@@ -17,6 +17,8 @@
 	{
 		global $url;
 
+		$controller=$action=$controllerName="";
+
 		if (isset($url)) {
 			$urlArray = array();
 			$urlArray = explode('/', $url);
@@ -25,24 +27,13 @@
 			if (isset($urlArray[0])) {
 				$action = $urlArray[0];
 				array_shift($urlArray);
-			} else {
-				$action = '';
 			}
 			$queryString = $urlArray;
-		} else {
-			$controller = '';
-			$action = '';
 		}
 		if (file_exists(SERVER_ROOT . DS . 'application' . DS . 'controllers' . DS . $controller . '.php')) {
 			$controllerName = ucfirst($controller);
 			$dispatch = new $controllerName();
-			if (method_exists($controllerName, $action)) {
-				call_user_func_array(array($dispatch, $action), $queryString);
-			}
-		} else {
-			$controllerName = '';
-			$controller = '';
-			$action = '';
+			if (method_exists($controllerName, $action)) call_user_func_array(array($dispatch, $action), $queryString);
 		}
 	}
 
