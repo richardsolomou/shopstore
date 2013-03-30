@@ -19,6 +19,11 @@
 	$url = $_GET['url'];
 
 	/**
+	 * Include the main controller.
+	 */
+	require_once SERVER_ROOT . DS . 'library' . DS . 'controller.class.php';
+	
+	/**
 	 * Include all element classes.
 	 */
 	require_once SERVER_ROOT . DS . 'application' . DS . 'controllers' . DS . 'categories.php';
