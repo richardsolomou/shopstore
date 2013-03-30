@@ -234,9 +234,9 @@
 		 */
 		public function select($columns = array())
 		{
-			$where = $this->_clause ? ' WHERE ' . substr($this->_clause, 0, -5) : '';
-			$order = $this->_orderBy ? ' ORDER BY `' . $this->_orderBy . '` ' . $this->_order : '';
-			$limit = $this->_limit ? ' LIMIT ' . $this->_limit : '';
+			$where = $this->_clause ? ' WHERE ' . substr($this->_clause, 0, -5) : null;
+			$order = $this->_orderBy ? ' ORDER BY `' . $this->_orderBy . '` ' . $this->_order : null;
+			$limit = $this->_limit ? ' LIMIT ' . $this->_limit : null;
 			$columns = $columns != array() ? implode(', ', $columns) : '*';
 			$this->_query = 'SELECT ' . $columns . ' FROM `' . $this->_table . '`' . $where . $order . $limit;
 			$this->execute();
@@ -274,8 +274,8 @@
 		 */
 		public function delete()
 		{
-			$where = $this->_clause ? substr(' WHERE ' . $this->_clause, 0, -5) : '';
-			$limit = $this->_limit ? ' LIMIT ' . $this->_limit : '';
+			$where = $this->_clause ? substr(' WHERE ' . $this->_clause, 0, -5) : null;
+			$limit = $this->_limit ? ' LIMIT ' . $this->_limit : null;
 			$this->_query = 'DELETE FROM `' . $this->_table . '`' . $where . $limit;
 			$this->execute();
 			$this->clear();
@@ -293,8 +293,8 @@
 		 */
 		public function update($arr = array())
 		{
-			$where = $this->_clause ? substr(' WHERE ' . $this->_clause, 0, -5) : '';
-			$set = '';
+			$where = $this->_clause ? substr(' WHERE ' . $this->_clause, 0, -5) : null;
+			$set = null;
 			foreach ($arr as $column => $value) {
 				array_push($this->_params, array($column, $value));
 				$set .= '`' . $column . '` = :' . $value . ', ';
