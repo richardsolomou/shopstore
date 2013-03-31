@@ -28,7 +28,7 @@
 			$dispatch = new $controllerName($controller, $action);
 			$action = empty($action) ? 'defaultPage' : $action;
 			if (method_exists($controllerName, $action)) {
-				$dispatch->$action($queryString);
+				call_user_func_array(array($dispatch, $action), $queryString);
 			} else {
 				notFound();
 			}
