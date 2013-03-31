@@ -77,7 +77,7 @@
 		 * @param  string $db   Contains the database name
 		 * @access public
 		 */
-		public function connect($host, $user, $pass, $db)
+		public function connect($host, $db, $user, $pass)
 		{
 			$this->_connection = new PDO('mysql:host=' . $host . ';dbname=' . $db, $user, $pass);
 			$this->_connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -100,8 +100,9 @@
 		 */
 		public function clear()
 		{
+			global $inflect;
 			$this->_query = null;
-			$this->_table = null;
+			$this->_table = $inflect->pluralize(strtolower(get_class($this)));
 			$this->_statement = null;
 			$this->_clause = null;
 			$this->_orderBy = null;
