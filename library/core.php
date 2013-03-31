@@ -25,18 +25,26 @@
 	{
 		if (file_exists(SERVER_ROOT . DS . 'application' . DS . 'controllers' . DS . $controller . '.php')) {
 			$controllerName = ucfirst($controller);
-			$dispatch = new $controllerName;
+			$dispatch = new $controllerName($controller, $action);
 			$action = empty($action) ? 'defaultPage' : $action;
 			if (method_exists($controllerName, $action)) {
-				call_user_func_array(array($dispatch, $action), $queryString);
+				$dispatch->$action($queryString);
 			} else {
-				header("HTTP/1.0 404 Not Found");
-				require_once SERVER_ROOT . DS . 'application' . DS . 'views' . DS . '404.php';
+				notFound();
 			}
 		} else {
-			header("HTTP/1.0 404 Not Found");
-			require_once SERVER_ROOT . DS . 'application' . DS . 'views' . DS . '404.php';
+			notFound();
 		}
+	}
+
+	/**
+	 * Sends the user to an error 404 page.
+	 */
+	function notFound()
+	{
+		header("HTTP/1.1 404 Not Found");
+		$controller = new Controller(null, '404');
+		$controller->set('pageTitle', 'Error 404');
 	}
 
 	/**
@@ -63,8 +71,7 @@
 			setControllerView($controller, $action, $queryString);
 		} else {
 			// If the URL is empty, render the default index page.
-			$dispatch = new Controller;
-			call_user_func_array(array($dispatch, 'defaultPage'), array());
+			$dispatch = new Controller(null, 'index');
 		}
 	}
 
