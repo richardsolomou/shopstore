@@ -2,9 +2,9 @@
 
 	/**
 	 * Extends the Model class in order to serve as the main element model
-	 * for the Categories controller class.
+	 * for the Administrators controller class.
 	 */
-	class Category extends Model
+	class Administrator extends Model
 	{
 		
 	}
