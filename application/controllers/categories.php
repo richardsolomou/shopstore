@@ -41,6 +41,7 @@
 		 * 
 		 * @param  int   $category_ID Category identifier.
 		 * @return array              Returns the category values.
+		 * @access public
 		 */
 		public function getCatById($category_ID = null)
 		{
