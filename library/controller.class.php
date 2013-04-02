@@ -9,28 +9,28 @@
 
 		/**
 		 * Name of the controller to connect to.
-		 * @var string
+		 * @var    string
 		 * @access protected
 		 */
 		protected $_controller;
 
 		/**
 		 * Name of the method action to take.
-		 * @var string
+		 * @var    string
 		 * @access protected
 		 */
 		protected $_action;
 
 		/**
 		 * Holds the variables to be passed on the views page.
-		 * @var array
+		 * @var    array
 		 * @access protected
 		 */
 		protected $variables = array();
 
 		/**
 		 * Decides if this is an AJAX call. Defaults to false.
-		 * @var bool
+		 * @var    boolean
 		 * @access public
 		 */
 		public $ajax = false;
@@ -39,8 +39,8 @@
 		 * Creates the model of the controller that was created and stores
 		 * the controller and action names in the class.
 		 * 
-		 * @param string $controller Element class controller to use.
-		 * @param string $action     Method to execute.
+		 * @param  string $controller Element class controller to use.
+		 * @param  string $action     Method to execute.
 		 * @access public
 		 */
 		public function __construct($controller = null, $action = null)
@@ -84,7 +84,7 @@
 		 * that data is used more than once in the website. This is done to
 		 * avoid code repetition throughout the application.
 		 * 
-		 * @param string $model Name of the model class of the controller.
+		 * @param  string $model Name of the model class of the controller.
 		 * @access public
 		 */
 		public function shared($model)
@@ -115,8 +115,8 @@
 		 * Sets a variable name and its value in an array to be later extracted
 		 * into the view for the static pages to use.
 		 * 
-		 * @param string $name  Identifier of the variable.
-		 * @param mixed  $value The value of the variable to pass.
+		 * @param  string $name  Identifier of the variable.
+		 * @param  mixed  $value The value of the variable to pass.
 		 * @access public
 		 */
 		public function set($name, $value)

@@ -20,6 +20,10 @@
 	/**
 	 * Checks if the element controller file exists and moves on to check for
 	 * the method given. If either one doesn't exist, it returns a 404 error.
+	 * 
+	 * @param string $controller   Controller to use for operation.
+	 * @param string $action       Method to use in the controller.
+	 * @param string  $queryString Parameters following the action.
 	 */
 	function setControllerView($controller, $action, $queryString)
 	{
