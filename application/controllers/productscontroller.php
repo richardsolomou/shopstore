@@ -33,10 +33,17 @@
 				$productCategory = self::getCatById($product['category_ID']);
 				$settingsCurrency = self::getSettings('\'currency_ID\'');
 				$currencySymbol = self::getCurrencyById($settingsCurrency['setting_value']);
+				$reviews = self::getProductReviews($product_ID);
+				$reviewNumber = self::getProductReviewNumber($product_ID);
+		        if ($reviewNumber > 0) foreach ($reviews as $review) $reviewRatingAverage += $review['review_rating'] / $reviewNumber;
 				self::set('product', $product);
+				self::set('reviews', $reviews);
+				self::set('reviewNumber', $reviewNumber);
+				self::set('reviewRatingAverage', $reviewRatingAverage);
 				self::set('productCategory', $productCategory['category_name']);
 				self::set('currencySymbol', $currencySymbol['currency_symbol']);
 			} else {
+				$this->_action = 'error';
 				return false;
 			}
 		}
@@ -114,6 +121,44 @@
 				$this->Product->where('currency_ID', $currency_ID);
 				$this->Product->select();
 				return $this->Product->fetch();
+			} else {
+				return false;
+			}
+		}
+
+		/**
+		 * Returns the reviews of the product selected.
+		 * 
+		 * @param  int    $product_ID Product identifier.
+		 * @return string             Returns the reviews of the product.
+		 */
+		public function getProductReviews($product_ID = null)
+		{
+			if (self::exists('product_ID', $product_ID, true)) {
+				$this->Product->clear();
+				$this->Product->table('reviews');
+				$this->Product->where('product_ID', $product_ID);
+				$this->Product->select();
+				return $this->Product->fetch(true);
+			} else {
+				return false;
+			}
+		}
+
+		/**
+		 * Returns the number of reviews of the product selected.
+		 * 
+		 * @param  int    $product_ID Product identifier.
+		 * @return string             Returns the reviews of the product.
+		 */
+		public function getProductReviewNumber($product_ID = null)
+		{
+			if (self::exists('product_ID', $product_ID, true)) {
+				$this->Product->clear();
+				$this->Product->table('reviews');
+				$this->Product->where('product_ID', $product_ID);
+				$this->Product->select();
+				return $this->Product->rowCount();
 			} else {
 				return false;
 			}
