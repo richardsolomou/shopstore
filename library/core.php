@@ -45,7 +45,7 @@
 	function setControllerView($controller, $action, $queryString)
 	{
 		$controllerName = ucfirst($controller) . 'Controller';
-		if (file_exists(SERVER_ROOT . DS . 'application' . DS . 'controllers' . DS . strtolower($controllerName)	 . '.php')) {
+		if (file_exists(SERVER_ROOT . DS . 'application' . DS . 'controllers' . DS . strtolower($controllerName) . '.php')) {
 			$dispatch = new $controllerName($controller, $action);
 			$action = empty($action) ? 'defaultPage' : $action;
 			if (method_exists($controllerName, $action)) {
@@ -65,7 +65,7 @@
 	{
 		header("HTTP/1.1 404 Not Found");
 		$controller = new Controller(null, '404');
-		$controller->set('pageTitle', 'Error 404');
+		$controller->set('title', 'Error 404');
 	}
 
 	/**
