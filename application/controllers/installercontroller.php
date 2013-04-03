@@ -68,7 +68,7 @@
 			        $db_conn->query('CREATE TABLE orders (order_ID int unsigned NOT NULL auto_increment, order_date DATETIME NOT NULL default "0000-00-00 00:00:00", order_status varchar(15) NOT NULL, order_total float NOT NULL, customer_ID int unsigned NOT NULL, PRIMARY KEY (order_ID));');
 			        $db_conn->query('CREATE TABLE administrators (admin_ID int unsigned NOT NULL auto_increment, admin_username varchar(50) NOT NULL, admin_password varchar(50) NOT NULL, admin_firstname varchar(50) NOT NULL, admin_lastname varchar(50) NOT NULL, admin_email varchar(150) NOT NULL, PRIMARY KEY (admin_ID), UNIQUE KEY `admin_username` (`admin_username`));');
 			        $db_conn->query('CREATE TABLE currencies (currency_ID int unsigned NOT NULL auto_increment, currency_name varchar(30) NOT NULL, currency_code char(3) NOT NULL, currency_symbol varchar(8) NOT NULL, PRIMARY KEY (currency_ID));');
-			        $db_conn->query('CREATE TABLE settings (setting_ID int unsigned NOT NULL auto_increment, setting_column varchar(150) NOT NULL, setting_value varchar(150) NULL, PRIMARY KEY (setting_ID));');
+			        $db_conn->query('CREATE TABLE settings (setting_ID int unsigned NOT NULL auto_increment, setting_column varchar(150) NOT NULL, setting_value varchar(150) NULL, PRIMARY KEY (setting_ID), UNIQUE KEY `setting_column` (`setting_column`));');
 			    } catch (PDOException $e) {
 			    	array_push($error, 'Tables could not be created.<br>' . $e->getMessage());
 			    }
