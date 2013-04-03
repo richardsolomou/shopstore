@@ -60,9 +60,12 @@
 			$this->_action = $this->_controller == 'Controller' ? 'index' : $action;
 
 			$model = ucfirst(Inflect::singularize($this->_controller));
-			$this->$model = $model != 'Controller' ? new $model : new Model;
-			
-			self::shared($model);
+			if ($controller != 'installer') {
+				$this->$model = $model != 'Controller' ? new $model : new Model;
+				self::shared($model);
+			} else {
+				self::set('pageTitle', 'Installer');
+			}
 		}
 
 		/**
@@ -89,10 +92,13 @@
 		{
 			// Checks if the database has been setup.
 			if (DB_SETUP == true) {
-				$store = $this->$model->query('SELECT * FROM settings');
+				// Stores the settings of the website in a variable.
+				$settings = $this->$model->query('SELECT * FROM settings');
+				self::set('settings', $settings);
+				// Stores the categories of the website in a variable.
 				$categories = $this->$model->query('SELECT * FROM categories', true);
-				self::set('store', $store);
 				self::set('categories', $categories);
+				// Sets the title of the current page according to the controller.
 				$pageTitle = $this->_controller != 'Controller' ? $this->_controller : 'Home';
 				self::set('pageTitle', $pageTitle);
 				// Checks if the administrator is logged in.
