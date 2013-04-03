@@ -29,16 +29,27 @@
 		public function getById($product_ID = null)
 		{
 			if (self::exists('product_ID', $product_ID, true)) {
+				// Gets the values of the product and its category.
 				$product = self::getProductById($product_ID);
 				$productCategory = self::getCatById($product['category_ID']);
+				// Gets the currency ID from the website settings table.
 				$settingsCurrency = self::getSettings('\'currency_ID\'');
+				// And gets the symbol from the ID of the currency.
 				$currencySymbol = self::getCurrencyById($settingsCurrency['setting_value']);
+				// Gets the amount of reviews for the specific product.
 				$reviews = self::getProductReviews($product_ID);
 				$reviewNumber = self::getProductReviewNumber($product_ID);
-		        if ($reviewNumber > 0) foreach ($reviews as $review) $reviewRatingAverage += $review['review_rating'] / $reviewNumber;
+				// Calculates the average rating based on all reviews.
+				$reviewRatingAverage = 0;
+		        if ($reviewNumber > 0) {
+		        	foreach ($reviews as $individualReview) {
+		        		$reviewRatingAverage += $individualReview['review_rating'] / $reviewNumber;
+		        	}
+		        }
 				self::set('product', $product);
 				self::set('reviews', $reviews);
 				self::set('reviewNumber', $reviewNumber);
+				self::set('individualReview', $individualReview);
 				self::set('reviewRatingAverage', $reviewRatingAverage);
 				self::set('productCategory', $productCategory['category_name']);
 				self::set('currencySymbol', $currencySymbol['currency_symbol']);
@@ -180,13 +191,13 @@
 		/**
 		 * Adds a product into the database.
 		 * 
-		 * @param  int    $category_ID         Name of the inserted product.
-		 * @param  string $product_name        Parent of the inserted product.
-		 * @param  string $product_description Parent of the inserted product.
-		 * @param  string $product_condition   Parent of the inserted product.
-		 * @param  float  $product_price       Parent of the inserted product.
-		 * @param  int    $product_stock       Parent of the inserted product.
-		 * @param  string $product_image       Parent of the inserted product.
+		 * @param  int    $category_ID         Category the product belongs to.
+		 * @param  string $product_name        Name of the product.
+		 * @param  string $product_description Summary of the product.
+		 * @param  string $product_condition   Product condition (new, used, etc.)
+		 * @param  float  $product_price       Price of the product.
+		 * @param  int    $product_stock       Available stock of the product.
+		 * @param  string $product_image       Path to the image of the product.
 		 * @access public
 		 */
 		public function insert($category_ID = null, $product_name = null, $product_description = null, $product_condition = null, $product_price = null, $product_stock = null, $product_image = null)
@@ -262,12 +273,13 @@
 		}
 
 		/**
-		 * Checks if a category exists in the database with the given attributes.
+		 * Checks if a product exists in the database with the given attributes.
 		 * 
-		 * @param  array   $arr         Name and value of column to search for.
+		 * @param  string  $column      Name of the column to search on.
+		 * @param  string  $value       Value to search for.
 		 * @param  boolean $requireInt  Requires the value sent to be an integer.
 		 * @param  string  $customTable Uses a table from another controller.
-		 * @return boolean              Does the category exist?
+		 * @return boolean              Does the product exist?
 		 * @access public
 		 */
 		public function exists($column = null, $value = null, $requireInt = false, $customTable = 'products')
