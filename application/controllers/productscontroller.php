@@ -31,7 +31,7 @@
 			if (self::exists('product_ID', $product_ID, true)) {
 				$product = self::getProductById($product_ID);
 				$productCategory = self::getCatById($product['category_ID']);
-				$settingsCurrency = self::getSettings('currency_ID');
+				$settingsCurrency = self::getSettings('\'currency_ID\'');
 				$currencySymbol = self::getCurrencyById($settingsCurrency['setting_value']);
 				self::set('product', $product);
 				self::set('productCategory', $productCategory['category_name']);
@@ -71,6 +71,7 @@
 		{
 			if (self::exists('category_ID', $category_ID, true, 'categories')) {
 				$this->Product->clear();
+				$this->Product->table('categories');
 				$this->Product->where('category_ID', $category_ID);
 				$this->Product->select();
 				return $this->Product->fetch();
@@ -93,7 +94,7 @@
 				$this->Product->table('settings');
 				$this->Product->where('setting_column', $setting_column);
 				$this->Product->select();
-				return $this->Product->fetch(true);
+				return $this->Product->fetch();
 			} else {
 				return false;
 			}
