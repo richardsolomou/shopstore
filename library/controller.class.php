@@ -36,6 +36,13 @@
 		public $ajax = false;
 
 		/**
+		 * Decides if this is a full page width call. Defaults to false.
+		 * @var    boolean
+		 * @access public
+		 */
+		public $full = false;
+
+		/**
 		 * Creates the model of the controller that was created and stores
 		 * the controller and action names in the class.
 		 * 
@@ -45,12 +52,16 @@
 		 */
 		public function __construct($controller = null, $action = null)
 		{
-			global $inflect;
-			
-			$this->_controller = ucfirst($controller);
-			$this->_action = $action;
+			//global $inflect;
 
-			$model = $inflect->singularize(get_class($this));
+			// Checks if the database has been setup, otherwise blocks all
+			// connectivity and sends the user to the installation page.
+			if (DB_SETUP == false && $controller != 'installer') header('Location: ' . BASE_PATH . DS . 'installer');
+			
+			$this->_controller = $controller == null ? 'Controller' : ucfirst($controller);
+			$this->_action = $this->_controller == 'Controller' ? 'index' : $action;
+
+			$model = ucfirst(Inflect::singularize($this->_controller));
 			$this->$model = $model != 'Controller' ? new $model : new Model;
 			
 			self::shared($model);
@@ -64,18 +75,7 @@
 		 */
 		public function __destruct()
 		{
-			$this->render($this->ajax);
-		}
-
-		/**
-		 * Lets the system know which file to be used for the view of the
-		 * default page in each controller.
-		 *
-		 * @access public
-		 */
-		public function defaultPage()
-		{
-			$this->_action = 'index';
+			self::render($this->ajax, $this->full);
 		}
 
 		/**
@@ -93,10 +93,10 @@
 			if (DB_SETUP == true) {
 				$store = $this->$model->query('SELECT * FROM settings');
 				$categories = $this->$model->query('SELECT * FROM categories', true);
-				$this->set('store', $store);
-				$this->set('categories', $categories);
-				$pageTitle = $this->_controller != null ? $this->_controller : 'Home';
-				$this->set('pageTitle', $pageTitle);
+				self::set('store', $store);
+				self::set('categories', $categories);
+				$pageTitle = $this->_controller != 'Controller' ? $this->_controller : 'Home';
+				self::set('pageTitle', $pageTitle);
 				// Checks if the administrator is logged in.
 				if (isset($_SESSION['SESS_ADMINLOGGEDIN']) && isset($_SESSION['SESS_ADMINID'])) {
 					$this->$model->table('administrators');
@@ -104,10 +104,10 @@
 					$this->$model->select();
 					$this->$model->execute();
 					$admin = $this->$model->fetch();
-					$this->set('admin', $admin);
+					self::set('admin', $admin);
 				}
 			} else {
-				$this->set('pageTitle', 'WEBSCRP');
+				self::set('pageTitle', 'WEBSCRP');
 			}
 		}
 
@@ -133,13 +133,13 @@
 		 * @param  boolean $ajax Decides if this is an AJAX call.
 		 * @access public
 		 */
-		public function render($ajax = false)
+		public function render($ajax = false, $full = false)
 		{
 			extract($this->variables);
 
 			if ($ajax == false) {
 				require_once SERVER_ROOT . DS . 'application' . DS . 'views' . DS . 'header.php';
-				require_once SERVER_ROOT . DS . 'application' . DS . 'views' . DS . 'navigation.php';
+				if ($full == false) require_once SERVER_ROOT . DS . 'application' . DS . 'views' . DS . 'navigation.php';
 			}
 
 			$viewLowerCase = strtolower(SERVER_ROOT . DS . 'application' . DS . 'views' . DS . $this->_controller . DS . $this->_action . '.php');
@@ -154,7 +154,7 @@
 			}
 
 			if ($ajax == false) {
-				require_once SERVER_ROOT . DS . 'application' . DS . 'views' . DS . 'sidebar.php';
+				if ($full == false) require_once SERVER_ROOT . DS . 'application' . DS . 'views' . DS . 'sidebar.php';
 				require_once SERVER_ROOT . DS . 'application' . DS . 'views' . DS . 'footer.php';
 			}
 		}
