@@ -57,15 +57,9 @@
 			if (DB_SETUP == false && $controller != 'installer') header('Location: ' . BASE_PATH . DS . 'installer');
 			
 			$this->_controller = $controller == null ? 'Controller' : ucfirst($controller);
-			$this->_action = $this->_controller == 'Controller' ? 'index' : $action;
+			$this->_action = $this->_controller == 'Controller' && $action == null ? 'index' : $action;
 
-			$model = ucfirst(Inflect::singularize($this->_controller));
-			if ($controller != 'installer') {
-				$this->$model = $model != 'Controller' ? new $model : new Model;
-				self::shared($model);
-			} else {
-				self::set('pageTitle', 'Installer');
-			}
+			self::shared();
 		}
 
 		/**
@@ -88,12 +82,14 @@
 		 * @param  string $model Name of the model class of the controller.
 		 * @access public
 		 */
-		public function shared($model)
+		public function shared()
 		{
 			// Checks if the database has been setup.
 			if (DB_SETUP == true) {
+				$model = ucfirst(Inflect::singularize($this->_controller));
+				$this->$model = $model != 'Controller' ? new $model : new Model;
 				// Stores the settings of the website in a variable.
-				$settings = $this->$model->query('SELECT * FROM settings');
+				$settings = $this->$model->query('SELECT `setting_value` FROM `settings` WHERE `setting_column` = "website_name"');
 				self::set('settings', $settings);
 				// Stores the categories of the website in a variable.
 				$categories = $this->$model->query('SELECT * FROM categories', true);
@@ -101,17 +97,17 @@
 				// Sets the title of the current page according to the controller.
 				$pageTitle = $this->_controller != 'Controller' ? $this->_controller : 'Home';
 				self::set('pageTitle', $pageTitle);
+				self::set('title', $settings['setting_value'] . ' &raquo; ' . $pageTitle);
 				// Checks if the administrator is logged in.
 				if (isset($_SESSION['SESS_ADMINLOGGEDIN']) && isset($_SESSION['SESS_ADMINID'])) {
 					$this->$model->table('administrators');
 					$this->$model->where('admin_ID', $_SESSION['SESS_ADMINID']);
 					$this->$model->select();
-					$this->$model->execute();
-					$admin = $this->$model->fetch();
-					self::set('admin', $admin);
+					self::set('admin', $this->$model->fetch());
 				}
 			} else {
-				self::set('pageTitle', 'WEBSCRP');
+				// Database was not setup, forward to installer.
+				self::set('title', 'LayerCMS Installer');
 			}
 		}
 
@@ -146,6 +142,7 @@
 				if ($full == false) require_once SERVER_ROOT . DS . 'application' . DS . 'views' . DS . 'navigation.php';
 			}
 
+			if ($this->_controller == 'Controller') $this->_controller = null;
 			$viewLowerCase = strtolower(SERVER_ROOT . DS . 'application' . DS . 'views' . DS . $this->_controller . DS . $this->_action . '.php');
 			$viewGlobal = glob(strtolower(SERVER_ROOT . DS . 'application' . DS . 'views' . DS . $this->_controller . DS . '*'));
 			$viewArray = $viewGlobal ? $viewGlobal : array();
