@@ -1,0 +1,45 @@
+header {
+    background: -webkit-gradient(linear, left top, left bottom, from(#e5e5e5), to(#ffffff));
+    background: -moz-linear-gradient(top, #e5e5e5, #ffffff);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e5e5e5', endColorstr='#ffffff');
+    margin-bottom: 1em;
+    position: relative;
+    padding: 4em 0;
+}
+
+header h1:after, header h1:before {
+    right: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+header h1:after {
+    border-right-color: #A60000;
+    border-width: 30px;
+    top: 50%;
+    margin-top: -30px;
+}
+header h1:before {
+    border-right-color: #bf3030;
+    border-width: 36px;
+    top: 50%;
+    margin-top: -36px;
+}
+
+header h1 {
+    background: #A60000;
+}
+
+header h1 a {
+    font-size: 32px;
+    display: block;
+    color: #f4f4f4;
+    text-decoration: none;
+    padding: 0 1em;
+}
+
+header h1 a:hover { text-decoration: none; }
