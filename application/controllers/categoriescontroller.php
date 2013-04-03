@@ -33,6 +33,8 @@
 				$products = self::getProductsByCat($category_ID);
 				self::set('category', $category);
 				self::set('products', $products);
+			} else {
+				return false;
 			}
 		}
 
@@ -45,10 +47,14 @@
 		 */
 		public function getCatById($category_ID = null)
 		{
-			$this->Category->clear();
-			$this->Category->where('category_ID', $category_ID);
-			$this->Category->select();
-			return $this->Category->fetch();
+			if (self::exists('category_ID', $category_ID, true)) {
+				$this->Category->clear();
+				$this->Category->where('category_ID', $category_ID);
+				$this->Category->select();
+				return $this->Category->fetch();
+			} else {
+				return false;
+			}
 		}
 
 		/**
@@ -60,11 +66,15 @@
 		 */
 		public function getProductsByCat($category_ID = null)
 		{
-			$this->Category->clear();
-			$this->Category->table('products');
-			$this->Category->where('category_ID', $category_ID);
-			$this->Category->select();
-			return $this->Category->fetch(true);
+			if (self::exists('category_ID', $category_ID, true)) {
+				$this->Category->clear();
+				$this->Category->table('products');
+				$this->Category->where('category_ID', $category_ID);
+				$this->Category->select();
+				return $this->Category->fetch(true);
+			} else {
+				return false;
+			}
 		}
 
 		/**
@@ -90,15 +100,14 @@
 		/**
 		 * Returns all categories in the database.
 		 * 
-		 * @return array Categories in the database.
+		 * @return array  Categories in the database.
 		 * @access public
 		 */
 		public function getList()
 		{
 			$this->Category->clear();
 			$this->Category->select();
-			$categories = $this->Category->fetch(true);
-			return $categories;
+			return $this->Category->fetch(true);
 		}
 
 		/**
@@ -110,30 +119,34 @@
 		 */
 		public function insert($category_name = null, $category_parent_ID = null)
 		{
-			if ($this->exists('category_ID', $category_parent_ID, true)) {
+			if (self::exists('category_ID', $category_parent_ID, true)) {
 				$this->Category->clear();
 				$category = array(
 					'category_name' => $category_name,
 					'category_parent_ID' => $category_parent_ID
 				);
 				$this->Category->insert($category);
-				$this->set('category', $category);
+				self::set('insert', $category);
+			} else {
+				return false;
 			}
 		}
 
 		/**
 		 * Removes a category from the database.
 		 * 
-		 * @param  int $category_ID Category identifier.
+		 * @param  int    $category_ID Category identifier.
 		 * @access public
 		 */
 		public function delete($category_ID = null)
 		{
-			if ($this->exists('category_ID', $category_ID, true)) {
+			if (self::exists('category_ID', $category_ID, true) && self::getProductCountByCat($category_ID) != 0) {
 				$this->Category->clear();
 				$this->Category->where('category_ID', $category_ID);
 				$this->Category->delete();
-				$this->set('category', true);
+				self::set('delete', true);
+			} else {
+				return false;
 			}
 		}
 
@@ -147,7 +160,7 @@
 		 */
 		public function update($category_ID = null, $category_name = null, $category_parent_ID = null)
 		{
-			if ($this->exists('category_ID', $category_ID, true) && $this->exists('category_ID', $category_parent_ID, true)) {
+			if (self::exists('category_ID', $category_ID, true) && self::exists('category_ID', $category_parent_ID, true)) {
 				$this->Category->clear();
 				$this->Category->where('category_ID', $category_ID);
 				$category = array(
@@ -155,7 +168,9 @@
 					'category_parent_ID' => $category_parent_ID
 				);
 				$this->Category->update($category);
-				$this->set('category', $category);
+				self::set('update', $category);
+			} else {
+				return false;
 			}
 		}
 
@@ -169,9 +184,10 @@
 		 */
 		public function exists($column = null, $value = null, $requireInt = false)
 		{
+			// Checks if all characters are digits.
 			if ($requireInt == true && !ctype_digit($value)) return false;
 			// Allows for the category parent to have a root parent.
-			if ($column == 'category_parent_ID' && $value == '0') return true;
+			if ($column == 'category_ID' && $value == '0') return true;
 			$this->Category->clear();
 			$this->Category->where($column, $value);
 			$this->Category->select();
