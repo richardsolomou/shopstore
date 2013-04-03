@@ -66,11 +66,11 @@
 	    <?php if ($reviewNumber > 0) { ?>
 	    	<hr>
 	    	<h2>Reviews</h2>
-	    		<?php
-	    		$dispatch = new CustomersController('customers', 'getById');
-	    		foreach ($reviews['results'] as $review) {
-	    			$customer = $dispatch->getById($review['customer_ID']);
-	    		?>
+	    	<?php
+	    		$customerDispatch = new CustomersController('customers', 'getCustomerById');
+	    		foreach ($reviews as $review) {
+	    			$customer = $customerDispatch->getCustomerById($review['customer_ID']);
+	    	?>
 				<table class="bordered">
 					<tr>
 						<td><strong>By:</strong> <?php echo $customer['customer_firstname'] . " " . $customer['customer_lastname']; ?></td>
