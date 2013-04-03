@@ -1,6 +1,6 @@
 <article id="full">
 
-    <h1><?php echo $pageTitle ?></h1>
+    <h1><?php echo $title ?></h1>
 
     <div class="alert">LayerCMS has already been setup.</div>
 

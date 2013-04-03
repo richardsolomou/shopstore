@@ -1,6 +1,6 @@
 <article id="full">
 
-    <h1><?php echo $pageTitle ?></h1>
+    <h1><?php echo $title ?></h1>
 
     <?php foreach ($error as $err) { ?>
     	<div class="alert"><?php echo $err; ?></div>

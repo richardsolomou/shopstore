@@ -1,6 +1,6 @@
 <article id="full">
 
-    <h1><?php echo $pageTitle ?></h1>
+    <h1><?php echo $title ?></h1>
 
     <form action="<?php echo BASE_PATH . DS . 'installer' . DS . 'second'; ?>" method="post">
         
@@ -17,7 +17,7 @@
             <tr>
                 <td class="righted"><label for="website_name">Website Name:</label></td>
                 <td>
-                    <input type="text" id="website_name" name="website_name" required value="LayerCMS">
+                    <input type="text" id="website_name" name="website_name" required value="WEBSCRP">
                 </td>
             </tr>
             <tr>
@@ -71,13 +71,13 @@
                 <tr>
                     <td class="righted"><label for="db_host">Database Host:</label></td>
                     <td>
-                        <input type="text" id="db_host" name="db_host" required value="">
+                        <input type="text" id="db_host" name="db_host" required value="127.0.0.1">
                     </td>
                 </tr>
                 <tr>
                     <td class="righted"><label for="db_user">Database User:</label></td>
                     <td>
-                        <input type="text" id="db_user" name="db_user" required value="">
+                        <input type="text" id="db_user" name="db_user" required value="root">
                     </td>
                 </tr>
                 <tr>
@@ -89,7 +89,7 @@
                 <tr>
                     <td class="righted"><label for="db_name">Database Name:</label></td>
                     <td>
-                        <input type="text" id="db_name" name="db_name" required value="">
+                        <input type="text" id="db_name" name="db_name" required value="layercms">
                     </td>
                 </tr>
                 <tr>
