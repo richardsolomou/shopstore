@@ -1,6 +1,23 @@
 <?php
 
 	/**
+	* Autoload any classes that are required.
+	*/
+	function __autoload($className)
+	{
+		if (file_exists($libraryClass = SERVER_ROOT . DS . 'library' . DS . strtolower($className) . '.class.php')) {
+			// Includes the inflect, main controller and database classes.
+			require_once $libraryClass;
+		} else if (file_exists($controllerClass = SERVER_ROOT . DS . 'application' . DS . 'controllers' . DS . strtolower($className) . '.php')) {
+			// Includes the element controllers for categories, customers, etc.
+			require_once $controllerClass;
+		} else if (file_exists($modelClass = SERVER_ROOT . DS . 'application' . DS . 'models' . DS . strtolower($className) . '.php')) {
+			// Include the element class models for categories, customers, etc.
+			require_once $modelClass;
+		}
+	}
+
+	/**
 	 * If currently in development display errors, otherwise hide and log
 	 * the errors in a file.
 	 */
@@ -27,8 +44,8 @@
 	 */
 	function setControllerView($controller, $action, $queryString)
 	{
-		if (file_exists(SERVER_ROOT . DS . 'application' . DS . 'controllers' . DS . $controller . '.php')) {
-			$controllerName = ucfirst($controller);
+		$controllerName = ucfirst($controller) . 'Controller';
+		if (file_exists(SERVER_ROOT . DS . 'application' . DS . 'controllers' . DS . strtolower($controllerName)	 . '.php')) {
 			$dispatch = new $controllerName($controller, $action);
 			$action = empty($action) ? 'defaultPage' : $action;
 			if (method_exists($controllerName, $action)) {
@@ -75,7 +92,7 @@
 			setControllerView($controller, $action, $queryString);
 		} else {
 			// If the URL is empty, render the default index page.
-			$dispatch = new Controller(null, 'index');
+			$dispatch = new Controller();
 		}
 	}
 

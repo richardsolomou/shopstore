@@ -100,9 +100,8 @@
 		 */
 		public function clear()
 		{
-			global $inflect;
 			$this->_query = null;
-			$this->_table = $inflect->pluralize(strtolower(get_class($this)));
+			$this->_table = Inflect::pluralize(strtolower(get_class($this)));
 			$this->_statement = null;
 			$this->_clause = null;
 			$this->_orderBy = null;

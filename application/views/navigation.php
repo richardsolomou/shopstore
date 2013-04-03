@@ -17,7 +17,7 @@
          * category.
          */
         
-        $dispatch = new Categories;
+        $dispatch = new CategoriesController('categories', 'getProductCountByCat');
 
         foreach ($categories as $navCats) {
             // Runs the method on every loop

@@ -19,11 +19,6 @@
 	$url = isset($_GET['url']) ? $_GET['url'] : null;
 
 	/**
-	 * Include the global classes file.
-	 */
-	require_once SERVER_ROOT . DS . 'library' . DS . 'classes.php';
-
-	/**
 	 * Include the server configuration and core functions.
 	 */
 	require_once SERVER_ROOT . DS . 'library' . DS . 'config.php';

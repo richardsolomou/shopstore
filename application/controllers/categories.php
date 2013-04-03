@@ -4,12 +4,12 @@
 	 * Serves as the controller for all category related functions and
 	 * operations. Sends commands to the model to update the model's state.
 	 */
-	class Categories extends Controller
+	class CategoriesController extends Controller
 	{
 
 		/**
 		 * Lets the system know which file to be used for the view of the
-		 * default page in this controller, if an action is not specified.
+		 * default page in this controller if an action is not specified.
 		 * 
 		 * @access public
 		 */

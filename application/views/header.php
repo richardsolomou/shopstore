@@ -17,7 +17,7 @@
 
 			<header>
 
-				<h1><a href="<?php echo BASE_PATH . DS . 'index.php'; ?>"><?php echo $title; ?></a></h1>
+				<h1><a href="<?php echo BASE_PATH; ?>"><?php echo $title; ?></a></h1>
 
 			</header>
 

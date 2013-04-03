@@ -52,8 +52,6 @@
 		 */
 		public function __construct($controller = null, $action = null)
 		{
-			//global $inflect;
-
 			// Checks if the database has been setup, otherwise blocks all
 			// connectivity and sends the user to the installation page.
 			if (DB_SETUP == false && $controller != 'installer') header('Location: ' . BASE_PATH . DS . 'installer');
