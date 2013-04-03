@@ -1,5 +1,3 @@
-<?php $title = isset($store) ? $store['store_name'] . " &raquo; " . $pageTitle : $pageTitle; ?>
-
 <!DOCTYPE HTML>
 <html lang="en">
 	<head>
