@@ -34,6 +34,7 @@
 				self::set('category', $category);
 				self::set('products', $products);
 			} else {
+				$this->_action = 'error';
 				return false;
 			}
 		}
