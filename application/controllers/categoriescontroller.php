@@ -178,7 +178,8 @@
 		/**
 		 * Checks if a category exists in the database with the given attributes.
 		 * 
-		 * @param  array   $arr        Name and value of column to search for.
+		 * @param  string  $column     Name of the column to search on.
+		 * @param  string  $value      Value to search for.
 		 * @param  boolean $requireInt Requires the value sent to be an integer.
 		 * @return boolean             Does the category exist?
 		 * @access public
