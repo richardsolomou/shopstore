@@ -99,7 +99,7 @@
 				self::set('pageTitle', $pageTitle);
 				self::set('title', $settings['setting_value'] . ' &raquo; ' . $pageTitle);
 				// Checks if the administrator is logged in.
-				if (isset($_SESSION['SESS_ADMINLOGGEDIN']) && isset($_SESSION['SESS_ADMINID'])) {
+				if (self::isAdmin()) {
 					$this->$model->table('administrators');
 					$this->$model->where('admin_ID', $_SESSION['SESS_ADMINID']);
 					$this->$model->select();
@@ -122,6 +122,21 @@
 		public function set($name, $value)
 		{
 			$this->_variables[$name] = $value;
+		}
+
+		/**
+		 * Checks if the current user is a logged in administrator.
+		 * 
+		 * @return boolean Returns whether or not an administrator is logged in.
+		 * @access public
+		 * */
+		public function isAdmin()
+		{
+			if (isset($_SESSION['SESS_ADMINLOGGEDIN']) && isset($_SESSION['SESS_ADMINID'])) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 		/**
