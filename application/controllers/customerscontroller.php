@@ -66,7 +66,7 @@
 		public function insert($customer_username = null, $customer_password = null, $customer_firstname = null, $customer_lastname = null, $customer_address1 = null, $customer_address2 = null, $customer_postcode = null, $customer_phone = null, $customer_email = null)
 		{
 			if (self::isAdmin()) {
-				try {
+				if (!self::_exists('customer_username', $customer_username)) {
 					$this->Customer->clear();
 					$customer = array(
 						'customer_username'  => $customer_username,
@@ -81,9 +81,12 @@
 					);
 					$this->Customer->insert($customer);
 					self::set('insert', $customer);
-				} catch (PDOException $e) {
-					self::set('e', $e);
-					$this->_action = 'insertFail';
+					self::set('message', 'Customer successfully inserted.');
+					self::set('alert', 'alert-success');
+					return true;
+				} else {
+					self::set('message', 'Customer username already exists.');
+					self::set('alert', '');
 					return false;
 				}
 			} else {
@@ -105,8 +108,12 @@
 					$this->Customer->where('customer_ID', $customer_ID);
 					$this->Customer->delete();
 					self::set('delete', true);
+					self::set('message', 'Customer successfully deleted.');
+					self::set('alert', 'alert-success');
+					return true;
 				} else {
-					$this->_action = 'deleteFail';
+					self::set('message', 'Customer does not exist.');
+					self::set('alert', '');
 					return false;
 				}
 			} else {
@@ -148,8 +155,12 @@
 					);
 					$this->Customer->update($customer);
 					self::set('update', $customer);
+					self::set('message', 'Customer successfully updated.');
+					self::set('alert', 'alert-success');
+					return true;
 				} else {
-					$this->_action = 'updateFail';
+					self::set('message', 'Customer does not exist.');
+					self::set('alert', '');
 					return false;
 				}
 			} else {

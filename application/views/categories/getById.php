@@ -8,7 +8,7 @@
 	</h1>
 
 	<?php if (isset($message) && isset($alert)) { ?>
-		<div class="alert <?php echo $alert ?>"><?php echo $message ?></div>
+		<div class="alert<?php echo $alert ?>"><?php echo $message ?></div>
 	<?php } ?>
 
 	<div class="items">

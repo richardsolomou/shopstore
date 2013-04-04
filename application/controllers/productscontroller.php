@@ -100,8 +100,12 @@
 					);
 					$this->Product->insert($product);
 					self::set('insert', $product);
+					self::set('message', 'Product successfully inserted.');
+					self::set('alert', 'alert-success');
+					return true;
 				} else {
-					$this->_action = 'insertFail';
+					self::set('message', 'Category specified does not exist.');
+					self::set('alert', '');
 					return false;
 				}
 			} else {
@@ -123,8 +127,12 @@
 					$this->Product->where('product_ID', $product_ID);
 					$this->Product->delete();
 					self::set('delete', true);
+					self::set('message', 'Product successfully deleted.');
+					self::set('alert', 'alert-success');
+					return true;
 				} else {
-					$this->_action = 'deleteFail';
+					self::set('message', 'Product does not exist.');
+					self::set('alert', '');
 					return false;
 				}
 			} else {
@@ -162,8 +170,12 @@
 					);
 					$this->Product->update($product);
 					self::set('update', $product);
+					self::set('message', 'Product successfully updated.');
+					self::set('alert', 'alert-success');
+					return true;
 				} else {
-					$this->_action = 'updateFail';
+					self::set('message', 'Product does not exist, or category specified does not exist.');
+					self::set('alert', '');
 					return false;
 				}
 			} else {

@@ -70,8 +70,12 @@
 					);
 					$this->Category->insert($category);
 					self::set('insert', $category);
+					self::set('message', 'Category successfully inserted.');
+					self::set('alert', 'alert-success');
+					return true;
 				} else {
-					$this->_action = 'insertFail';
+					self::set('message', 'Category parent does not exist.');
+					self::set('alert', '');
 					return false;
 				}
 			} else {
@@ -93,8 +97,12 @@
 					$this->Category->where('category_ID', $category_ID);
 					$this->Category->delete();
 					self::set('delete', true);
+					self::set('message', 'Category successfully deleted.');
+					self::set('alert', 'alert-success');
+					return true;
 				} else {
-					$this->_action = 'deleteFail';
+					self::set('message', 'Category does not exist, or has products under it.');
+					self::set('alert', '');
 					return false;
 				}
 			} else {
@@ -122,8 +130,12 @@
 					);
 					$this->Category->update($category);
 					self::set('update', $category);
+					self::set('message', 'Category successfully updated.');
+					self::set('alert', 'alert-success');
+					return true;
 				} else {
-					$this->_action = 'updateFail';
+					self::set('message', 'Category does not exist, or category parent does not exist, or category is the same as the parent.');
+					self::set('alert', '');
 					return false;
 				}
 			} else {
