@@ -61,16 +61,21 @@
 		 */
 		public function insert($category_name = null, $category_parent_ID = null)
 		{
-			if (self::_exists('category_ID', $category_parent_ID, true)) {
-				$this->Category->clear();
-				$category = array(
-					'category_name' => $category_name,
-					'category_parent_ID' => $category_parent_ID
-				);
-				$this->Category->insert($category);
-				self::set('insert', $category);
+			if (self::isAdmin()) {
+				if (self::_exists('category_ID', $category_parent_ID, true)) {
+					$this->Category->clear();
+					$category = array(
+						'category_name' => $category_name,
+						'category_parent_ID' => $category_parent_ID
+					);
+					$this->Category->insert($category);
+					self::set('insert', $category);
+				} else {
+					$this->_action = 'insertFail';
+					return false;
+				}
 			} else {
-				return false;
+				$this->_action = 'unauthorizedAccess';
 			}
 		}
 
@@ -82,13 +87,18 @@
 		 */
 		public function delete($category_ID = null)
 		{
-			if (self::_exists('category_ID', $category_ID, true) && self::_getProductCountByCat($category_ID) == 0) {
-				$this->Category->clear();
-				$this->Category->where('category_ID', $category_ID);
-				$this->Category->delete();
-				self::set('delete', true);
+			if (self::isAdmin()) {
+				if (self::_exists('category_ID', $category_ID, true) && self::_getProductCountByCat($category_ID) == 0) {
+					$this->Category->clear();
+					$this->Category->where('category_ID', $category_ID);
+					$this->Category->delete();
+					self::set('delete', true);
+				} else {
+					$this->_action = 'deleteFail';
+					return false;
+				}
 			} else {
-				return false;
+				$this->_action = 'unauthorizedAccess';
 			}
 		}
 
@@ -102,17 +112,22 @@
 		 */
 		public function update($category_ID = null, $category_name = null, $category_parent_ID = null)
 		{
-			if (self::_exists('category_ID', $category_ID, true) && self::_exists('category_ID', $category_parent_ID, true) && $category_parent_ID != $category_ID) {
-				$this->Category->clear();
-				$this->Category->where('category_ID', $category_ID, true);
-				$category = array(
-					'category_name' => $category_name,
-					'category_parent_ID' => $category_parent_ID
-				);
-				$this->Category->update($category);
-				self::set('update', $category);
+			if (self::isAdmin()) {
+				if (self::_exists('category_ID', $category_ID, true) && self::_exists('category_ID', $category_parent_ID, true) && $category_parent_ID != $category_ID) {
+					$this->Category->clear();
+					$this->Category->where('category_ID', $category_ID, true);
+					$category = array(
+						'category_name' => $category_name,
+						'category_parent_ID' => $category_parent_ID
+					);
+					$this->Category->update($category);
+					self::set('update', $category);
+				} else {
+					$this->_action = 'updateFail';
+					return false;
+				}
 			} else {
-				return false;
+				$this->_action = 'unauthorizedAccess';
 			}
 		}
 

@@ -65,20 +65,30 @@
 		 */
 		public function insert($customer_username = null, $customer_password = null, $customer_firstname = null, $customer_lastname = null, $customer_address1 = null, $customer_address2 = null, $customer_postcode = null, $customer_phone = null, $customer_email = null)
 		{
-			$this->Customer->clear();
-			$customer = array(
-				'customer_username'  => $customer_username,
-				'customer_password'  => $customer_password,
-				'customer_firstname' => $customer_firstname,
-				'customer_lastname'  => $customer_lastname,
-				'customer_address1'  => $customer_address1,
-				'customer_address2'  => $customer_address2,
-				'customer_postcode'  => $customer_postcode,
-				'customer_phone'     => $customer_phone,
-				'customer_email'     => $customer_email
-			);
-			$this->Customer->insert($customer);
-			self::set('insert', $customer);
+			if (self::isAdmin()) {
+				try {
+					$this->Customer->clear();
+					$customer = array(
+						'customer_username'  => $customer_username,
+						'customer_password'  => $customer_password,
+						'customer_firstname' => $customer_firstname,
+						'customer_lastname'  => $customer_lastname,
+						'customer_address1'  => $customer_address1,
+						'customer_address2'  => $customer_address2,
+						'customer_postcode'  => $customer_postcode,
+						'customer_phone'     => $customer_phone,
+						'customer_email'     => $customer_email
+					);
+					$this->Customer->insert($customer);
+					self::set('insert', $customer);
+				} catch (PDOException $e) {
+					self::set('e', $e);
+					$this->_action = 'insertFail';
+					return false;
+				}
+			} else {
+				$this->_action = 'unauthorizedAccess';
+			}
 		}
 
 		/**
@@ -89,13 +99,18 @@
 		 */
 		public function delete($customer_ID = null)
 		{
-			if (self::_exists('customer_ID', $customer_ID, true)) {
-				$this->Customer->clear();
-				$this->Customer->where('customer_ID', $customer_ID);
-				$this->Customer->delete();
-				self::set('delete', true);
+			if (self::isAdmin()) {
+				if (self::_exists('customer_ID', $customer_ID, true)) {
+					$this->Customer->clear();
+					$this->Customer->where('customer_ID', $customer_ID);
+					$this->Customer->delete();
+					self::set('delete', true);
+				} else {
+					$this->_action = 'deleteFail';
+					return false;
+				}
 			} else {
-				return false;
+				$this->_action = 'unauthorizedAccess';
 			}
 		}
 
@@ -116,24 +131,29 @@
 		 */
 		public function update($customer_ID = null, $customer_username = null, $customer_password = null, $customer_firstname = null, $customer_lastname = null, $customer_address1 = null, $customer_address2 = null, $customer_postcode = null, $customer_phone = null, $customer_email = null)
 		{
-			if (self::_exists('customer_ID', $customer_ID, true)) {
-				$this->Customer->clear();
-				$this->Customer->where('customer_ID', $customer_ID, true);
-				$customer = array(
-					'customer_username'  => $customer_username,
-					'customer_password'  => $customer_password,
-					'customer_firstname' => $customer_firstname,
-					'customer_lastname'  => $customer_lastname,
-					'customer_address1'  => $customer_address1,
-					'customer_address2'  => $customer_address2,
-					'customer_postcode'  => $customer_postcode,
-					'customer_phone'     => $customer_phone,
-					'customer_email'     => $customer_email
-				);
-				$this->Customer->update($customer);
-				self::set('update', $customer);
+			if (self::isAdmin()) {
+				if (self::_exists('customer_ID', $customer_ID, true)) {
+					$this->Customer->clear();
+					$this->Customer->where('customer_ID', $customer_ID, true);
+					$customer = array(
+						'customer_username'  => $customer_username,
+						'customer_password'  => $customer_password,
+						'customer_firstname' => $customer_firstname,
+						'customer_lastname'  => $customer_lastname,
+						'customer_address1'  => $customer_address1,
+						'customer_address2'  => $customer_address2,
+						'customer_postcode'  => $customer_postcode,
+						'customer_phone'     => $customer_phone,
+						'customer_email'     => $customer_email
+					);
+					$this->Customer->update($customer);
+					self::set('update', $customer);
+				} else {
+					$this->_action = 'updateFail';
+					return false;
+				}
 			} else {
-				return false;
+				$this->_action = 'unauthorizedAccess';
 			}
 		}
 

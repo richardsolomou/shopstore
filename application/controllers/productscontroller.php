@@ -86,21 +86,26 @@
 		 */
 		public function insert($category_ID = null, $product_name = null, $product_description = null, $product_condition = null, $product_price = null, $product_stock = null, $product_image = null)
 		{
-			if (self::_exists('category_ID', $category_ID, true, 'categories')) {
-				$this->Product->clear();
-				$product = array(
-					'category_ID' => $category_ID,
-					'product_name' => $product_name,
-					'product_description' => $product_description,
-					'product_condition' => $product_condition,
-					'product_price' => $product_price,
-					'product_stock' => $product_stock,
-					'product_image' => $product_image
-				);
-				$this->Product->insert($product);
-				self::set('insert', $product);
+			if (self::isAdmin()) {
+				if (self::_exists('category_ID', $category_ID, true, 'categories')) {
+					$this->Product->clear();
+					$product = array(
+						'category_ID' => $category_ID,
+						'product_name' => $product_name,
+						'product_description' => $product_description,
+						'product_condition' => $product_condition,
+						'product_price' => $product_price,
+						'product_stock' => $product_stock,
+						'product_image' => $product_image
+					);
+					$this->Product->insert($product);
+					self::set('insert', $product);
+				} else {
+					$this->_action = 'insertFail';
+					return false;
+				}
 			} else {
-				return false;
+				$this->_action = 'unauthorizedAccess';
 			}
 		}
 
@@ -112,13 +117,18 @@
 		 */
 		public function delete($product_ID = null)
 		{
-			if (self::_exists('product_ID', $product_ID, true)) {
-				$this->Product->clear();
-				$this->Product->where('product_ID', $product_ID);
-				$this->Product->delete();
-				self::set('delete', true);
+			if (self::isAdmin()) {
+				if (self::_exists('product_ID', $product_ID, true)) {
+					$this->Product->clear();
+					$this->Product->where('product_ID', $product_ID);
+					$this->Product->delete();
+					self::set('delete', true);
+				} else {
+					$this->_action = 'deleteFail';
+					return false;
+				}
 			} else {
-				return false;
+				$this->_action = 'unauthorizedAccess';
 			}
 		}
 
@@ -137,22 +147,27 @@
 		 */
 		public function update($product_ID = null, $category_ID = null, $product_name = null, $product_description = null, $product_condition = null, $product_price = null, $product_stock = null, $product_image = null)
 		{
-			if (self::_exists('product_ID', $product_ID, true) && self::_exists('category_ID', $category_ID, true, 'categories')) {
-				$this->Product->clear();
-				$this->Product->where('product_ID', $product_ID, true);
-				$product = array(
-					'category_ID' => $category_ID,
-					'product_name' => $product_name,
-					'product_description' => $product_description,
-					'product_condition' => $product_condition,
-					'product_price' => $product_price,
-					'product_stock' => $product_stock,
-					'product_image' => $product_image
-				);
-				$this->Product->update($product);
-				self::set('update', $product);
+			if (self::isAdmin()) {
+				if (self::_exists('product_ID', $product_ID, true) && self::_exists('category_ID', $category_ID, true, 'categories')) {
+					$this->Product->clear();
+					$this->Product->where('product_ID', $product_ID, true);
+					$product = array(
+						'category_ID' => $category_ID,
+						'product_name' => $product_name,
+						'product_description' => $product_description,
+						'product_condition' => $product_condition,
+						'product_price' => $product_price,
+						'product_stock' => $product_stock,
+						'product_image' => $product_image
+					);
+					$this->Product->update($product);
+					self::set('update', $product);
+				} else {
+					$this->_action = 'updateFail';
+					return false;
+				}
 			} else {
-				return false;
+				$this->_action = 'unauthorizedAccess';
 			}
 		}
 
