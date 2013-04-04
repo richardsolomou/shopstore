@@ -139,7 +139,7 @@
 		{
 			if (self::_exists('product_ID', $product_ID, true) && self::_exists('category_ID', $category_ID, true, 'categories')) {
 				$this->Product->clear();
-				$this->Product->where('product_ID', $product_ID);
+				$this->Product->where('product_ID', $product_ID, true);
 				$product = array(
 					'category_ID' => $category_ID,
 					'product_name' => $product_name,

@@ -125,13 +125,16 @@
 		 * Receives two variables and pushes them to the parameters array
 		 * and then adds the statement to the clause class variable.
 		 * 
-		 * @param  string $column Column of the specific table in the database.
-		 * @param  string $value  Value of the column to be searched for.
+		 * @param  string  $column   Column of the specific table in the database.
+		 * @param  string  $value    Value of the column to be searched for.
+		 * @param  boolean $override Don't push to parameters array.
 		 * @access public
 		 */
-		public function where($column, $value)
+		public function where($column, $value, $override = false)
 		{
-			array_push($this->_params, array('column' => $column, 'value' => $value));
+			if ($override == false) {
+				array_push($this->_params, array('column' => $column, 'value' => $value));
+			}
 			$this->_clause .= '`' . $column . '` = ' . $value . ' AND ';
 		}
 
@@ -175,7 +178,7 @@
 			} else {
 				$this->_statement = $this->_connection->prepare($this->_query);
 				foreach ($this->_params as $param) {
-					$this->_statement->bindValue($param['column'], $param['value']);
+					$this->_statement->bindParam($param['column'], $param['value']);
 				}
 				$this->_statement->execute();
 			}
@@ -296,11 +299,11 @@
 			$where = $this->_clause ? substr(' WHERE ' . $this->_clause, 0, -5) : null;
 			$set = null;
 			foreach ($arr as $column => $value) {
-				array_push($this->_params, array($column, $value));
-				$set .= '`' . $column . '` = :' . $value . ', ';
+				array_push($this->_params, array('column' => $column, 'value' => $value));
+				$set .= '`' . $column . '` = :' . $column . ', ';
 			}
-			$set = substr($values, 0, -2);
-			$this->_query = 'UPDATE `' . $this->_table . '` SET ' . $set . $where;
+			$set = substr($set, 0, -2);
+			$this->_query = 'UPDATE `' . $this->_table . '` SET ' . $set . $where . ';';
 			$this->execute();
 		}
 

@@ -118,7 +118,7 @@
 		{
 			if (self::_exists('customer_ID', $customer_ID, true)) {
 				$this->Customer->clear();
-				$this->Customer->where('customer_ID', $customer_ID);
+				$this->Customer->where('customer_ID', $customer_ID, true);
 				$customer = array(
 					'customer_username'  => $customer_username,
 					'customer_password'  => $customer_password,
