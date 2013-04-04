@@ -26,7 +26,7 @@
 		 * @var    array
 		 * @access protected
 		 */
-		protected $variables = array();
+		protected $_variables = array();
 
 		/**
 		 * Decides if this is an AJAX call. Defaults to false.
@@ -121,7 +121,7 @@
 		 */
 		public function set($name, $value)
 		{
-			$this->variables[$name] = $value;
+			$this->_variables[$name] = $value;
 		}
 
 		/**
@@ -135,7 +135,7 @@
 		 */
 		public function render($ajax = false, $full = false)
 		{
-			extract($this->variables);
+			extract($this->_variables);
 
 			if ($ajax == false) {
 				require_once SERVER_ROOT . DS . 'application' . DS . 'views' . DS . 'header.php';

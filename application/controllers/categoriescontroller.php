@@ -28,9 +28,9 @@
 		 */
 		public function getById($category_ID = null)
 		{
-			if (self::exists('category_ID', $category_ID, true)) {
-				$category = self::getCatById($category_ID);
-				$products = self::getProductsByCat($category_ID);
+			if (self::_exists('category_ID', $category_ID, true)) {
+				$category = self::_getCatById($category_ID);
+				$products = self::_getProductsByCat($category_ID);
 				self::set('category', $category);
 				self::set('products', $products);
 			} else {
@@ -61,7 +61,7 @@
 		 */
 		public function insert($category_name = null, $category_parent_ID = null)
 		{
-			if (self::exists('category_ID', $category_parent_ID, true)) {
+			if (self::_exists('category_ID', $category_parent_ID, true)) {
 				$this->Category->clear();
 				$category = array(
 					'category_name' => $category_name,
@@ -82,7 +82,7 @@
 		 */
 		public function delete($category_ID = null)
 		{
-			if (self::exists('category_ID', $category_ID, true) && self::getProductCountByCat($category_ID) != 0) {
+			if (self::_exists('category_ID', $category_ID, true) && self::_getProductCountByCat($category_ID) != 0) {
 				$this->Category->clear();
 				$this->Category->where('category_ID', $category_ID);
 				$this->Category->delete();
@@ -102,7 +102,7 @@
 		 */
 		public function update($category_ID = null, $category_name = null, $category_parent_ID = null)
 		{
-			if (self::exists('category_ID', $category_ID, true) && self::exists('category_ID', $category_parent_ID, true)) {
+			if (self::_exists('category_ID', $category_ID, true) && self::_exists('category_ID', $category_parent_ID, true)) {
 				$this->Category->clear();
 				$this->Category->where('category_ID', $category_ID);
 				$category = array(
@@ -123,9 +123,9 @@
 		 * @return array                  Returns the category values.
 		 * @access protected
 		 */
-		protected function getCatById($category_ID = null)
+		protected function _getCatById($category_ID = null)
 		{
-			if (self::exists('category_ID', $category_ID, true)) {
+			if (self::_exists('category_ID', $category_ID, true)) {
 				$this->Category->clear();
 				$this->Category->where('category_ID', $category_ID);
 				$this->Category->select();
@@ -142,9 +142,9 @@
 		 * @return array                  Products in the category.
 		 * @access protected
 		 */
-		protected function getProductsByCat($category_ID = null)
+		protected function _getProductsByCat($category_ID = null)
 		{
-			if (self::exists('category_ID', $category_ID, true)) {
+			if (self::_exists('category_ID', $category_ID, true)) {
 				$this->Category->clear();
 				$this->Category->table('products');
 				$this->Category->where('category_ID', $category_ID);
@@ -162,9 +162,9 @@
 		 * @return int                    Number of products in the category.
 		 * @access protected
 		 */
-		protected function getProductCountByCat($category_ID = null)
+		protected function _getProductCountByCat($category_ID = null)
 		{
-			if (self::exists('category_ID', $category_ID, true)) {
+			if (self::_exists('category_ID', $category_ID, true)) {
 				$this->Category->clear();
 				$this->Category->table('products');
 				$this->Category->where('category_ID', $category_ID);
@@ -184,7 +184,7 @@
 		 * @return boolean               Does the category exist?
 		 * @access protected
 		 */
-		protected function exists($column = null, $value = null, $requireInt = false)
+		protected function _exists($column = null, $value = null, $requireInt = false)
 		{
 			// Checks if all characters are digits.
 			if ($requireInt == true && !ctype_digit($value)) return false;

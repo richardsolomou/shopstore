@@ -17,11 +17,11 @@
          * category.
          */
         
-        $navigationDispatch = new CategoriesController('categories', 'getProductCountByCat');
+        $navigationDispatch = new CategoriesController('categories', '_getProductCountByCat');
 
         foreach ($categories as $navCats) {
             // Runs the method on every loop
-            $productNumber = $navigationDispatch->getProductCountByCat($navCats['category_ID']);
+            $productNumber = $navigationDispatch->_getProductCountByCat($navCats['category_ID']);
             if (isset($category['category_ID'])) {
                 $active = $category['category_ID'] == $navCats['category_ID'] ? ' class="active"' : '';
                     echo '<li' . $active . '><a href="' . BASE_PATH . DS . 'categories' . DS . 'getById' . DS . $navCats['category_ID'] . '">' . $navCats['category_name'] . ' (' . $productNumber . ')</a></li>';

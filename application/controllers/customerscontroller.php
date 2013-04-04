@@ -27,8 +27,8 @@
 		 */
 		public function getById($customer_ID = null)
 		{
-			if (self::exists('customer_ID', $customer_ID, true)) {
-				$customer = self::getCustomerById($customer_ID);
+			if (self::_exists('customer_ID', $customer_ID, true)) {
+				$customer = self::_getCustomerById($customer_ID);
 				self::set('customer', $customer);
 			} else {
 				$this->_action = 'error';
@@ -56,9 +56,9 @@
 		 * @return array                  Returns the customer values.
 		 * @access protected
 		 */
-		protected function getCustomerById($customer_ID = null)
+		protected function _getCustomerById($customer_ID = null)
 		{
-			if (self::exists('customer_ID', $customer_ID, true)) {
+			if (self::_exists('customer_ID', $customer_ID, true)) {
 				$this->Customer->clear();
 				$this->Customer->where('customer_ID', $customer_ID);
 				$this->Customer->select();
@@ -78,7 +78,7 @@
 		 * @return boolean                Does the customer exist?
 		 * @access protected
 		 */
-		protected function exists($column = null, $value = null, $requireInt = false, $customTable = 'customers')
+		protected function _exists($column = null, $value = null, $requireInt = false, $customTable = 'customers')
 		{
 			// Checks if all characters are digits.
 			if ($requireInt == true && !ctype_digit($value)) return false;

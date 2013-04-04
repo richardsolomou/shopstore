@@ -67,7 +67,7 @@
 	    	<hr>
 	    	<h2>Reviews</h2>
 	    	<?php foreach ($reviews as $review) { ?>
-	    		<?php $customer = $customerDispatch->getCustomerById($review['customer_ID']); ?>
+	    		<?php $customer = $customerDispatch->_getCustomerById($review['customer_ID']); ?>
 				<table class="bordered">
 					<tr>
 						<td><strong>By:</strong> <?php echo $customer['customer_firstname'] . " " . $customer['customer_lastname']; ?></td>
