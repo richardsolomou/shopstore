@@ -40,65 +40,6 @@
 		}
 
 		/**
-		 * Returns category values in a variable.
-		 * 
-		 * @param  int   $category_ID Category identifier.
-		 * @return array              Returns the category values.
-		 * @access public
-		 */
-		public function getCatById($category_ID = null)
-		{
-			if (self::exists('category_ID', $category_ID, true)) {
-				$this->Category->clear();
-				$this->Category->where('category_ID', $category_ID);
-				$this->Category->select();
-				return $this->Category->fetch();
-			} else {
-				return false;
-			}
-		}
-
-		/**
-		 * Returns all the products in a specified category.
-		 * 
-		 * @param  int   $category_ID Category identifier.
-		 * @return array              Products in the category.
-		 * @access public
-		 */
-		public function getProductsByCat($category_ID = null)
-		{
-			if (self::exists('category_ID', $category_ID, true)) {
-				$this->Category->clear();
-				$this->Category->table('products');
-				$this->Category->where('category_ID', $category_ID);
-				$this->Category->select();
-				return $this->Category->fetch(true);
-			} else {
-				return false;
-			}
-		}
-
-		/**
-		 * Returns the amount of products in a specified category.
-		 * 
-		 * @param  int $category_ID Category identifier.
-		 * @return int              Number of products in the category.
-		 * @access public
-		 */
-		public function getProductCountByCat($category_ID = null)
-		{
-			if (self::exists('category_ID', $category_ID, true)) {
-				$this->Category->clear();
-				$this->Category->table('products');
-				$this->Category->where('category_ID', $category_ID);
-				$this->Category->select();
-				return $this->Category->rowCount();
-			} else {
-				return 0;
-			}
-		}
-
-		/**
 		 * Returns all categories in the database.
 		 * 
 		 * @return array  Categories in the database.
@@ -176,15 +117,74 @@
 		}
 
 		/**
+		 * Returns category values in a variable.
+		 * 
+		 * @param  int       $category_ID Category identifier.
+		 * @return array                  Returns the category values.
+		 * @access protected
+		 */
+		protected function getCatById($category_ID = null)
+		{
+			if (self::exists('category_ID', $category_ID, true)) {
+				$this->Category->clear();
+				$this->Category->where('category_ID', $category_ID);
+				$this->Category->select();
+				return $this->Category->fetch();
+			} else {
+				return false;
+			}
+		}
+
+		/**
+		 * Returns all the products in a specified category.
+		 * 
+		 * @param  int       $category_ID Category identifier.
+		 * @return array                  Products in the category.
+		 * @access protected
+		 */
+		protected function getProductsByCat($category_ID = null)
+		{
+			if (self::exists('category_ID', $category_ID, true)) {
+				$this->Category->clear();
+				$this->Category->table('products');
+				$this->Category->where('category_ID', $category_ID);
+				$this->Category->select();
+				return $this->Category->fetch(true);
+			} else {
+				return false;
+			}
+		}
+
+		/**
+		 * Returns the amount of products in a specified category.
+		 * 
+		 * @param  int       $category_ID Category identifier.
+		 * @return int                    Number of products in the category.
+		 * @access protected
+		 */
+		protected function getProductCountByCat($category_ID = null)
+		{
+			if (self::exists('category_ID', $category_ID, true)) {
+				$this->Category->clear();
+				$this->Category->table('products');
+				$this->Category->where('category_ID', $category_ID);
+				$this->Category->select();
+				return $this->Category->rowCount();
+			} else {
+				return 0;
+			}
+		}
+
+		/**
 		 * Checks if a category exists in the database with the given attributes.
 		 * 
-		 * @param  string  $column     Name of the column to search on.
-		 * @param  string  $value      Value to search for.
-		 * @param  boolean $requireInt Requires the value sent to be an integer.
-		 * @return boolean             Does the category exist?
-		 * @access public
+		 * @param  string    $column     Name of the column to search on.
+		 * @param  string    $value      Value to search for.
+		 * @param  boolean   $requireInt Requires the value sent to be an integer.
+		 * @return boolean               Does the category exist?
+		 * @access protected
 		 */
-		public function exists($column = null, $value = null, $requireInt = false)
+		protected function exists($column = null, $value = null, $requireInt = false)
 		{
 			// Checks if all characters are digits.
 			if ($requireInt == true && !ctype_digit($value)) return false;

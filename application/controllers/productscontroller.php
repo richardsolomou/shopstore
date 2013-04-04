@@ -23,7 +23,7 @@
 		 * the results of that product as well as the currency symbol in the view
 		 * presentation.
 		 * 
-		 * @param  int $product_ID Product identifier.
+		 * @param  int    $product_ID Product identifier.
 		 * @access public
 		 */
 		public function getById($product_ID = null)
@@ -41,136 +41,20 @@
 				$reviewNumber = self::getProductReviewNumber($product_ID);
 				// Calculates the average rating based on all reviews.
 				$reviewRatingAverage = 0;
-		        if ($reviewNumber > 0) {
-		        	foreach ($reviews as $individualReview) {
-		        		$reviewRatingAverage += $individualReview['review_rating'] / $reviewNumber;
-		        	}
-		        }
+		        if ($reviewNumber > 0) foreach ($reviews as $individualReview) $reviewRatingAverage += $individualReview['review_rating'] / $reviewNumber;
+		        // Creates an instance of the customers controller to fetch
+		        // details for the customers in the reviews.
+		        $customerDispatch = new CustomersController('customers', 'getCustomerById');
 				self::set('product', $product);
 				self::set('reviews', $reviews);
 				self::set('reviewNumber', $reviewNumber);
 				self::set('individualReview', $individualReview);
 				self::set('reviewRatingAverage', $reviewRatingAverage);
+				self::set('customerDispatch', $customerDispatch);
 				self::set('productCategory', $productCategory['category_name']);
 				self::set('currencySymbol', $currencySymbol['currency_symbol']);
 			} else {
 				$this->_action = 'error';
-				return false;
-			}
-		}
-
-		/**
-		 * Returns product values in a variable.
-		 * 
-		 * @param  int   $product_ID Product identifier.
-		 * @return array             Returns the product values.
-		 * @access public
-		 */
-		public function getProductById($product_ID = null)
-		{
-			if (self::exists('product_ID', $product_ID, true, 'products')) {
-				$this->Product->clear();
-				$this->Product->where('product_ID', $product_ID);
-				$this->Product->select();
-				return $this->Product->fetch();
-			} else {
-				return false;
-			}
-		}
-
-		/**
-		 * Returns category values in a variable.
-		 * 
-		 * @param  int   $category_ID Category identifier.
-		 * @return array              Returns the category values.
-		 * @access public
-		 */
-		public function getCatById($category_ID = null)
-		{
-			if (self::exists('category_ID', $category_ID, true, 'categories')) {
-				$this->Product->clear();
-				$this->Product->table('categories');
-				$this->Product->where('category_ID', $category_ID);
-				$this->Product->select();
-				return $this->Product->fetch();
-			} else {
-				return false;
-			}
-		}
-
-		/**
-		 * Returns all the settings of the database.
-		 *
-		 * @param  string $setting_column Name of the setting's column.
-		 * @return array                  Settings of the database.
-		 * @access public
-		 */
-		public function getSettings($setting_column = null)
-		{
-			if (self::exists('setting_column', $setting_column, false, 'settings')) {
-				$this->Product->clear();
-				$this->Product->table('settings');
-				$this->Product->where('setting_column', $setting_column);
-				$this->Product->select();
-				return $this->Product->fetch();
-			} else {
-				return false;
-			}
-		}
-
-		/**
-		 * Returns the values of the currency that was selected.
-		 * 
-		 * @param  int    $currency_ID Currency identifier.
-		 * @return string              Returns the values of the currency.
-		 */
-		public function getCurrencyById($currency_ID = null)
-		{
-			if (self::exists('currency_ID', $currency_ID, true, 'currencies')) {
-				$this->Product->clear();
-				$this->Product->table('currencies');
-				$this->Product->where('currency_ID', $currency_ID);
-				$this->Product->select();
-				return $this->Product->fetch();
-			} else {
-				return false;
-			}
-		}
-
-		/**
-		 * Returns the reviews of the product selected.
-		 * 
-		 * @param  int    $product_ID Product identifier.
-		 * @return string             Returns the reviews of the product.
-		 */
-		public function getProductReviews($product_ID = null)
-		{
-			if (self::exists('product_ID', $product_ID, true)) {
-				$this->Product->clear();
-				$this->Product->table('reviews');
-				$this->Product->where('product_ID', $product_ID);
-				$this->Product->select();
-				return $this->Product->fetch(true);
-			} else {
-				return false;
-			}
-		}
-
-		/**
-		 * Returns the number of reviews of the product selected.
-		 * 
-		 * @param  int    $product_ID Product identifier.
-		 * @return string             Returns the reviews of the product.
-		 */
-		public function getProductReviewNumber($product_ID = null)
-		{
-			if (self::exists('product_ID', $product_ID, true)) {
-				$this->Product->clear();
-				$this->Product->table('reviews');
-				$this->Product->where('product_ID', $product_ID);
-				$this->Product->select();
-				return $this->Product->rowCount();
-			} else {
 				return false;
 			}
 		}
@@ -273,16 +157,135 @@
 		}
 
 		/**
+		 * Returns product values in a variable.
+		 * 
+		 * @param  int       $product_ID Product identifier.
+		 * @return array                 Returns the product values.
+		 * @access protected
+		 */
+		protected function getProductById($product_ID = null)
+		{
+			if (self::exists('product_ID', $product_ID, true, 'products')) {
+				$this->Product->clear();
+				$this->Product->where('product_ID', $product_ID);
+				$this->Product->select();
+				return $this->Product->fetch();
+			} else {
+				return false;
+			}
+		}
+
+		/**
+		 * Returns category values in a variable.
+		 * 
+		 * @param  int       $category_ID Category identifier.
+		 * @return array                  Returns the category values.
+		 * @access protected
+		 */
+		protected function getCatById($category_ID = null)
+		{
+			if (self::exists('category_ID', $category_ID, true, 'categories')) {
+				$this->Product->clear();
+				$this->Product->table('categories');
+				$this->Product->where('category_ID', $category_ID);
+				$this->Product->select();
+				return $this->Product->fetch();
+			} else {
+				return false;
+			}
+		}
+
+		/**
+		 * Returns all the settings of the database.
+		 *
+		 * @param  string    $setting_column Name of the setting's column.
+		 * @return array                     Settings of the database.
+		 * @access protected
+		 */
+		protected function getSettings($setting_column = null)
+		{
+			if (self::exists('setting_column', $setting_column, false, 'settings')) {
+				$this->Product->clear();
+				$this->Product->table('settings');
+				$this->Product->where('setting_column', $setting_column);
+				$this->Product->select();
+				return $this->Product->fetch();
+			} else {
+				return false;
+			}
+		}
+
+		/**
+		 * Returns the values of the currency that was selected.
+		 * 
+		 * @param  int       $currency_ID Currency identifier.
+		 * @return string                 Returns the values of the currency.
+		 * @access protected
+		 */
+		protected function getCurrencyById($currency_ID = null)
+		{
+			if (self::exists('currency_ID', $currency_ID, true, 'currencies')) {
+				$this->Product->clear();
+				$this->Product->table('currencies');
+				$this->Product->where('currency_ID', $currency_ID);
+				$this->Product->select();
+				return $this->Product->fetch();
+			} else {
+				return false;
+			}
+		}
+
+		/**
+		 * Returns the reviews of the product selected.
+		 * 
+		 * @param  int       $product_ID Product identifier.
+		 * @return string                Returns the reviews of the product.
+		 * @access protected
+		 */
+		protected function getProductReviews($product_ID = null)
+		{
+			if (self::exists('product_ID', $product_ID, true)) {
+				$this->Product->clear();
+				$this->Product->table('reviews');
+				$this->Product->where('product_ID', $product_ID);
+				$this->Product->select();
+				return $this->Product->fetch(true);
+			} else {
+				return false;
+			}
+		}
+
+		/**
+		 * Returns the number of reviews of the product selected.
+		 * 
+		 * @param  int       $product_ID Product identifier.
+		 * @return string                Returns the reviews of the product.
+		 * @access protected
+		 */
+		protected function getProductReviewNumber($product_ID = null)
+		{
+			if (self::exists('product_ID', $product_ID, true)) {
+				$this->Product->clear();
+				$this->Product->table('reviews');
+				$this->Product->where('product_ID', $product_ID);
+				$this->Product->select();
+				return $this->Product->rowCount();
+			} else {
+				return false;
+			}
+		}
+
+		/**
 		 * Checks if a product exists in the database with the given attributes.
 		 * 
-		 * @param  string  $column      Name of the column to search on.
-		 * @param  string  $value       Value to search for.
-		 * @param  boolean $requireInt  Requires the value sent to be an integer.
-		 * @param  string  $customTable Uses a table from another controller.
-		 * @return boolean              Does the product exist?
-		 * @access public
+		 * @param  string    $column      Name of the column to search on.
+		 * @param  string    $value       Value to search for.
+		 * @param  boolean   $requireInt  Requires the value sent to be an integer.
+		 * @param  string    $customTable Uses a table from another controller.
+		 * @return boolean                Does the product exist?
+		 * @access protected
 		 */
-		public function exists($column = null, $value = null, $requireInt = false, $customTable = 'products')
+		protected function exists($column = null, $value = null, $requireInt = false, $customTable = 'products')
 		{
 			// Checks if all characters are digits.
 			if ($requireInt == true && !ctype_digit($value)) return false;
