@@ -50,6 +50,94 @@
 		}
 
 		/**
+		 * Adds a customer into the database.
+		 * 
+		 * @param  string $customer_username  Customer's login username.
+		 * @param  string $customer_password  Customer's login password.
+		 * @param  string $customer_firstname Customer's forename.
+		 * @param  string $customer_lastname  Customer's surname.
+		 * @param  string $customer_address1  Customer address (line 1).
+		 * @param  string $customer_address2  Customer address (line 2).
+		 * @param  string $customer_postcode  Postcode of the address.
+		 * @param  int    $customer_phone     Customer phone number.
+		 * @param  string $customer_email     Customer e-mail address.
+		 * @access public
+		 */
+		public function insert($customer_username = null, $customer_password = null, $customer_firstname = null, $customer_lastname = null, $customer_address1 = null, $customer_address2 = null, $customer_postcode = null, $customer_phone = null, $customer_email = null)
+		{
+			$this->Customer->clear();
+			$customer = array(
+				'customer_username'  => $customer_username,
+				'customer_password'  => $customer_password,
+				'customer_firstname' => $customer_firstname,
+				'customer_lastname'  => $customer_lastname,
+				'customer_address1'  => $customer_address1,
+				'customer_address2'  => $customer_address2,
+				'customer_postcode'  => $customer_postcode,
+				'customer_phone'     => $customer_phone,
+				'customer_email'     => $customer_email
+			);
+			$this->Customer->insert($customer);
+			self::set('insert', $customer);
+		}
+
+		/**
+		 * Removes a customer from the database.
+		 * 
+		 * @param  int    $customer_ID Customer identifier.
+		 * @access public
+		 */
+		public function delete($customer_ID = null)
+		{
+			if (self::_exists('customer_ID', $customer_ID, true)) {
+				$this->Customer->clear();
+				$this->Customer->where('customer_ID', $customer_ID);
+				$this->Customer->delete();
+				self::set('delete', true);
+			} else {
+				return false;
+			}
+		}
+
+		/**
+		 * Modifies a customer in the database with the specified new attributes.
+		 * 
+		 * @param  int    $customer_ID        Customer identifier.
+		 * @param  string $customer_username  Customer's login username.
+		 * @param  string $customer_password  Customer's login password.
+		 * @param  string $customer_firstname Customer's forename.
+		 * @param  string $customer_lastname  Customer's surname.
+		 * @param  string $customer_address1  Customer address (line 1).
+		 * @param  string $customer_address2  Customer address (line 2).
+		 * @param  string $customer_postcode  Postcode of the address.
+		 * @param  int    $customer_phone     Customer phone number.
+		 * @param  string $customer_email     Customer e-mail address.
+		 * @access public
+		 */
+		public function update($customer_ID = null, $customer_username = null, $customer_password = null, $customer_firstname = null, $customer_lastname = null, $customer_address1 = null, $customer_address2 = null, $customer_postcode = null, $customer_phone = null, $customer_email = null)
+		{
+			if (self::_exists('customer_ID', $customer_ID, true)) {
+				$this->Customer->clear();
+				$this->Customer->where('customer_ID', $customer_ID);
+				$customer = array(
+					'customer_username'  => $customer_username,
+					'customer_password'  => $customer_password,
+					'customer_firstname' => $customer_firstname,
+					'customer_lastname'  => $customer_lastname,
+					'customer_address1'  => $customer_address1,
+					'customer_address2'  => $customer_address2,
+					'customer_postcode'  => $customer_postcode,
+					'customer_phone'     => $customer_phone,
+					'customer_email'     => $customer_email
+				);
+				$this->Customer->update($customer);
+				self::set('update', $customer);
+			} else {
+				return false;
+			}
+		}
+
+		/**
 		 * Returns customer values in a variable.
 		 * 
 		 * @param  int       $customer_ID Customer identifier.
