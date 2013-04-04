@@ -16,10 +16,10 @@
         <table>
             <tr>
             	<td>
-            		<?php if ($product['product_image'] == null) {
-                        echo '<img src="' . $product['product_image'] . '">';
+            		<?php if ($product['product_image'] != null) {
+                        echo '<img src="' . BASE_PATH . '/templates/img/products/' . $product['product_image'] . '">';
                     } else {
-                        echo '<img src="images/NA.png">';
+                        echo '<img src="' . BASE_PATH . '/templates/img/' . 'NA.png' . '">';
                     } ?>
             	</td>
             	<td class="centered">

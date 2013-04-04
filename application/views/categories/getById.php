@@ -18,10 +18,10 @@
 			<a href="<?php echo BASE_PATH . DS . 'products' . DS . 'getById' . DS . $productByCat['product_ID']; ?>">
 				<h3><?php echo $productByCat['product_name'] ?></h3>
 				<p>
-					<?php if ($image = $productByCat['product_image']) {
-						echo '<img src="' . $image . '">';
+					<?php if ($productByCat['product_image'] != null) {
+						echo '<img src="' . BASE_PATH . '/templates/img/products/' . $productByCat['product_image'] . '">';
 					} else {
-						echo '<img src="' . BASE_PATH . DS . 'templates' . DS . 'img' . DS . 'NA.png' . '">';
+						echo '<img src="' . BASE_PATH . '/templates/img/' . 'NA.png' . '">';
 					} ?>
 				</p>
 			</a>
