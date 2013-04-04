@@ -48,8 +48,15 @@
 		if (file_exists(SERVER_ROOT . DS . 'application' . DS . 'controllers' . DS . strtolower($controllerName) . '.php')) {
 			$dispatch = new $controllerName($controller, $action);
 			$action = empty($action) ? 'defaultPage' : $action;
+			// Checks if the method exists.
 			if (method_exists($controllerName, $action)) {
-				call_user_func_array(array($dispatch, $action), $queryString);
+				$reflection = new ReflectionMethod($controllerName, $action);
+				// Checks if the method is public, and if so displays it.
+				if ($reflection->isPublic()) {
+					call_user_func_array(array($dispatch, $action), $queryString);
+				} else {
+					notFound();
+				}
 			} else {
 				notFound();
 			}
