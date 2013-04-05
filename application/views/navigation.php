@@ -8,7 +8,7 @@
     </ul>
     
     
-    <h3><?php echo (isset($_SESSION['SESS_ADMINLOGGEDIN'])) ? '<a href="' . BASE_PATH . '/categories/getList">Categories</a>' : 'Categories'; ?></h3>
+    <h3>Categories</h3>
     <ul class="categories">
     <?php
 
