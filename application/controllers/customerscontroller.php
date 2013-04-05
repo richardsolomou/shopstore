@@ -31,7 +31,7 @@
 				$customer = self::_getCustomerById($customer_ID);
 				self::set('customer', $customer);
 			} else {
-				$this->_action = 'error';
+				notFound();
 				return false;
 			}
 		}

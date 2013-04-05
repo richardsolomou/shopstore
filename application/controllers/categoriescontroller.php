@@ -34,7 +34,7 @@
 				self::set('category', $category);
 				self::set('products', $products);
 			} else {
-				$this->_action = 'error';
+				notFound();
 				return false;
 			}
 		}
@@ -47,36 +47,44 @@
 		 */
 		public function getList()
 		{
-			$this->Category->clear();
-			$this->Category->select();
-			return $this->Category->fetch(true);
+			if (self::isAdmin()) {
+				$this->Category->clear();
+				$this->Category->select();
+				$categories = $this->Category->fetch(true);
+				$categoryDispatch = new CategoriesController('categories', '_getProductCountByCat');
+				self::set('categoryDispatch', $categoryDispatch);
+				self::set('categories1', $categories);
+				self::set('categories2', $categories);
+			} else {
+				$this->_action = 'unauthorizedAccess';
+			}
 		}
 
 		/**
 		 * Adds a category into the database.
 		 * 
-		 * @param  string $category_name      Name of the inserted category.
-		 * @param  int    $category_parent_ID Parent of the inserted category.
 		 * @access public
 		 */
-		public function insert($category_name = null, $category_parent_ID = null)
+		public function insert()
 		{
 			if (self::isAdmin()) {
-				if (self::_exists('category_ID', $category_parent_ID, true)) {
-					$this->Category->clear();
-					$category = array(
-						'category_name' => $category_name,
-						'category_parent_ID' => $category_parent_ID
-					);
-					$this->Category->insert($category);
-					self::set('insert', $category);
-					self::set('message', 'Category successfully inserted.');
-					self::set('alert', 'alert-success');
-					return true;
-				} else {
-					self::set('message', 'Category parent does not exist.');
-					self::set('alert', '');
-					return false;
+				if (isset($_POST['operation'])) {
+					if (self::_exists('category_ID', $_POST['category_parent_ID'], true)) {
+						$this->Category->clear();
+						$category = array(
+							'category_name' => $_POST['category_name'],
+							'category_parent_ID' => $_POST['category_parent_ID']
+						);
+						$this->Category->insert($category);
+						self::set('insert', $category);
+						self::set('message', 'Category successfully inserted.');
+						self::set('alert', 'alert-success');
+						return true;
+					} else {
+						self::set('message', 'Category parent does not exist.');
+						self::set('alert', '');
+						return false;
+					}
 				}
 			} else {
 				$this->_action = 'unauthorizedAccess';

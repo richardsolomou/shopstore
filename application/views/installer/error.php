@@ -6,6 +6,6 @@
     	<div class="alert"><?php echo $err; ?></div>
 	<?php } ?>
 
-    <a href="<?php echo BASE_PATH . DS . 'installer'; ?>" class="btn">Back to Installer</a>
+    <a href="<?php echo BASE_PATH . '/installer'; ?>" class="btn">Back to Installer</a>
 
 </article>

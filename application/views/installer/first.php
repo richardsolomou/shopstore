@@ -2,7 +2,7 @@
 
     <h1><?php echo $title ?></h1>
 
-    <form action="<?php echo BASE_PATH . DS . 'installer' . DS . 'second'; ?>" method="post">
+    <form action="<?php echo BASE_PATH . '/installer/' . 'second'; ?>" method="post">
         
         <input type="hidden" name="first" value="true">
 
@@ -28,31 +28,31 @@
             <tr>
                 <td class="righted"><label for="admin_username">Administrator Username:</label></td>
                 <td>
-                    <input type="text" id="admin_username" name="admin_username" required value="" pattern="[a-zA-Z0-9]+">
+                    <input type="text" id="admin_username" name="admin_username" required value="admin" pattern="[a-zA-Z0-9]+">
                 </td>
             </tr>
             <tr>
                 <td class="righted"><label for="admin_password">Administrator Password:</label></td>
                 <td>
-                    <input type="password" id="admin_password" name="admin_password" required value="" pattern="[a-zA-Z0-9]+">
+                    <input type="password" id="admin_password" name="admin_password" required value="password" pattern="[a-zA-Z0-9]+">
                 </td>
             </tr>
             <tr>
                 <td class="righted"><label for="admin_firstname">First Name:</label></td>
                 <td>
-                    <input type="text" id="admin_firstname" name="admin_firstname" required value="" pattern="[a-zA-Z ]+">
+                    <input type="text" id="admin_firstname" name="admin_firstname" required value="Rich" pattern="[a-zA-Z ]+">
                 </td>
             </tr>
             <tr>
                 <td class="righted"><label for="admin_lastname">Last Name:</label></td>
                 <td>
-                    <input type="text" id="admin_lastname" name="admin_lastname" required value="" pattern="[a-zA-Z ]+">
+                    <input type="text" id="admin_lastname" name="admin_lastname" required value="Solomou" pattern="[a-zA-Z ]+">
                 </td>
             </tr>
             <tr>
                 <td class="righted"><label for="admin_email">E-mail Address:</label></td>
                 <td>
-                    <input type="text" id="admin_email" name="admin_email" required value="" pattern="^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$">
+                    <input type="text" id="admin_email" name="admin_email" required value="rich@geekdiv.com" pattern="^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$">
                 </td>
             </tr>
             <tr>

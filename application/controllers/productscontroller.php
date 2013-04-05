@@ -54,7 +54,7 @@
 				self::set('productCategory', $productCategory['category_name']);
 				self::set('currencySymbol', $currencySymbol['currency_symbol']);
 			} else {
-				$this->_action = 'error';
+				notFound();
 				return false;
 			}
 		}

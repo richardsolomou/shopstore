@@ -3,7 +3,7 @@
 	<h1>
 		<?php
 			echo $product['product_name'];
-			if (isset($_SESSION['SESS_ADMINLOGGEDIN'])) echo '<a href="' . ADMIN_PATH . 'products' . DS . 'edit' . DS . $product['product_ID'] . '" class="btn pull-right small">Edit</a>';
+			if (isset($_SESSION['SESS_ADMINLOGGEDIN'])) echo '<a href="' . BASE_PATH . '/products/update/' . $product['product_ID'] . '" class="btn pull-right small">Edit</a>';
 		?>
 	</h1>
 
@@ -29,19 +29,19 @@
 	                	if ($reviewNumber > 0) {
 	                		echo '<p><strong>Rating:</strong><br>';
 	                		for ($x = 1; $x <= $reviewRatingAverage ; $x++) {
-						        echo '<img src="' . BASE_PATH . DS . 'templates' . DS . 'img' . DS . 'star.png">';
+						        echo '<img src="' . BASE_PATH . '/templates/img/' . 'star.png">';
 						    }
 						    while ($x <= 5) {
-						        echo '<img src="' . BASE_PATH . DS . 'templates' . DS . 'img' . DS . 'blankstar.png">';
+						        echo '<img src="' . BASE_PATH . '/templates/img/' . 'blankstar.png">';
 						        $x++;
 						    }
 						    echo '</p>';
 						} else {
-							echo 'This item hasn\'t been rated yet.<br><a href="' . BASE_PATH . DS . 'reviews' . DS . 'insert' . DS . $product['product_ID'] . '">Be the first!</a>';
+							echo 'This item hasn\'t been rated yet.<br><a href="' . BASE_PATH . '/reviews/insert/' . $product['product_ID'] . '">Be the first!</a>';
 						}
 					?>
 					<?php if ($product['product_stock'] != 0) { ?>
-        			<p><a href="<?php echo BASE_PATH . DS . 'basket' . DS . 'insert' . DS . $product['product_ID']; ?>" class="highlight big">Add to Basket</a></p>
+        			<p><a href="<?php echo BASE_PATH . '/basket/insert/' . $product['product_ID']; ?>" class="highlight big">Add to Basket</a></p>
         			<?php } ?>
 				</td>
             </tr>
@@ -62,7 +62,7 @@
             </tr>
         </table>
 	    <hr>
-		<p class="centered"><a href="<?php echo BASE_PATH . DS . 'reviews' . DS . 'insert' . DS . $product['product_ID']; ?>" class="btn">Review this product</a></p>
+		<p class="centered"><a href="<?php echo BASE_PATH . '/reviews/insert/' . $product['product_ID']; ?>" class="btn">Review this product</a></p>
 	    <?php if ($reviewNumber > 0) { ?>
 	    	<hr>
 	    	<h2>Reviews</h2>
@@ -77,10 +77,10 @@
 					<tr><td colspan="2" class="centered"><strong>Rating:</strong><br>
 						<?php
 	                		for($x = 1; $x <= $review['review_rating']; $x++) {
-						        echo '<img src="' . BASE_PATH . DS . 'templates' . DS . 'img' . DS . 'star.png">';
+						        echo '<img src="' . BASE_PATH . '/templates/img/' . 'star.png">';
 						    }
 						    while ($x <= 5) {
-						        echo '<img src="' . BASE_PATH . DS . 'templates' . DS . 'img' . DS . 'blankstar.png">';
+						        echo '<img src="' . BASE_PATH . '/templates/img/' . 'blankstar.png">';
 						        $x++;
 						    }
 						?></td></tr>

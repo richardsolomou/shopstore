@@ -2,12 +2,13 @@
 
     <h3>Navigation</h3>
     <ul>
-        <li><a href="<?php echo BASE_PATH . DS; ?>">Home</a></li>
-        <li><a href="<?php echo BASE_PATH . DS . 'basket'; ?>">My Shopping Basket</a></li>
-        <li><a href="<?php echo ADMIN_PATH; ?>">Administration Area</a></li>
+        <li><a href="<?php echo BASE_PATH; ?>">Home</a></li>
+        <li><a href="<?php echo BASE_PATH . '/basket'; ?>">My Shopping Basket</a></li>
+        <li><a href="<?php echo BASE_PATH . '/admin'; ?>">Administration Area</a></li>
     </ul>
     
-    <h3><a href="<?php echo  BASE_PATH . DS . 'categories' . DS . 'getList'; ?>">Categories</a></h3>
+    
+    <h3><?php echo (isset($_SESSION['SESS_ADMINLOGGEDIN'])) ? '<a href="' . BASE_PATH . '/categories/getList">Categories</a>' : 'Categories'; ?></h3>
     <ul class="categories">
     <?php
 
@@ -24,9 +25,9 @@
             $productNumber = $navigationDispatch->_getProductCountByCat($navCats['category_ID']);
             if (isset($category['category_ID'])) {
                 $active = $category['category_ID'] == $navCats['category_ID'] ? ' class="active"' : '';
-                    echo '<li' . $active . '><a href="' . BASE_PATH . DS . 'categories' . DS . 'getById' . DS . $navCats['category_ID'] . '">' . $navCats['category_name'] . ' (' . $productNumber . ')</a></li>';
+                    echo '<li' . $active . '><a href="' . BASE_PATH . '/categories/getById/' . $navCats['category_ID'] . '">' . $navCats['category_name'] . ' (' . $productNumber . ')</a></li>';
             } else {
-                echo '<li><a href="' . BASE_PATH . DS . 'categories' . DS . 'getById' . DS . $navCats['category_ID'] . '">' . $navCats['category_name'] . ' (' . $productNumber . ')</a></li>';
+                echo '<li><a href="' . BASE_PATH . '/categories/getById/' . $navCats['category_ID'] . '">' . $navCats['category_name'] . ' (' . $productNumber . ')</a></li>';
             }
         }
 

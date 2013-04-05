@@ -5,13 +5,13 @@
 	*/
 	function __autoload($className)
 	{
-		if (file_exists($libraryClass = SERVER_ROOT . DS . 'library' . DS . strtolower($className) . '.class.php')) {
+		if (file_exists($libraryClass = SERVER_ROOT . '/library/' . strtolower($className) . '.class.php')) {
 			// Includes the inflect, main controller and database classes.
 			require_once $libraryClass;
-		} else if (file_exists($controllerClass = SERVER_ROOT . DS . 'application' . DS . 'controllers' . DS . strtolower($className) . '.php')) {
+		} else if (file_exists($controllerClass = SERVER_ROOT . '/application/controllers/' . strtolower($className) . '.php')) {
 			// Includes the element controllers for categories, customers, etc.
 			require_once $controllerClass;
-		} else if (file_exists($modelClass = SERVER_ROOT . DS . 'application' . DS . 'models' . DS . strtolower($className) . '.php')) {
+		} else if (file_exists($modelClass = SERVER_ROOT . '/application/models/' . strtolower($className) . '.php')) {
 			// Include the element class models for categories, customers, etc.
 			require_once $modelClass;
 		}
@@ -45,7 +45,7 @@
 	function setControllerView($controller, $action, $queryString)
 	{
 		$controllerName = ucfirst($controller) . 'Controller';
-		if (file_exists(SERVER_ROOT . DS . 'application' . DS . 'controllers' . DS . strtolower($controllerName) . '.php')) {
+		if (file_exists(SERVER_ROOT . '/application/controllers/' . strtolower($controllerName) . '.php')) {
 			$dispatch = new $controllerName($controller, $action);
 			$action = empty($action) ? 'defaultPage' : $action;
 			// Checks if the method exists.

@@ -54,7 +54,7 @@
 		{
 			// Checks if the database has been setup, otherwise blocks all
 			// connectivity and sends the user to the installation page.
-			if (DB_SETUP == false && $controller != 'installer') header('Location: ' . BASE_PATH . DS . 'installer');
+			if (DB_SETUP == false && $controller != 'installer') header('Location: ' . BASE_PATH . '/installer');
 			
 			$this->_controller = $controller == null ? 'Controller' : ucfirst($controller);
 			$this->_action = $this->_controller == 'Controller' && $action == null ? 'index' : $action;
@@ -153,13 +153,13 @@
 			extract($this->_variables);
 
 			if ($ajax == false) {
-				require_once SERVER_ROOT . DS . 'application' . DS . 'views' . DS . 'header.php';
-				if ($full == false) require_once SERVER_ROOT . DS . 'application' . DS . 'views' . DS . 'navigation.php';
+				require_once SERVER_ROOT . '/application/views/' . 'header.php';
+				if ($full == false) require_once SERVER_ROOT . '/application/views/' . 'navigation.php';
 			}
 
-			if ($this->_controller == 'Controller') $this->_controller = null;
-			$viewLowerCase = strtolower(SERVER_ROOT . DS . 'application' . DS . 'views' . DS . $this->_controller . DS . $this->_action . '.php');
-			$viewGlobal = glob(strtolower(SERVER_ROOT . DS . 'application' . DS . 'views' . DS . $this->_controller . DS . '*'));
+			if ($this->_controller == 'Controller' || $this->_action == 'unauthorizedAccess') $this->_controller = null;
+			$viewLowerCase = strtolower(SERVER_ROOT . '/application/views/' . $this->_controller . '/' . $this->_action . '.php');
+			$viewGlobal = glob(strtolower(SERVER_ROOT . '/application/views/' . $this->_controller . '/' . '*'));
 			$viewArray = $viewGlobal ? $viewGlobal : array();
 			if ($viewArray != array()) {
 				foreach ($viewArray as $view) {
@@ -170,8 +170,8 @@
 			}
 
 			if ($ajax == false) {
-				if ($full == false) require_once SERVER_ROOT . DS . 'application' . DS . 'views' . DS . 'sidebar.php';
-				require_once SERVER_ROOT . DS . 'application' . DS . 'views' . DS . 'footer.php';
+				if ($full == false) require_once SERVER_ROOT . '/application/views/' . 'sidebar.php';
+				require_once SERVER_ROOT . '/application/views/' . 'footer.php';
 			}
 		}
 

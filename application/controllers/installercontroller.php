@@ -109,7 +109,7 @@
 		            $config[] = '     */';
 		            $config[] = '    define(\'DB_SETUP\', true);' . PHP_EOL;
 		            $config[] = '?>';
-		            file_put_contents(SERVER_ROOT . DS . 'library' . DS . 'config.php', implode(PHP_EOL, $config));
+		            file_put_contents(SERVER_ROOT . '/library/' . 'config.php', implode(PHP_EOL, $config));
 		            $_SESSION['SESS_ADMINID'] = 1;
 		            $_SESSION['SESS_ADMINLOGGEDIN'] = 1;
 		        } else {
