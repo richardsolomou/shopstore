@@ -45,7 +45,7 @@ hr {
     background: #e1e1e1;
     height: 1px;
     border: none;
-    margin: 1.5em 0 2em 0;
+    margin: 0;
 }
 
 h2 { font-size: 20px; font-weight: 600; margin: 2em 0 0.5em 0; }
@@ -78,7 +78,7 @@ aside { width: 200px; float: right; }
 .margin1 { margin: 1em; }
 .table1 { width: 50%; margin: 0 auto; }
 .table2 { width: 50%; }
-.table3 { width: 100%; }
+.table3 { width: 100%; margin-top: 0; }
 .tdleft { width: 20%; }
 .vatop { vertical-align: top!important; }
 .tdright { width: 80%; }
