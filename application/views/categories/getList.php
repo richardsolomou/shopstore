@@ -36,7 +36,7 @@
                         </td>
                     </tr>
                     <tr class="noHover">
-                        <td colspan="5"><div class="showHide" id="edit_<?php echo $category1['category_ID'] ?>"></div></td>
+                        <td colspan="5"><div class="showHide" id="edit_<?php echo $category1['category_ID']; ?>"></div></td>
                     </tr>
             <?php } ?>
         </tbody>

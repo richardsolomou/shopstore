@@ -2,10 +2,6 @@
 
     <div id="addAlert" class="showHide"></div>
 
-    <?php if (isset($message) && isset($alert)) { ?>
-        <div class="alert <?php echo $alert ?>"><?php echo $message ?></div>
-    <?php } ?>
-
     <form id="formInsert" method="post" onsubmit="layercms.webscrp.doAdd('categories', 'formInsert');return false;">
 
         <input type="hidden" name="operation" id="operation" value="add">

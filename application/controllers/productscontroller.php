@@ -67,46 +67,56 @@
 		 */
 		public function getList()
 		{
-			$this->Product->clear();
-			$this->Product->select();
-			return $this->Product->fetch(true);
+			if (self::isAdmin()) {
+				$this->Product->clear();
+				$this->Product->select();
+				$products = $this->Product->fetch(true);
+				self::set('objectParse', $this->_controller);
+				self::set('products', $products);
+			} else {
+				$this->_action = 'unauthorizedAccess';
+			}
 		}
 
 		/**
 		 * Adds a product into the database.
 		 * 
-		 * @param  int    $category_ID         Category the product belongs to.
-		 * @param  string $product_name        Name of the product.
-		 * @param  string $product_description Summary of the product.
-		 * @param  string $product_condition   Product condition (new, used, etc.)
-		 * @param  float  $product_price       Price of the product.
-		 * @param  int    $product_stock       Available stock of the product.
-		 * @param  string $product_image       Path to the image of the product.
 		 * @access public
 		 */
-		public function insert($category_ID = null, $product_name = null, $product_description = null, $product_condition = null, $product_price = null, $product_stock = null, $product_image = null)
+		public function insert()
 		{
 			if (self::isAdmin()) {
-				if (self::_exists('category_ID', $category_ID, true, 'categories')) {
-					$this->Product->clear();
-					$product = array(
-						'category_ID' => $category_ID,
-						'product_name' => $product_name,
-						'product_description' => $product_description,
-						'product_condition' => $product_condition,
-						'product_price' => $product_price,
-						'product_stock' => $product_stock,
-						'product_image' => $product_image
-					);
-					$this->Product->insert($product);
-					self::set('insert', $product);
-					self::set('message', 'Product successfully inserted.');
-					self::set('alert', 'alert-success');
-					return true;
+				// Only loads the content for this method.
+				$this->ajax = true;
+				// Checks if this was a POST request.
+				if (isset($_POST['operation'])) {
+					if (self::_exists('category_ID', $_POST['category_ID'], true, 'categories')) {
+						$this->Product->clear();
+						$product = array(
+							'category_ID' => $_POST['category_ID'],
+							'product_name' => $_POST['product_name'],
+							'product_description' => $_POST['product_description'],
+							'product_condition' => $_POST['product_condition'],
+							'product_price' => $_POST['product_price'],
+							'product_stock' => $_POST['product_stock'],
+							'product_image' => $_POST['product_image']
+						);
+						$this->Product->insert($product);
+						self::set('insert', $product);
+						// Sets the value and class of the alert to be shown.
+						self::set('message', 'Product successfully inserted.');
+						self::set('alert', 'alert-success nomargin');
+						return true;
+					} else {
+						self::set('message', 'Category specified does not exist.');
+						self::set('alert', '');
+						return false;
+					}
+				// Default action for GET requests.
 				} else {
-					self::set('message', 'Category specified does not exist.');
-					self::set('alert', '');
-					return false;
+					$settingsCurrency = self::_getSettings('\'currency_ID\'');
+					$currencySymbol = self::_getCurrencyById($settingsCurrency['setting_value']);
+					self::set('currencySymbol', $currencySymbol['currency_symbol']);
 				}
 			} else {
 				$this->_action = 'unauthorizedAccess';
@@ -122,13 +132,14 @@
 		public function delete($product_ID = null)
 		{
 			if (self::isAdmin()) {
+				$this->ajax = true;
 				if (self::_exists('product_ID', $product_ID, true)) {
 					$this->Product->clear();
 					$this->Product->where('product_ID', $product_ID);
 					$this->Product->delete();
 					self::set('delete', true);
 					self::set('message', 'Product successfully deleted.');
-					self::set('alert', 'alert-success');
+					self::set('alert', 'alert-success nomargin');
 					return true;
 				} else {
 					self::set('message', 'Product does not exist.');
@@ -153,30 +164,40 @@
 		 * @param  string $product_image       Path to the image of the product.
 		 * @access public
 		 */
-		public function update($product_ID = null, $category_ID = null, $product_name = null, $product_description = null, $product_condition = null, $product_price = null, $product_stock = null, $product_image = null)
+		public function update($product_ID = null)
 		{
 			if (self::isAdmin()) {
-				if (self::_exists('product_ID', $product_ID, true) && self::_exists('category_ID', $category_ID, true, 'categories')) {
-					$this->Product->clear();
-					$this->Product->where('product_ID', $product_ID, true);
-					$product = array(
-						'category_ID' => $category_ID,
-						'product_name' => $product_name,
-						'product_description' => $product_description,
-						'product_condition' => $product_condition,
-						'product_price' => $product_price,
-						'product_stock' => $product_stock,
-						'product_image' => $product_image
-					);
-					$this->Product->update($product);
-					self::set('update', $product);
-					self::set('message', 'Product successfully updated.');
-					self::set('alert', 'alert-success');
-					return true;
+				$this->ajax = true;
+				if (isset($_POST['operation'])) {
+					if (self::_exists('product_ID', $_POST['product_ID'], true) && self::_exists('category_ID', $_POST['category_ID'], true, 'categories')) {
+						$this->Product->clear();
+						$this->Product->where('product_ID', $_POST['product_ID'], true);
+						$product = array(
+							'category_ID' => $_POST['category_ID'],
+							'product_name' => $_POST['product_name'],
+							'product_description' => $_POST['product_description'],
+							'product_condition' => $_POST['product_condition'],
+							'product_price' => $_POST['product_price'],
+							'product_stock' => $_POST['product_stock'],
+							'product_image' => $_POST['product_image']
+						);
+						$this->Product->update($product);
+						self::set('update', $product);
+						self::set('message', 'Product successfully updated.');
+						self::set('alert', 'alert-success nomargin');
+						return true;
+					} else {
+						self::set('message', 'Product does not exist, or category specified does not exist.');
+						self::set('alert', '');
+						return false;
+					}
 				} else {
-					self::set('message', 'Product does not exist, or category specified does not exist.');
-					self::set('alert', '');
-					return false;
+					$product = self::_getProductById($product_ID);
+					$settingsCurrency = self::_getSettings('\'currency_ID\'');
+					$currencySymbol = self::_getCurrencyById($settingsCurrency['setting_value']);
+					self::set('currencySymbol', $currencySymbol['currency_symbol']);
+					self::set('product', $product);
+					self::set('product_ID', $product_ID);
 				}
 			} else {
 				$this->_action = 'unauthorizedAccess';
