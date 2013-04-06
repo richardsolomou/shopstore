@@ -15,7 +15,7 @@
 		 */
 		public function defaultPage()
 		{
-			$this->_action = 'getList';
+			header('Location: ' . BASE_PATH . '/categories/getList');
 		}
 
 		/**
@@ -52,6 +52,7 @@
 				$this->Category->select();
 				$categories = $this->Category->fetch(true);
 				$categoryDispatch = new CategoriesController('categories', '_getProductCountByCat');
+				self::set('objectParse', $this->_controller);
 				self::set('categoryDispatch', $categoryDispatch);
 				self::set('categories1', $categories);
 				self::set('categories2', $categories);
@@ -68,6 +69,7 @@
 		public function insert()
 		{
 			if (self::isAdmin()) {
+				$this->ajax = true;
 				if (isset($_POST['operation'])) {
 					if (self::_exists('category_ID', $_POST['category_parent_ID'], true)) {
 						$this->Category->clear();
@@ -78,7 +80,7 @@
 						$this->Category->insert($category);
 						self::set('insert', $category);
 						self::set('message', 'Category successfully inserted.');
-						self::set('alert', 'alert-success');
+						self::set('alert', 'alert-success nomargin');
 						return true;
 					} else {
 						self::set('message', 'Category parent does not exist.');
@@ -100,13 +102,14 @@
 		public function delete($category_ID = null)
 		{
 			if (self::isAdmin()) {
+				$this->ajax = true;
 				if (self::_exists('category_ID', $category_ID, true) && self::_getProductCountByCat($category_ID) == 0) {
 					$this->Category->clear();
 					$this->Category->where('category_ID', $category_ID);
 					$this->Category->delete();
 					self::set('delete', true);
 					self::set('message', 'Category successfully deleted.');
-					self::set('alert', 'alert-success');
+					self::set('alert', 'alert-success nomargin');
 					return true;
 				} else {
 					self::set('message', 'Category does not exist, or has products under it.');
@@ -120,31 +123,36 @@
 
 		/**
 		 * Modifies a category in the database with the specified new attributes.
-		 * 
-		 * @param  int    $category_ID        Category identifier.
-		 * @param  string $category_name      Name of the modified category.
-		 * @param  int    $category_parent_ID Parent of the modified category.
+		 *
+		 * @param  int    $category_ID Category identifier.
 		 * @access public
 		 */
-		public function update($category_ID = null, $category_name = null, $category_parent_ID = null)
+		public function update($category_ID = null)
 		{
 			if (self::isAdmin()) {
-				if (self::_exists('category_ID', $category_ID, true) && self::_exists('category_ID', $category_parent_ID, true) && $category_parent_ID != $category_ID) {
-					$this->Category->clear();
-					$this->Category->where('category_ID', $category_ID, true);
-					$category = array(
-						'category_name' => $category_name,
-						'category_parent_ID' => $category_parent_ID
-					);
-					$this->Category->update($category);
-					self::set('update', $category);
-					self::set('message', 'Category successfully updated.');
-					self::set('alert', 'alert-success');
-					return true;
+				$this->ajax = true;
+				if (isset($_POST['operation'])) {
+					if (self::_exists('category_ID', $_POST['category_ID'], true) && self::_exists('category_ID', $_POST['category_parent_ID'], true) && $_POST['category_parent_ID'] != $_POST['category_ID']) {
+						$this->Category->clear();
+						$this->Category->where('category_ID', $_POST['category_ID'], true);
+						$category = array(
+							'category_name' => $_POST['category_name'],
+							'category_parent_ID' => $_POST['category_parent_ID']
+						);
+						$this->Category->update($category);
+						self::set('update', $category);
+						self::set('message', 'Category successfully updated.');
+						self::set('alert', 'alert-success nomargin');
+						return true;
+					} else {
+						self::set('message', 'Category does not exist, or category parent does not exist, or category is the same as the parent.');
+						self::set('alert', '');
+						return false;
+					}
 				} else {
-					self::set('message', 'Category does not exist, or category parent does not exist, or category is the same as the parent.');
-					self::set('alert', '');
-					return false;
+					$category = self::_getCatById($category_ID);
+					self::set('category_ID', $category_ID);
+					self::set('category', $category);
 				}
 			} else {
 				$this->_action = 'unauthorizedAccess';

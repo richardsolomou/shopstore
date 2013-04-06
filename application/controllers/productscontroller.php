@@ -15,7 +15,7 @@
 		 */
 		public function defaultPage()
 		{
-			$this->_action = 'getList';
+			header('Location: ' . BASE_PATH . '/products/getList');
 		}
 
 		/**
