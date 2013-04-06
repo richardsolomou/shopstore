@@ -1,4 +1,4 @@
-<article>
+<?php if (!isset($_POST['operation'])) { ?>
 
     <div id="addAlert" class="showHide"></div>
 
@@ -6,7 +6,7 @@
         <div class="alert <?php echo $alert ?>"><?php echo $message ?></div>
     <?php } ?>
 
-    <form method="post" action="<?php echo BASE_PATH . '/categories/insert'; ?>">
+    <form method="post" onsubmit="layercms.webscrp.doAdd('categories');return false;">
 
         <input type="hidden" name="operation" id="operation" value="add">
 
@@ -35,4 +35,9 @@
 
     </form>
 
-</article>
+<?php } else { ?>
+
+    <div class="alert <?php echo $alert ?>"><?php echo $message ?></div>
+    <?php if ($alert == 'alert-success nomargin') echo '<div class="alert alert-info "><a href="' . BASE_PATH . '/categories/getList' . '">Refresh</a> to see the changes.</div>'; ?>
+
+<?php } ?>

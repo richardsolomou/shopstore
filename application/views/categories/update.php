@@ -1,10 +1,10 @@
-<article>
+<?php if (!isset($_POST['operation'])) { ?>
 
     <div id="editAlert_<?php echo $category_ID ?>" class="showHide"></div>
 
     <hr class="nomargin nopadding">
 
-    <form method="post" action="<?php echo BASE_PATH . '/categories/update'; ?>">
+    <form method="post" onsubmit="layercms.webscrp.doEdit('categories', <?php echo $category_ID; ?>);return false;">
 
         <input type="hidden" id="operation" name="operation" value="edit">
         <input type="hidden" name="category_ID" id="category_ID" value="<?php echo $category_ID ?>">
@@ -46,4 +46,9 @@
 
     <hr class="nopadding">
 
-</article>
+<?php } else { ?>
+
+    <div class="alert <?php echo $alert ?>"><?php echo $message ?></div>
+    <?php if ($alert == 'alert-success nomargin') echo '<div class="alert alert-info "><a href="' . BASE_PATH . '/categories/getList' . '">Refresh</a> to see the changes.</div>'; ?>
+
+<?php } ?>
