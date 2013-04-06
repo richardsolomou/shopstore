@@ -91,8 +91,11 @@ layercms.webscrp = (function() {
 	};
 
 	getFormValue = function (form, name) {
-		if (form && form[name] && form[name].value) return "&" + name + "=" + form[name].value;
-		return "";
+		if (form && form[name] && form[name].value) {
+			return '&' + name + '=' + form[name].value;
+		} else {
+			return '&' + name + '=';
+		}
 	};
 
 	// Creates and assigns the variables required to be sent to the loader function and gets all
