@@ -20,6 +20,11 @@ p { margin: 8px 0; }
 
 strong { font-weight: 700; }
 
+.loading {
+    background: url('../img/ajax-loader.gif') no-repeat center;
+    height: 15px;
+}
+
 .cleaner {
     clear: both;
     height: 0;
