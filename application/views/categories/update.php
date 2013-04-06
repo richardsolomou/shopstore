@@ -1,25 +1,25 @@
 <?php if (!isset($_POST['operation'])) { ?>
 
-    <div id="editAlert_<?php echo $category_ID ?>" class="showHide"></div>
+    <div id="editAlert_<?php echo $category_ID; ?>" class="showHide"></div>
 
     <hr class="nomargin nopadding">
 
-    <form method="post" onsubmit="layercms.webscrp.doEdit('categories', <?php echo $category_ID; ?>);return false;">
+    <form id="formUpdate_<?php echo $category_ID; ?>" method="post" onsubmit="layercms.webscrp.doEdit('categories', <?php echo $category_ID; ?>, 'formUpdate_<?php echo $category_ID; ?>');return false;">
 
         <input type="hidden" id="operation" name="operation" value="edit">
-        <input type="hidden" name="category_ID" id="category_ID" value="<?php echo $category_ID ?>">
+        <input type="hidden" name="category_ID" id="category_ID" value="<?php echo $category_ID; ?>">
 
         <table class="table3">
             <tr>
                 <td>
                     <table class="table3">
                         <tr>
-                            <td class="tdleft width25"><label for="category_name">Category Name:</label></td>
-                            <td class="tdright"><input type="text" id="category_name" name="category_name" required value="<?php echo $category['category_name']; ?>"></td>
+                            <td><label for="category_name">Category Name:</label></td>
+                            <td><input type="text" id="category_name" name="category_name" required value="<?php echo $category['category_name']; ?>"></td>
                         </tr>
                         <tr>
-                            <td class="tdleft width25"><label for="category_parent_ID">Category Parent:</label></td>
-                            <td class="tdright">
+                            <td><label for="category_parent_ID">Category Parent:</label></td>
+                            <td>
                                 <select name="category_parent_ID" id="category_parent_ID">
                                     <option value="0">-- None --</option>
                                     <?php

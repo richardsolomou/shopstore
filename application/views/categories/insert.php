@@ -6,22 +6,22 @@
         <div class="alert <?php echo $alert ?>"><?php echo $message ?></div>
     <?php } ?>
 
-    <form method="post" onsubmit="layercms.webscrp.doAdd('categories');return false;">
+    <form id="formInsert" method="post" onsubmit="layercms.webscrp.doAdd('categories', 'formInsert');return false;">
 
         <input type="hidden" name="operation" id="operation" value="add">
 
         <table class="table3">
             <tr>
-                <td class="tdleft"><label for="category_name">Name:</label></td>
-                <td class="tdright"><input type="text" id="category_name" name="category_name" required value=""></td>
+                <td><label for="category_name">Name:</label></td>
+                <td><input type="text" id="category_name" name="category_name" required value=""></td>
             </tr>
             <tr>
-                <td class="tdleft"><label for="category_parent_ID">Parent:</label></td>
-                <td class="tdright">
+                <td><label for="category_parent_ID">Parent:</label></td>
+                <td>
                     <select id="category_parent_ID" name="category_parent_ID">
                         <option value="0">-- None --</option>
                         <?php
-                            foreach($categories as $category) echo "<option value=\"" . $category['category_ID'] . "\">" . $category['category_name'] . "</option>";
+                            foreach($categories as $category) echo '<option value="' . $category['category_ID'] . '">' . $category['category_name'] . '</option>';
                         ?>
                     </select>
                 </td>
