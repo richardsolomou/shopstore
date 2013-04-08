@@ -62,7 +62,7 @@
             </tr>
         </table>
 
-        <a href="javascript:void(0)" onclick="layercms.webscrp.toggleShowHide('advancedOptions')" class="showHide"><span>Toggle Advanced Options</span><img src="images/showhide.png" alt=""></a>
+        <a href="javascript:void(0)" onclick="layercms.webscrp.toggleShowHide('advancedOptions')" class="showHide"><span>Toggle Advanced Options</span><img src="<?php echo BASE_PATH . '/templates/img/showhide.png'; ?>" alt=""></a>
 
         <div id="advancedOptions" class="showHide">
 

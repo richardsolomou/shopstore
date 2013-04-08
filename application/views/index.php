@@ -1,1 +1,3 @@
-index
+<article>
+	index
+</article>
