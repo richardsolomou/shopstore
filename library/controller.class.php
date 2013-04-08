@@ -98,6 +98,7 @@
 				$pageTitle = $this->_controller != 'Controller' ? $this->_controller : 'Home';
 				self::set('pageTitle', $pageTitle);
 				self::set('title', $settings['setting_value'] . ' &raquo; ' . $pageTitle);
+				self::set('website_name', $settings['setting_value']);
 				// Checks if the administrator is logged in.
 				if (self::isAdmin()) {
 					$this->$model->table('administrators');
@@ -108,6 +109,7 @@
 			} else {
 				// Database was not setup, forward to installer.
 				self::set('title', 'LayerCMS Installer');
+				self::set('website_name', 'LayerCMS');
 			}
 		}
 
