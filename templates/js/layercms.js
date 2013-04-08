@@ -30,6 +30,11 @@ layercms.webscrp = (function() {
 		getReviewParams,
 		getStoreParams,
 		doDelete,
+		toggleSidebar,
+		toggleSidebarCookies,
+		createCookie,
+		readCookie,
+		eraseCookie,
 		loaded;
 
 	// Gets an element by ID and adds the 'displayBlock' class to it, making it visible.
@@ -66,13 +71,11 @@ layercms.webscrp = (function() {
 		}
 
 		xhr.onreadystatechange = function () {
-			if (xhr.readyState == 0 || xhr.readyState == 1 || xhr.readyState == 2 || xhr.readyState == 3) {
+			if (xhr.readyState == 4 && xhr.status == 200) {
+				document.getElementById(target).classList.remove('loading');
+				document.getElementById(target).innerHTML = xhr.responseText;
+			} else {
 				document.getElementById(target).classList.add('loading');
-			} else if (xhr.readyState == 4) {
-				if (xhr.status == 200) {
-					document.getElementById(target).classList.remove('loading');
-					document.getElementById(target).innerHTML = xhr.responseText;
-				}
 			}
 		}
 		
@@ -232,8 +235,63 @@ layercms.webscrp = (function() {
 
 	};
 
+	toggleSidebar = function () {
+
+		var aside = document.querySelector('aside');
+		var article = document.querySelector('article');
+		var asideContent = document.getElementById('asideContent');
+
+		if (readCookie('hiddenSidebar') != null) {
+			aside.classList.add('hiddenSidebar');
+			article.classList.add('hiddenSidebar');
+			asideContent.classList.add('hiddenSidebar');
+		} else {
+			aside.classList.remove('hiddenSidebar');
+			article.classList.remove('hiddenSidebar');
+			asideContent.classList.remove('hiddenSidebar');
+		}
+	};
+
+	toggleSidebarCookies = function () {
+		if (readCookie('hiddenSidebar') == null) {
+			createCookie('hiddenSidebar', 'hidden', 7);
+		} else {
+			eraseCookie('hiddenSidebar');
+		}
+	}
+
+	createCookie = function (name, value, days) {
+
+		if (days) {
+			var date = new Date();
+			date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+			var expires = "; expires="+date.toGMTString();
+		} else {
+			var expires = "";
+		}
+		document.cookie = name+"="+value+expires+"; path=/";
+
+	};
+
+	readCookie = function (name) {
+
+		var nameEQ = name + "=";
+		var ca = document.cookie.split(';');
+		for (var i = 0; i < ca.length; i++) {
+			var c = ca[i];
+			while (c.charAt(0)==' ') c = c.substring(1,c.length);
+			if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+		}
+		return null;
+
+	};
+
+	eraseCookie = function (name) { createCookie(name, "", -1); };
+
 	// Function to be called when the document is loaded on every page.
-	loaded = function () {};
+	loaded = function () {
+		toggleSidebar();
+	};
 
 	// Returns the respective function to the objects listed below.
 	return {
@@ -245,6 +303,8 @@ layercms.webscrp = (function() {
 		'getAddForm': getAddForm,
 		'getEditForm': getEditForm,
 		'doDelete': doDelete,
+		'toggleSidebar': toggleSidebar,
+		'toggleSidebarCookies': toggleSidebarCookies,
 		'loaded': loaded
 	};
 

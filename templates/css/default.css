@@ -8,7 +8,7 @@ body, input, textarea, select, button{
     font-family: 'Open Sans', sans-serif!important;
 }
 
-a {
+a, aside, article {
     transition: all .1s linear; 
     -o-transition: all .1s linear; 
     -moz-transition: all .1s linear; 
@@ -45,7 +45,7 @@ hr {
     background: #e1e1e1;
     height: 1px;
     border: none;
-    margin: 0;
+    margin: 1em;
 }
 
 h2 { font-size: 20px; font-weight: 600; margin: 2em 0 0.5em 0; }
