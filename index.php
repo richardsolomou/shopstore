@@ -9,7 +9,7 @@
 	 * Define the basic global variables.
 	 */
 	define('SERVER_ROOT', dirname(__FILE__));
-	define('BASE_PATH', dirname($_SERVER['PHP_SELF']) == '/' ? '' : dirname($_SERVER['PHP_SELF']));
+	define('BASE_PATH', (dirname($_SERVER['PHP_SELF']) == '/' || dirname($_SERVER['PHP_SELF']) == '\\') ? '' : dirname($_SERVER['PHP_SELF']));
 
 	/**
 	 * Write the raw URL to a variable to be used in a later function.
