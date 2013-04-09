@@ -35,6 +35,7 @@ layercms.webscrp = (function() {
 		createCookie,
 		readCookie,
 		eraseCookie,
+		liveSearch,
 		loaded;
 
 	// Gets an element by ID and adds the 'displayBlock' class to it, making it visible.
@@ -267,17 +268,17 @@ layercms.webscrp = (function() {
 		if (days) {
 			var date = new Date();
 			date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-			var expires = "; expires="+date.toGMTString();
+			var expires = '; expires='+date.toGMTString();
 		} else {
-			var expires = "";
+			var expires = '';
 		}
-		document.cookie = name+"="+value+expires+"; path=/";
+		document.cookie = name+'='+value+expires+'; path=/';
 
 	};
 
 	readCookie = function (name) {
 
-		var nameEQ = name + "=";
+		var nameEQ = name + '=';
 		var ca = document.cookie.split(';');
 		for (var i = 0; i < ca.length; i++) {
 			var c = ca[i];
@@ -288,7 +289,24 @@ layercms.webscrp = (function() {
 
 	};
 
-	eraseCookie = function (name) { createCookie(name, "", -1); };
+	eraseCookie = function (name) { createCookie(name, '', -1); };
+
+	liveSearch = function (str, urlString) {
+		
+		var liveSearch = document.getElementById('liveSearch');
+		var method = 'GET';
+		var url = urlString + '/search/liveSearch/' + str;
+		var params = '';
+		var target = 'liveSearch';
+
+		if (str.length < 3) {
+			liveSearch.innerHTML = '';
+			return null;
+		}
+
+		loader(method, url, params, target);
+
+	}
 
 	// Function to be called when the document is loaded on every page.
 	loaded = function () {
@@ -307,6 +325,7 @@ layercms.webscrp = (function() {
 		'doDelete': doDelete,
 		'toggleSidebar': toggleSidebar,
 		'toggleSidebarCookies': toggleSidebarCookies,
+		'liveSearch': liveSearch,
 		'loaded': loaded
 	};
 

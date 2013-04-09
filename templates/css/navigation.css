@@ -31,7 +31,14 @@ nav > ul > li.active > a {
 ul.margintop { margin-top: 1em; }
 
 
-#search { margin: 2em auto; text-align: center; }
+#search {
+    margin: 2em auto;
+    background: #f1f1f1;
+    padding: 1em;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
 
 #search input.searchText {
     padding: 6px;
@@ -61,4 +68,20 @@ ul.margintop { margin-top: 1em; }
     -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
     -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+#liveSearch > ul > li > a {
+    color: #666;
+    text-decoration: none;
+    display: block;
+    margin-top: 2px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 4px;
+}
+
+#liveSearch > ul > li > a:hover {
+    background: #bf3030;
+    color: #f1f1f1;
 }

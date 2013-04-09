@@ -34,9 +34,10 @@
     ?>
     </ul>
 
-    <form action="<?php echo BASE_PATH . '/search'; ?>" id="search" method="post">
-        <input type="text" value="" name="searchText" class="searchText">
-        <input type="submit" value="Search" name="searchButton" class="searchButton">
-    </form>
+    <div id="search">
+        <h3>Search</h3>
+        <input type="text" value="" id="searchText" name="searchText" autocomplete="off" class="searchText" onkeyup="layercms.webscrp.liveSearch(this.value, '<?php echo BASE_PATH; ?>')">
+        <div id="liveSearch" class="noBorder"></div>
+    </div>
 
 </nav>
