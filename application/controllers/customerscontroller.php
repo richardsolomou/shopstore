@@ -19,24 +19,6 @@
 		}
 
 		/**
-		 * Searches the database for a customer with the given ID and returns
-		 * the results of that customer to the view presentation.
-		 * 
-		 * @param  int    $customer_ID Customer identifier.
-		 * @access public
-		 */
-		public function getById($customer_ID = null)
-		{
-			if (self::_exists('customer_ID', $customer_ID, true)) {
-				$customer = self::_getCustomerById($customer_ID);
-				self::set('customer', $customer);
-			} else {
-				notFound();
-				return false;
-			}
-		}
-
-		/**
 		 * Returns all customers in the database.
 		 * 
 		 * @return array  Customers in the database.
@@ -44,50 +26,52 @@
 		 */
 		public function getList()
 		{
-			$this->Customer->clear();
-			$this->Customer->select();
-			return $this->Customer->fetch(true);
+			if (self::isAdmin()) {
+				$this->Customer->clear();
+				$this->Customer->select();
+				$customers = $this->Customer->fetch(true);
+				self::set('customers', $customers);
+			} else {
+				$this->_action = 'unauthorizedAccess';
+			}
 		}
 
 		/**
 		 * Adds a customer into the database.
 		 * 
-		 * @param  string $customer_username  Customer's login username.
-		 * @param  string $customer_password  Customer's login password.
-		 * @param  string $customer_firstname Customer's forename.
-		 * @param  string $customer_lastname  Customer's surname.
-		 * @param  string $customer_address1  Customer address (line 1).
-		 * @param  string $customer_address2  Customer address (line 2).
-		 * @param  string $customer_postcode  Postcode of the address.
-		 * @param  int    $customer_phone     Customer phone number.
-		 * @param  string $customer_email     Customer e-mail address.
 		 * @access public
 		 */
-		public function insert($customer_username = null, $customer_password = null, $customer_firstname = null, $customer_lastname = null, $customer_address1 = null, $customer_address2 = null, $customer_postcode = null, $customer_phone = null, $customer_email = null)
+		public function insert()
 		{
 			if (self::isAdmin()) {
-				if (!self::_exists('customer_username', $customer_username)) {
-					$this->Customer->clear();
-					$customer = array(
-						'customer_username'  => $customer_username,
-						'customer_password'  => $customer_password,
-						'customer_firstname' => $customer_firstname,
-						'customer_lastname'  => $customer_lastname,
-						'customer_address1'  => $customer_address1,
-						'customer_address2'  => $customer_address2,
-						'customer_postcode'  => $customer_postcode,
-						'customer_phone'     => $customer_phone,
-						'customer_email'     => $customer_email
-					);
-					$this->Customer->insert($customer);
-					self::set('insert', $customer);
-					self::set('message', 'Customer successfully inserted.');
-					self::set('alert', 'alert-success');
-					return true;
-				} else {
-					self::set('message', 'Customer username already exists.');
-					self::set('alert', '');
-					return false;
+				// Only loads the content for this method.
+				$this->ajax = true;
+				// Checks if this was a POST request.
+				if (isset($_POST['operation'])) {
+					if (!self::_exists('customer_username', $_POST['customer_username'])) {
+						$this->Customer->clear();
+						$customer = array(
+							'customer_username'  => $_POST['customer_username'],
+							'customer_password'  => $_POST['customer_password'],
+							'customer_firstname' => $_POST['customer_firstname'],
+							'customer_lastname'  => $_POST['customer_lastname'],
+							'customer_address1'  => $_POST['customer_address1'],
+							'customer_address2'  => $_POST['customer_address2'],
+							'customer_postcode'  => $_POST['customer_postcode'],
+							'customer_phone'     => $_POST['customer_phone'],
+							'customer_email'     => $_POST['customer_email']
+						);
+						$this->Customer->insert($customer);
+						self::set('insert', $customer);
+						// Sets the value and class of the alert to be shown.
+						self::set('message', 'Customer successfully inserted.');
+						self::set('alert', 'alert-success nomargin');
+						return true;
+					} else {
+						self::set('message', 'Customer username already exists.');
+						self::set('alert', '');
+						return false;
+					}
 				}
 			} else {
 				$this->_action = 'unauthorizedAccess';
@@ -103,13 +87,14 @@
 		public function delete($customer_ID = null)
 		{
 			if (self::isAdmin()) {
+				$this->ajax = true;
 				if (self::_exists('customer_ID', $customer_ID, true)) {
 					$this->Customer->clear();
 					$this->Customer->where('customer_ID', $customer_ID);
 					$this->Customer->delete();
 					self::set('delete', true);
 					self::set('message', 'Customer successfully deleted.');
-					self::set('alert', 'alert-success');
+					self::set('alert', 'alert-success nomargin');
 					return true;
 				} else {
 					self::set('message', 'Customer does not exist.');
@@ -124,44 +109,42 @@
 		/**
 		 * Modifies a customer in the database with the specified new attributes.
 		 * 
-		 * @param  int    $customer_ID        Customer identifier.
-		 * @param  string $customer_username  Customer's login username.
-		 * @param  string $customer_password  Customer's login password.
-		 * @param  string $customer_firstname Customer's forename.
-		 * @param  string $customer_lastname  Customer's surname.
-		 * @param  string $customer_address1  Customer address (line 1).
-		 * @param  string $customer_address2  Customer address (line 2).
-		 * @param  string $customer_postcode  Postcode of the address.
-		 * @param  int    $customer_phone     Customer phone number.
-		 * @param  string $customer_email     Customer e-mail address.
+		 * @param  int    $customer_ID Customer identifier.
 		 * @access public
 		 */
-		public function update($customer_ID = null, $customer_username = null, $customer_password = null, $customer_firstname = null, $customer_lastname = null, $customer_address1 = null, $customer_address2 = null, $customer_postcode = null, $customer_phone = null, $customer_email = null)
+		public function update($customer_ID = null)
 		{
 			if (self::isAdmin()) {
-				if (self::_exists('customer_ID', $customer_ID, true)) {
-					$this->Customer->clear();
-					$this->Customer->where('customer_ID', $customer_ID, true);
-					$customer = array(
-						'customer_username'  => $customer_username,
-						'customer_password'  => $customer_password,
-						'customer_firstname' => $customer_firstname,
-						'customer_lastname'  => $customer_lastname,
-						'customer_address1'  => $customer_address1,
-						'customer_address2'  => $customer_address2,
-						'customer_postcode'  => $customer_postcode,
-						'customer_phone'     => $customer_phone,
-						'customer_email'     => $customer_email
-					);
-					$this->Customer->update($customer);
-					self::set('update', $customer);
-					self::set('message', 'Customer successfully updated.');
-					self::set('alert', 'alert-success');
-					return true;
+				$this->ajax = true;
+				if (isset($_POST['operation'])) {
+					if (self::_exists('customer_ID', $customer_ID, true)) {
+						$this->Customer->clear();
+						$this->Customer->where('customer_ID', $customer_ID, true);
+						$customer = array(
+							'customer_username'  => $_POST['customer_username'],
+							'customer_password'  => $_POST['customer_password'],
+							'customer_firstname' => $_POST['customer_firstname'],
+							'customer_lastname'  => $_POST['customer_lastname'],
+							'customer_address1'  => $_POST['customer_address1'],
+							'customer_address2'  => $_POST['customer_address2'],
+							'customer_postcode'  => $_POST['customer_postcode'],
+							'customer_phone'     => $_POST['customer_phone'],
+							'customer_email'     => $_POST['customer_email']
+						);
+						$this->Customer->update($customer);
+						self::set('update', $customer);
+						self::set('message', 'Customer successfully updated.');
+						self::set('alert', 'alert-success nomargin');
+						return true;
+					} else {
+						self::set('message', 'Customer does not exist.');
+						self::set('alert', '');
+						return false;
+					}
 				} else {
-					self::set('message', 'Customer does not exist.');
-					self::set('alert', '');
-					return false;
+					$customer = self::_getCustomerById($customer_ID);
+					self::set('customer_ID', $customer_ID);
+					self::set('customer', $customer);
 				}
 			} else {
 				$this->_action = 'unauthorizedAccess';
@@ -204,7 +187,11 @@
 			$this->Customer->clear();
 			// Uses a different table for other controllers.
 			if ($customTable != 'customers') $this->Customer->table($customTable);
-			$this->Customer->where($column, $value);
+			if ($requireInt == false) {
+				$this->Customer->where($column, '"' . $value . '"');
+			} else {
+				$this->Customer->where($column, $value);
+			}
 			$this->Customer->select();
 			if ($this->Customer->rowCount() != 0) {
 				return true;
