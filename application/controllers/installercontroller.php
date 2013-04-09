@@ -82,6 +82,11 @@
 		        } catch (PDOException $e) {
 		        	array_push($error, 'Failed to create website name setting.<br>' . $e->getMessage());
 		        }
+		        try {
+		        	$db_conn->query('INSERT INTO settings (`setting_ID`, `setting_column`, `setting_value`) VALUES (2, "currency_ID", 1);');
+		        } catch (PDOException $e) {
+		        	array_push($error, 'Failed to create default currency setting.<br>' . $e->getMessage());
+		        }
 		        if (isset($_POST['sampleData']) && $_POST['sampleData'] == 'Yes') {
 		        	try {
 		        		$db_conn->query('INSERT INTO currencies (currency_ID, currency_name, currency_code, currency_symbol) VALUES (1, "British Pound", "GBP", "&pound;");');
