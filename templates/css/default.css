@@ -8,7 +8,7 @@ body, input, textarea, select, button{
     font-family: 'Open Sans', sans-serif!important;
 }
 
-a, aside, article {
+a, aside:not(.hiddenSidebar) {
     transition: all .1s linear; 
     -o-transition: all .1s linear; 
     -moz-transition: all .1s linear; 

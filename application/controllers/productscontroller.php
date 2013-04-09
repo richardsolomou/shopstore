@@ -33,7 +33,7 @@
 				$product = self::_getProductById($product_ID);
 				$productCategory = self::_getCatById($product['category_ID']);
 				// Gets the currency ID from the website settings table.
-				$settingsCurrency = self::_getSettings('\'currency_ID\'');
+				$settingsCurrency = self::_getSettings('currency_ID');
 				// And gets the symbol from the ID of the currency.
 				$currencySymbol = self::_getCurrencyById($settingsCurrency['setting_value']);
 				// Gets the amount of reviews for the specific product.
@@ -71,7 +71,6 @@
 				$this->Product->clear();
 				$this->Product->select();
 				$products = $this->Product->fetch(true);
-				self::set('objectParse', $this->_controller);
 				self::set('products', $products);
 			} else {
 				$this->_action = 'unauthorizedAccess';
@@ -114,7 +113,7 @@
 					}
 				// Default action for GET requests.
 				} else {
-					$settingsCurrency = self::_getSettings('\'currency_ID\'');
+					$settingsCurrency = self::_getSettings('currency_ID');
 					$currencySymbol = self::_getCurrencyById($settingsCurrency['setting_value']);
 					self::set('currencySymbol', $currencySymbol['currency_symbol']);
 				}
@@ -126,7 +125,7 @@
 		/**
 		 * Removes a product from the database.
 		 * 
-		 * @param  int    $product ID Product identifier.
+		 * @param  int    $product_ID Product identifier.
 		 * @access public
 		 */
 		public function delete($product_ID = null)
@@ -169,9 +168,9 @@
 			if (self::isAdmin()) {
 				$this->ajax = true;
 				if (isset($_POST['operation'])) {
-					if (self::_exists('product_ID', $_POST['product_ID'], true) && self::_exists('category_ID', $_POST['category_ID'], true, 'categories')) {
+					if (self::_exists('product_ID', $product_ID, true) && self::_exists('category_ID', $_POST['category_ID'], true, 'categories')) {
 						$this->Product->clear();
-						$this->Product->where('product_ID', $_POST['product_ID'], true);
+						$this->Product->where('product_ID', $product_ID, true);
 						$product = array(
 							'category_ID' => $_POST['category_ID'],
 							'product_name' => $_POST['product_name'],
@@ -193,7 +192,7 @@
 					}
 				} else {
 					$product = self::_getProductById($product_ID);
-					$settingsCurrency = self::_getSettings('\'currency_ID\'');
+					$settingsCurrency = self::_getSettings('currency_ID');
 					$currencySymbol = self::_getCurrencyById($settingsCurrency['setting_value']);
 					self::set('currencySymbol', $currencySymbol['currency_symbol']);
 					self::set('product', $product);
@@ -255,7 +254,7 @@
 			if (self::_exists('setting_column', $setting_column, false, 'settings')) {
 				$this->Product->clear();
 				$this->Product->table('settings');
-				$this->Product->where('setting_column', $setting_column);
+				$this->Product->where('setting_column', '"' . $setting_column . '"');
 				$this->Product->select();
 				return $this->Product->fetch();
 			} else {
@@ -340,7 +339,11 @@
 			$this->Product->clear();
 			// Uses a different table for other controllers.
 			if ($customTable != 'products') $this->Product->table($customTable);
-			$this->Product->where($column, $value);
+			if ($requireInt == false) {
+				$this->Product->where($column, '"' . $value . '"');
+			} else {
+				$this->Product->where($column, $value);
+			}
 			$this->Product->select();
 			if ($this->Product->rowCount() != 0) {
 				return true;
