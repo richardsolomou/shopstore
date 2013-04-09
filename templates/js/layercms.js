@@ -128,10 +128,11 @@ layercms.webscrp = (function() {
 				params = getFormValue(form, 'category_ID') + getFormValue(form, 'product_name') + getFormValue(form, 'product_description') + getFormValue(form, 'product_condition') + getFormValue(form, 'product_price') + getFormValue(form, 'product_stock') + getFormValue(form, 'product_image');
 				break;
 			case 'reviews':
-				params = getFormValue(form, 'product_ID') + getFormValue(form, 'review_subject') + getFormValue(form, 'review_description') + getFormValue(form, 'review_rating') + getFormValue(form, 'customer_ID')
+				params = getFormValue(form, 'product_ID') + getFormValue(form, 'review_subject') + getFormValue(form, 'review_description') + getFormValue(form, 'review_rating') + getFormValue(form, 'customer_ID');
 				break;
 			case 'settings':
 				params = getFormValue(form, 'setting_column') + getFormValue(form, 'setting_value');
+				break;
 			default:
 				params = '';
 		}
@@ -172,10 +173,11 @@ layercms.webscrp = (function() {
 				params = getFormValue(form, 'product_ID') + getFormValue(form, 'category_ID') + getFormValue(form, 'product_name') + getFormValue(form, 'product_description') + getFormValue(form, 'product_condition') + getFormValue(form, 'product_price') + getFormValue(form, 'product_stock') + getFormValue(form, 'product_image');
 				break;
 			case 'reviews':
-				params = getFormValue(form, 'review_ID') + getFormValue(form, 'product_ID') + getFormValue(form, 'review_subject') + getFormValue(form, 'review_description') + getFormValue(form, 'review_rating') + getFormValue(form, 'customer_ID')
+				params = getFormValue(form, 'review_ID') + getFormValue(form, 'product_ID') + getFormValue(form, 'review_subject') + getFormValue(form, 'review_description') + getFormValue(form, 'review_rating') + getFormValue(form, 'customer_ID');
 				break;
 			case 'settings':
 				params = getFormValue(form, 'setting_ID') + getFormValue(form, 'setting_column') + getFormValue(form, 'setting_value');
+				break;
 			default:
 				params = '';
 		}
