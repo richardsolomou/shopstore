@@ -52,7 +52,6 @@
 				$this->Category->select();
 				$categories = $this->Category->fetch(true);
 				$categoryDispatch = new CategoriesController('categories', '_getProductCountByCat');
-				self::set('objectParse', $this->_controller);
 				self::set('categoryDispatch', $categoryDispatch);
 				self::set('categories1', $categories);
 				self::set('categories2', $categories);
@@ -69,7 +68,9 @@
 		public function insert()
 		{
 			if (self::isAdmin()) {
+				// Only loads the content for this method.
 				$this->ajax = true;
+				// Checks if this was a POST request.
 				if (isset($_POST['operation'])) {
 					if (self::_exists('category_ID', $_POST['category_parent_ID'], true)) {
 						$this->Category->clear();
@@ -132,9 +133,9 @@
 			if (self::isAdmin()) {
 				$this->ajax = true;
 				if (isset($_POST['operation'])) {
-					if (self::_exists('category_ID', $_POST['category_ID'], true) && self::_exists('category_ID', $_POST['category_parent_ID'], true) && $_POST['category_parent_ID'] != $_POST['category_ID']) {
+					if (self::_exists('category_ID', $category_ID, true) && self::_exists('category_ID', $_POST['category_parent_ID'], true) && $_POST['category_parent_ID'] != $category_ID) {
 						$this->Category->clear();
-						$this->Category->where('category_ID', $_POST['category_ID'], true);
+						$this->Category->where('category_ID', $category_ID, true);
 						$category = array(
 							'category_name' => $_POST['category_name'],
 							'category_parent_ID' => $_POST['category_parent_ID']
@@ -234,7 +235,11 @@
 			// Allows for the category parent to have a root parent.
 			if ($column == 'category_ID' && $value == '0') return true;
 			$this->Category->clear();
-			$this->Category->where($column, $value);
+			if ($requireInt == false) {
+				$this->Category->where($column, '"' . $value . '"');
+			} else {
+				$this->Category->where($column, $value);
+			}
 			$this->Category->select();
 			if ($this->Category->rowCount() != 0) {
 				return true;

@@ -7,7 +7,7 @@
     <form id="formUpdate_<?php echo $category_ID; ?>" method="post" onsubmit="layercms.webscrp.doEdit('categories', <?php echo $category_ID; ?>, 'formUpdate_<?php echo $category_ID; ?>');return false;">
 
         <input type="hidden" id="operation" name="operation" value="edit">
-        <input type="hidden" name="category_ID" id="category_ID" value="<?php echo $category_ID; ?>">
+        <input type="hidden" id="category_ID" name="category_ID" value="<?php echo $category_ID; ?>">
 
         <table class="table3">
             <tr>
