@@ -42,6 +42,13 @@
 		protected $_clause;
 
 		/**
+		 * Contains string of the condition where clause to be passed.
+		 * @var string
+		 * @access protected
+		 */
+		protected $_condition;
+
+		/**
 		 * Sets the variable by which to order the results from.
 		 * @var string
 		 * @access protected
@@ -136,6 +143,23 @@
 				array_push($this->_params, array('column' => $column, 'value' => $value));
 			}
 			$this->_clause .= '`' . $column . '` = ' . $value . ' AND ';
+		}
+
+		/**
+		 * Receives two variables and pushes them to the parameters array
+		 * and then adds the statement to the condition clause class variable.
+		 * 
+		 * @param  string  $column   Column of the specific table in the database.
+		 * @param  string  $value    Value of the column to be searched for.
+		 * @param  boolean $override Don't push to parameters array.
+		 * @access public
+		 */
+		public function like($column, $value, $override = false)
+		{
+			if ($override == false) {
+				array_push($this->_params, array('column' => $column, 'value' => $value));
+			}
+			$this->_condition .= '`' . $column . '` LIKE "%' . $value . '%" OR ';
 		}
 
 		/**
@@ -238,10 +262,11 @@
 		public function select($columns = array())
 		{
 			$where = $this->_clause ? ' WHERE ' . substr($this->_clause, 0, -5) : null;
+			$like = $this->_condition ? ' WHERE ' . substr($this->_condition, 0, -4) : null;
 			$order = $this->_orderBy ? ' ORDER BY `' . $this->_orderBy . '` ' . $this->_order : null;
 			$limit = $this->_limit ? ' LIMIT ' . $this->_limit : null;
 			$columns = $columns != array() ? implode(', ', $columns) : '*';
-			$this->_query = 'SELECT ' . $columns . ' FROM `' . $this->_table . '`' . $where . $order . $limit;
+			$this->_query = 'SELECT ' . $columns . ' FROM `' . $this->_table . '`' . $where . $like . $order . $limit;
 			$this->execute();
 		}
 
