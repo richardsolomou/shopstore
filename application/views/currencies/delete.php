@@ -1,0 +1,2 @@
+<div class="alert <?php echo $alert ?>"><?php echo $message ?></div>
+<?php if ($alert == 'alert-success nomargin') echo '<div class="alert alert-info "><a href="' . BASE_PATH . '/currencies/getList' . '">Refresh</a> to see the changes.</div>'; ?>
