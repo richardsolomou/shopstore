@@ -30,70 +30,9 @@
 				$this->Setting->clear();
 				$this->Setting->select();
 				$settings = $this->Setting->fetch(true);
+				$currencies = self::_getCurrencies();
 				self::set('settings', $settings);
-			} else {
-				$this->_action = 'unauthorizedAccess';
-			}
-		}
-
-		/**
-		 * Adds a setting into the database.
-		 * 
-		 * @access public
-		 */
-		public function insert()
-		{
-			if (self::isAdmin()) {
-				// Only loads the content for this method.
-				$this->ajax = true;
-				// Checks if this was a POST request.
-				if (isset($_POST['operation'])) {
-					try {
-						$this->Setting->clear();
-						$setting = array(
-							'setting_column' => $_POST['setting_column'],
-							'setting_value' => $_POST['setting_value']
-						);
-						$this->Setting->insert($setting);
-						self::set('insert', $setting);
-						// Sets the value and class of the alert to be shown.
-						self::set('message', 'Setting successfully inserted.');
-						self::set('alert', 'alert-success nomargin');
-						return true;
-					} catch (PDOException $e) {
-						self::set('message', 'Setting could not be inserted.');
-						self::set('alert', '');
-						return false;
-					}
-				}
-			} else {
-				$this->_action = 'unauthorizedAccess';
-			}
-		}
-
-		/**
-		 * Removes a setting from the database.
-		 * 
-		 * @param  int    $setting_ID Setting identifier.
-		 * @access public
-		 */
-		public function delete($setting_ID = null)
-		{
-			if (self::isAdmin()) {
-				$this->ajax = true;
-				if (self::_exists('setting_ID', $setting_ID, true)) {
-					$this->Setting->clear();
-					$this->Setting->where('setting_ID', $setting_ID);
-					$this->Setting->delete();
-					self::set('delete', true);
-					self::set('message', 'Setting successfully deleted.');
-					self::set('alert', 'alert-success nomargin');
-					return true;
-				} else {
-					self::set('message', 'Setting does not exist.');
-					self::set('alert', '');
-					return false;
-				}
+				self::set('currencies', $currencies);
 			} else {
 				$this->_action = 'unauthorizedAccess';
 			}
@@ -128,13 +67,31 @@
 						return false;
 					}
 				} else {
+					$currencies = self::_getCurrencies();
 					$setting = self::_getSettingById($setting_ID);
+					$currency_ID = self::_getDefaultCurrency();
+					self::set('currency_ID', $currency_ID);
+					self::set('currencies', $currencies);
 					self::set('setting', $setting);
 					self::set('setting_ID', $setting_ID);
 				}
 			} else {
 				$this->_action = 'unauthorizedAccess';
 			}
+		}
+
+		/**
+		 * Returns currency values in a variable.
+		 * 
+		 * @return array                  Returns the currency values.
+		 * @access protected
+		 */
+		protected function _getCurrencies()
+		{
+			$this->Setting->clear();
+			$this->Setting->table('currencies');
+			$this->Setting->select();
+			return $this->Setting->fetch(true);
 		}
 
 		/**
@@ -154,6 +111,37 @@
 			} else {
 				return false;
 			}
+		}
+
+		/**
+		 * Returns all the settings of the database.
+		 *
+		 * @param  string    $setting_column Name of the setting's column.
+		 * @return array                     Settings of the database.
+		 * @access protected
+		 */
+		protected function _getSettingByColumn($setting_column = null)
+		{
+			if (self::_exists('setting_column', $setting_column, false)) {
+				$this->Setting->clear();
+				$this->Setting->where('setting_column', '"' . $setting_column . '"');
+				$this->Setting->select();
+				return $this->Setting->fetch();
+			} else {
+				return false;
+			}
+		}
+
+		/**
+		 * Gets the default currency used in settings.
+		 *
+		 * @return string    Default currency identifier.
+		 * @access protected
+		 */
+		protected function _getDefaultCurrency()
+		{
+			$settingsCurrency = self::_getSettingByColumn('currency_ID');
+			return $settingsCurrency['setting_value'];
 		}
 
 		/**

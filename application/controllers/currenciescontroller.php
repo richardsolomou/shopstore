@@ -165,7 +165,7 @@
 		 * @return array                     Settings of the database.
 		 * @access protected
 		 */
-		protected function _getSettings($setting_column = null)
+		protected function _getSettingByColumn($setting_column = null)
 		{
 			if (self::_exists('setting_column', $setting_column, false, 'settings')) {
 				$this->Currency->clear();
@@ -186,7 +186,7 @@
 		 */
 		protected function _getDefaultCurrency()
 		{
-			$settingsCurrency = self::_getSettings('currency_ID');
+			$settingsCurrency = self::_getSettingByColumn('currency_ID');
 			return $settingsCurrency['setting_value'];
 		}
 
