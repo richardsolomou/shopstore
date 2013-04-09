@@ -4,7 +4,7 @@
 
     <div id="operationAlert" class="showHide"></div>
 
-    <button href="javascript:void(0)" onclick="layercms.webscrp.getAddForm('<?php echo $objectParse ?>')" class="btn">Add New <?php echo $objectParse ?></button>    
+    <button href="javascript:void(0)" onclick="layercms.webscrp.getAddForm('products')" class="btn">Add New Product</button>    
     <div id="message" class="showHide adminBar"></div>
 
     <table class="bordered hoverRed">
