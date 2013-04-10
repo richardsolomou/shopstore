@@ -26,12 +26,15 @@
 		 */
 		public function getList()
 		{
+			// Checks if the user has sufficient privileges.
 			if (self::isAdmin()) {
 				$this->Currency->clear();
 				$this->Currency->select();
+				// Fetches all the categories.
 				$currencies = $this->Currency->fetch(true);
 				self::set('currencies', $currencies);
 			} else {
+				// Returns an unauthorized access page.
 				$this->_action = 'unauthorizedAccess';
 			}
 		}
@@ -43,6 +46,7 @@
 		 */
 		public function insert()
 		{
+			// Checks if the user has sufficient privileges.
 			if (self::isAdmin()) {
 				// Only loads the content for this method.
 				$this->ajax = true;
@@ -55,19 +59,19 @@
 							'currency_code' => $_POST['currency_code'],
 							'currency_symbol' => $_POST['currency_symbol']
 						);
+						// Inserts the currency into the database.
 						$this->Currency->insert($currency);
-						self::set('insert', $currency);
-						// Sets the value and class of the alert to be shown.
+						// Returns the alert message to be sent to the user.
 						self::set('message', 'Currency successfully inserted.');
 						self::set('alert', 'alert-success nomargin');
-						return true;
 					} catch (PDOException $e) {
+						// Returns the alert message to be sent to the user.
 						self::set('message', 'Currency could not be inserted.');
 						self::set('alert', '');
-						return false;
 					}
 				}
 			} else {
+				// Returns an unauthorized access page.
 				$this->_action = 'unauthorizedAccess';
 			}
 		}
@@ -80,22 +84,35 @@
 		 */
 		public function delete($currency_ID = null)
 		{
+			// Checks if the user has sufficient privileges.
 			if (self::isAdmin()) {
+				// Only loads the content for this method.
 				$this->ajax = true;
-				if (self::_exists('currency_ID', $currency_ID, true) && self::_getDefaultCurrency() != $currency_ID) {
-					$this->Currency->clear();
-					$this->Currency->where('currency_ID', $currency_ID);
-					$this->Currency->delete();
-					self::set('delete', true);
-					self::set('message', 'Currency successfully deleted.');
-					self::set('alert', 'alert-success nomargin');
-					return true;
+				// Checks if the currency exists.
+				if (self::_exists('currency_ID', $currency_ID, true)) {
+					// Checks if the specified currency is not the default.
+					$settingsCurrency = self::_getSettingByColumn('currency_ID');
+					if ($settingsCurrency['setting_value'] != $currency_ID) {
+						$this->Currency->clear();
+						// Looks for the currency with that identifier.
+						$this->Currency->where('currency_ID', $currency_ID);
+						// Deletes the currency from the database.
+						$this->Currency->delete();
+						// Returns the alert message to be sent to the user.
+						self::set('message', 'Currency successfully deleted.');
+						self::set('alert', 'alert-success nomargin');
+					} else {
+						// Returns the alert message to be sent to the user.
+						self::set('message', 'Currency is the default currency.');
+						self::set('alert', '');
+					}
 				} else {
-					self::set('message', 'Currency does not exist, or is the default currency.');
+					// Returns the alert message to be sent to the user.
+					self::set('message', 'Currency does not exist.');
 					self::set('alert', '');
-					return false;
 				}
 			} else {
+				// Returns an unauthorized access page.
 				$this->_action = 'unauthorizedAccess';
 			}
 		}
@@ -108,33 +125,41 @@
 		 */
 		public function update($currency_ID = null)
 		{
+			// Checks if the user has sufficient privileges.
 			if (self::isAdmin()) {
+				// Only loads the content for this method.
 				$this->ajax = true;
+				// Checks if this was a POST request.
 				if (isset($_POST['operation'])) {
+					// Checks if the specified currency exists.
 					if (self::_exists('currency_ID', $currency_ID, true)) {
 						$this->Currency->clear();
+						// Looks for the currency with that identifier.
 						$this->Currency->where('currency_ID', $currency_ID, true);
 						$currency = array(
 							'currency_name' => $_POST['currency_name'],
 							'currency_code' => $_POST['currency_code'],
 							'currency_symbol' => $_POST['currency_symbol']
 						);
+						// Updates the currency.
 						$this->Currency->update($currency);
-						self::set('update', $currency);
+						// Returns the alert message to be sent to the user.
 						self::set('message', 'Currency successfully updated.');
 						self::set('alert', 'alert-success nomargin');
-						return true;
 					} else {
+						// Returns the alert message to be sent to the user.
 						self::set('message', 'Currency does not exist.');
 						self::set('alert', '');
-						return false;
 					}
+				// Default action for GET requests.
 				} else {
+					// Returns the currency's values from the database.
 					$currency = self::_getCurrencyById($currency_ID);
 					self::set('currency', $currency);
 					self::set('currency_ID', $currency_ID);
 				}
 			} else {
+				// Returns an unauthorized access page.
 				$this->_action = 'unauthorizedAccess';
 			}
 		}
@@ -148,10 +173,13 @@
 		 */
 		protected function _getCurrencyById($currency_ID = null)
 		{
+			// Checks if the currency exists.
 			if (self::_exists('currency_ID', $currency_ID, true)) {
 				$this->Currency->clear();
+				// Looks for the currency with that identifier.
 				$this->Currency->where('currency_ID', $currency_ID);
 				$this->Currency->select();
+				// Returns the results of the currency.
 				return $this->Currency->fetch();
 			} else {
 				return false;
@@ -159,7 +187,7 @@
 		}
 
 		/**
-		 * Returns all the settings of the database.
+		 * Returns a specified setting from the database.
 		 *
 		 * @param  string    $setting_column Name of the setting's column.
 		 * @return array                     Settings of the database.
@@ -167,27 +195,19 @@
 		 */
 		protected function _getSettingByColumn($setting_column = null)
 		{
+			// Checks if the setting column value exists.
 			if (self::_exists('setting_column', $setting_column, false, 'settings')) {
 				$this->Currency->clear();
+				// Uses the settings table.
 				$this->Currency->table('settings');
+				// Looks for the setting column with that value.
 				$this->Currency->where('setting_column', '"' . $setting_column . '"');
 				$this->Currency->select();
+				// Returns the result of the setting.
 				return $this->Currency->fetch();
 			} else {
 				return false;
 			}
-		}
-
-		/**
-		 * Gets the default currency used in settings.
-		 *
-		 * @return string    Default currency identifier.
-		 * @access protected
-		 */
-		protected function _getDefaultCurrency()
-		{
-			$settingsCurrency = self::_getSettingByColumn('currency_ID');
-			return $settingsCurrency['setting_value'];
 		}
 
 		/**
@@ -202,17 +222,20 @@
 		 */
 		protected function _exists($column = null, $value = null, $requireInt = false, $customTable = 'currencies')
 		{
-			// Checks if all characters are digits.
+			// Checks if not all characters are digits.
 			if ($requireInt == true && !ctype_digit($value)) return false;
 			$this->Currency->clear();
 			// Uses a different table for other controllers.
 			if ($customTable != 'currencies') $this->Currency->table($customTable);
 			if ($requireInt == false) {
+				// Looks for a string value in a specified column.
 				$this->Currency->where($column, '"' . $value . '"');
 			} else {
+				// Loooks for an integer value in a specified column.
 				$this->Currency->where($column, $value);
 			}
 			$this->Currency->select();
+			// Returns the appropriate value if the element exists or not.
 			if ($this->Currency->rowCount() != 0) {
 				return true;
 			} else {

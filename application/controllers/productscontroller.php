@@ -28,15 +28,16 @@
 		 */
 		public function getById($product_ID = null)
 		{
+			// Checks if the specified product exists.
 			if (self::_exists('product_ID', $product_ID, true)) {
 				// Gets the values of the product and its category.
 				$product = self::_getProductById($product_ID);
 				$productCategory = self::_getCatById($product['category_ID']);
-				// Gets the currency ID from the website settings table.
-				$settingsCurrency = self::_getSettings('currency_ID');
-				// And gets the symbol from the ID of the currency.
+				// Gets the currency ID from the website settings table and the
+				// respective symbol from the currencies table.
+				$settingsCurrency = self::_getSettingByColumn('currency_ID');
 				$currencySymbol = self::_getCurrencyById($settingsCurrency['setting_value']);
-				// Gets the amount of reviews for the specific product.
+				// Gets the reviews and the number of reviews for the product.
 				$reviews = self::_getProductReviews($product_ID);
 				$reviewNumber = self::_getProductReviewNumber($product_ID);
 				// Calculates the average rating based on all reviews.
@@ -54,8 +55,8 @@
 				self::set('productCategory', $productCategory['category_name']);
 				self::set('currencySymbol', $currencySymbol['currency_symbol']);
 			} else {
+				// Returns a 404 error page.
 				notFound();
-				return false;
 			}
 		}
 
@@ -67,12 +68,15 @@
 		 */
 		public function getList()
 		{
+			// Checks if the user has sufficient privileges.
 			if (self::isAdmin()) {
 				$this->Product->clear();
 				$this->Product->select();
+				// Fetches all the products.
 				$products = $this->Product->fetch(true);
 				self::set('products', $products);
 			} else {
+				// Returns an unauthorized access page.
 				$this->_action = 'unauthorizedAccess';
 			}
 		}
@@ -84,11 +88,13 @@
 		 */
 		public function insert()
 		{
+			// Checks if the user has sufficient privileges.
 			if (self::isAdmin()) {
 				// Only loads the content for this method.
 				$this->ajax = true;
 				// Checks if this was a POST request.
 				if (isset($_POST['operation'])) {
+					// Checks if the specified category exists.
 					if (self::_exists('category_ID', $_POST['category_ID'], true, 'categories')) {
 						$this->Product->clear();
 						$product = array(
@@ -100,24 +106,26 @@
 							'product_stock' => $_POST['product_stock'],
 							'product_image' => $_POST['product_image']
 						);
+						// Inserts the product into the database.
 						$this->Product->insert($product);
-						self::set('insert', $product);
-						// Sets the value and class of the alert to be shown.
+						// Returns the alert message to be sent to the user.
 						self::set('message', 'Product successfully inserted.');
 						self::set('alert', 'alert-success nomargin');
-						return true;
 					} else {
-						self::set('message', 'Category specified does not exist.');
+						// Returns the alert message to be sent to the user.
+						self::set('message', 'Category does not exist.');
 						self::set('alert', '');
-						return false;
 					}
 				// Default action for GET requests.
 				} else {
-					$settingsCurrency = self::_getSettings('currency_ID');
+					// Gets the currency ID from the website settings table and
+					// the respective symbol from the currencies table.
+					$settingsCurrency = self::_getSettingByColumn('currency_ID');
 					$currencySymbol = self::_getCurrencyById($settingsCurrency['setting_value']);
 					self::set('currencySymbol', $currencySymbol['currency_symbol']);
 				}
 			} else {
+				// Returns an unauthorized access page.
 				$this->_action = 'unauthorizedAccess';
 			}
 		}
@@ -130,22 +138,27 @@
 		 */
 		public function delete($product_ID = null)
 		{
+			// Checks if the user has sufficient privileges.
 			if (self::isAdmin()) {
+				// Only loads the content for this method.
 				$this->ajax = true;
+				// Checks if the specified product exists.
 				if (self::_exists('product_ID', $product_ID, true)) {
 					$this->Product->clear();
+					// Looks for the product with that identifier.
 					$this->Product->where('product_ID', $product_ID);
+					// Deletes the product from the database.
 					$this->Product->delete();
-					self::set('delete', true);
+					// Returns the alert message to be sent to the user.
 					self::set('message', 'Product successfully deleted.');
 					self::set('alert', 'alert-success nomargin');
-					return true;
 				} else {
+					// Returns the alert message to be sent to the user.
 					self::set('message', 'Product does not exist.');
 					self::set('alert', '');
-					return false;
 				}
 			} else {
+				// Returns an unauthorized access page.
 				$this->_action = 'unauthorizedAccess';
 			}
 		}
@@ -154,51 +167,62 @@
 		 * Modifies a product in the database with the specified new attributes.
 		 * 
 		 * @param  int    $product_ID          Product identifier.
-		 * @param  int    $category_ID         Category the product belongs to.
-		 * @param  string $product_name        Name of the product.
-		 * @param  string $product_description Summary of the product.
-		 * @param  string $product_condition   Product condition (new, used, etc.)
-		 * @param  float  $product_price       Price of the product.
-		 * @param  int    $product_stock       Available stock of the product.
-		 * @param  string $product_image       Path to the image of the product.
 		 * @access public
 		 */
 		public function update($product_ID = null)
 		{
+			// Checks if the user has sufficient privileges.
 			if (self::isAdmin()) {
+				// Only loads the content for this method.
 				$this->ajax = true;
+				// Checks if this was a POST request.
 				if (isset($_POST['operation'])) {
-					if (self::_exists('product_ID', $product_ID, true) && self::_exists('category_ID', $_POST['category_ID'], true, 'categories')) {
-						$this->Product->clear();
-						$this->Product->where('product_ID', $product_ID, true);
-						$product = array(
-							'category_ID' => $_POST['category_ID'],
-							'product_name' => $_POST['product_name'],
-							'product_description' => $_POST['product_description'],
-							'product_condition' => $_POST['product_condition'],
-							'product_price' => $_POST['product_price'],
-							'product_stock' => $_POST['product_stock'],
-							'product_image' => $_POST['product_image']
-						);
-						$this->Product->update($product);
-						self::set('update', $product);
-						self::set('message', 'Product successfully updated.');
-						self::set('alert', 'alert-success nomargin');
-						return true;
+					// Checks if the specified product exists.
+					if (self::_exists('product_ID', $product_ID, true)) {
+						// Checks if the specified category exists.
+						if (self::_exists('category_ID', $_POST['category_ID'], true, 'categories')) {
+							$this->Product->clear();
+							// Looks for the product with that identifier.
+							$this->Product->where('product_ID', $product_ID, true);
+							$product = array(
+								'category_ID' => $_POST['category_ID'],
+								'product_name' => $_POST['product_name'],
+								'product_description' => $_POST['product_description'],
+								'product_condition' => $_POST['product_condition'],
+								'product_price' => $_POST['product_price'],
+								'product_stock' => $_POST['product_stock'],
+								'product_image' => $_POST['product_image']
+							);
+							// Updates the product.
+							$this->Product->update($product);
+							// Returns the alert message to be sent to the user.
+							self::set('message', 'Product successfully updated.');
+							self::set('alert', 'alert-success nomargin');
+							return true;
+						} else {
+							// Returns the alert message to be sent to the user.
+							self::set('message', 'Category does not exist.');
+							self::set('alert', '');
+						}
 					} else {
-						self::set('message', 'Product does not exist, or category specified does not exist.');
+						// Returns the alert message to be sent to the user.
+						self::set('message', 'Product does not exist.');
 						self::set('alert', '');
-						return false;
 					}
+				// Default action for GET requests.
 				} else {
+					// Returns the product's values from the database.
 					$product = self::_getProductById($product_ID);
-					$settingsCurrency = self::_getSettings('currency_ID');
+					// Gets the currency ID from the website settings table and
+					// the respective symbol from the currencies table.
+					$settingsCurrency = self::_getSettingByColumn('currency_ID');
 					$currencySymbol = self::_getCurrencyById($settingsCurrency['setting_value']);
 					self::set('currencySymbol', $currencySymbol['currency_symbol']);
 					self::set('product', $product);
 					self::set('product_ID', $product_ID);
 				}
 			} else {
+				// Returns an unauthorized access page.
 				$this->_action = 'unauthorizedAccess';
 			}
 		}
@@ -212,10 +236,13 @@
 		 */
 		protected function _getProductById($product_ID = null)
 		{
-			if (self::_exists('product_ID', $product_ID, true, 'products')) {
+			// Checks if the product exists.
+			if (self::_exists('product_ID', $product_ID, true)) {
 				$this->Product->clear();
+				// Looks for the product with that identifier.
 				$this->Product->where('product_ID', $product_ID);
 				$this->Product->select();
+				// Returns the result of the product.
 				return $this->Product->fetch();
 			} else {
 				return false;
@@ -231,11 +258,15 @@
 		 */
 		protected function _getCatById($category_ID = null)
 		{
+			// Checks if the specified category exists.
 			if (self::_exists('category_ID', $category_ID, true, 'categories')) {
 				$this->Product->clear();
+				// Uses the categories table.
 				$this->Product->table('categories');
+				// Looks for the category with that identifier.
 				$this->Product->where('category_ID', $category_ID);
 				$this->Product->select();
+				// Returns the result of the category.
 				return $this->Product->fetch();
 			} else {
 				return false;
@@ -243,19 +274,23 @@
 		}
 
 		/**
-		 * Returns all the settings of the database.
+		 * Returns a specified setting from the database.
 		 *
 		 * @param  string    $setting_column Name of the setting's column.
 		 * @return array                     Settings of the database.
 		 * @access protected
 		 */
-		protected function _getSettings($setting_column = null)
+		protected function _getSettingByColumn($setting_column = null)
 		{
+			// Checks if the setting column value exists.
 			if (self::_exists('setting_column', $setting_column, false, 'settings')) {
 				$this->Product->clear();
+				// Uses the settings table.
 				$this->Product->table('settings');
+				// Looks for the setting column with that value.
 				$this->Product->where('setting_column', '"' . $setting_column . '"');
 				$this->Product->select();
+				// Returns the result of the setting.
 				return $this->Product->fetch();
 			} else {
 				return false;
@@ -271,11 +306,15 @@
 		 */
 		protected function _getCurrencyById($currency_ID = null)
 		{
+			// Checks if the currency exists.
 			if (self::_exists('currency_ID', $currency_ID, true, 'currencies')) {
 				$this->Product->clear();
+				// Uses the currencies table.
 				$this->Product->table('currencies');
+				// Looks for a currency with that identifier.
 				$this->Product->where('currency_ID', $currency_ID);
 				$this->Product->select();
+				// Returns the result of that currency.
 				return $this->Product->fetch();
 			} else {
 				return false;
@@ -291,11 +330,15 @@
 		 */
 		protected function _getProductReviews($product_ID = null)
 		{
+			// Checks if the product exists.
 			if (self::_exists('product_ID', $product_ID, true)) {
 				$this->Product->clear();
+				// Uses the reviews table
 				$this->Product->table('reviews');
+				// Looks for a review with that product identifier
 				$this->Product->where('product_ID', $product_ID);
 				$this->Product->select();
+				// Returns the results of the reviews.
 				return $this->Product->fetch(true);
 			} else {
 				return false;
@@ -311,11 +354,15 @@
 		 */
 		protected function _getProductReviewNumber($product_ID = null)
 		{
+			// Checks if the product exists.
 			if (self::_exists('product_ID', $product_ID, true)) {
 				$this->Product->clear();
+				// Uses the reviews table.
 				$this->Product->table('reviews');
+				// Looks for a review with that product identifier.
 				$this->Product->where('product_ID', $product_ID);
 				$this->Product->select();
+				// Returns the number of results of reviews.
 				return $this->Product->rowCount();
 			} else {
 				return false;
@@ -334,17 +381,20 @@
 		 */
 		protected function _exists($column = null, $value = null, $requireInt = false, $customTable = 'products')
 		{
-			// Checks if all characters are digits.
+			// Checks if not all characters are digits.
 			if ($requireInt == true && !ctype_digit($value)) return false;
 			$this->Product->clear();
 			// Uses a different table for other controllers.
 			if ($customTable != 'products') $this->Product->table($customTable);
 			if ($requireInt == false) {
+				// Looks for a string value in a specified column.
 				$this->Product->where($column, '"' . $value . '"');
 			} else {
+				// Loooks for an integer value in a specified column.
 				$this->Product->where($column, $value);
 			}
 			$this->Product->select();
+			// Returns the appropriate value if the element exists or not.
 			if ($this->Product->rowCount() != 0) {
 				return true;
 			} else {

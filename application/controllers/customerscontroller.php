@@ -26,12 +26,15 @@
 		 */
 		public function getList()
 		{
+			// Checks if the user has sufficient privileges.
 			if (self::isAdmin()) {
 				$this->Customer->clear();
 				$this->Customer->select();
+				// Fetches all the customers.
 				$customers = $this->Customer->fetch(true);
 				self::set('customers', $customers);
 			} else {
+				// Returns an unauthorized access page.
 				$this->_action = 'unauthorizedAccess';
 			}
 		}
@@ -43,11 +46,13 @@
 		 */
 		public function insert()
 		{
+			// Checks if the user has sufficient privileges.
 			if (self::isAdmin()) {
 				// Only loads the content for this method.
 				$this->ajax = true;
 				// Checks if this was a POST request.
 				if (isset($_POST['operation'])) {
+					// Checks if the username is not taken.
 					if (!self::_exists('customer_username', $_POST['customer_username'])) {
 						$this->Customer->clear();
 						$customer = array(
@@ -61,19 +66,19 @@
 							'customer_phone'     => $_POST['customer_phone'],
 							'customer_email'     => $_POST['customer_email']
 						);
+						// Inserts the customer into the database.
 						$this->Customer->insert($customer);
-						self::set('insert', $customer);
-						// Sets the value and class of the alert to be shown.
+						// Returns the alert message to be sent to the user.
 						self::set('message', 'Customer successfully inserted.');
 						self::set('alert', 'alert-success nomargin');
-						return true;
 					} else {
+						// Returns the alert message to be sent to the user.
 						self::set('message', 'Customer username already exists.');
 						self::set('alert', '');
-						return false;
 					}
 				}
 			} else {
+				// Returns an unauthorized access page.
 				$this->_action = 'unauthorizedAccess';
 			}
 		}
@@ -86,22 +91,27 @@
 		 */
 		public function delete($customer_ID = null)
 		{
+			// Checks if the user has sufficient privileges.
 			if (self::isAdmin()) {
+				// Only loads the content for this method.
 				$this->ajax = true;
+				// Checks if the customer exists.
 				if (self::_exists('customer_ID', $customer_ID, true)) {
 					$this->Customer->clear();
+					// Looks for the customer with that identifier.
 					$this->Customer->where('customer_ID', $customer_ID);
+					// Deletes the customer from the database.
 					$this->Customer->delete();
-					self::set('delete', true);
+					// Returns the alert message to be sent to the user.
 					self::set('message', 'Customer successfully deleted.');
 					self::set('alert', 'alert-success nomargin');
-					return true;
 				} else {
+					// Returns the alert message to be sent to the user.
 					self::set('message', 'Customer does not exist.');
 					self::set('alert', '');
-					return false;
 				}
 			} else {
+				// Returns an unauthorized access page.
 				$this->_action = 'unauthorizedAccess';
 			}
 		}
@@ -114,11 +124,15 @@
 		 */
 		public function update($customer_ID = null)
 		{
+			// Checks if the user has sufficient privileges.
 			if (self::isAdmin()) {
+				// Only loads the content for this method.
 				$this->ajax = true;
 				if (isset($_POST['operation'])) {
+					// Checks if the specified customer exists.
 					if (self::_exists('customer_ID', $customer_ID, true)) {
 						$this->Customer->clear();
+						// Looks for the customer with that identifier.
 						$this->Customer->where('customer_ID', $customer_ID, true);
 						$customer = array(
 							'customer_username'  => $_POST['customer_username'],
@@ -131,22 +145,25 @@
 							'customer_phone'     => $_POST['customer_phone'],
 							'customer_email'     => $_POST['customer_email']
 						);
+						// Updates the customer.
 						$this->Customer->update($customer);
-						self::set('update', $customer);
+						// Returns the alert message to be sent to the user.
 						self::set('message', 'Customer successfully updated.');
 						self::set('alert', 'alert-success nomargin');
-						return true;
 					} else {
+						// Returns the alert message to be sent to the user.
 						self::set('message', 'Customer does not exist.');
 						self::set('alert', '');
-						return false;
 					}
+				// Default action for GET requests.
 				} else {
+					// Returns the customer's values from the database.
 					$customer = self::_getCustomerById($customer_ID);
 					self::set('customer_ID', $customer_ID);
 					self::set('customer', $customer);
 				}
 			} else {
+				// Returns an unauthorized access page.
 				$this->_action = 'unauthorizedAccess';
 			}
 		}
@@ -160,10 +177,13 @@
 		 */
 		protected function _getCustomerById($customer_ID = null)
 		{
+			// Checks if the customer exists.
 			if (self::_exists('customer_ID', $customer_ID, true)) {
 				$this->Customer->clear();
+				// Looks for the customer with that identifier.
 				$this->Customer->where('customer_ID', $customer_ID);
 				$this->Customer->select();
+				// Returns the results of the customer.
 				return $this->Customer->fetch();
 			} else {
 				return false;
@@ -182,17 +202,20 @@
 		 */
 		protected function _exists($column = null, $value = null, $requireInt = false, $customTable = 'customers')
 		{
-			// Checks if all characters are digits.
+			// Checks if not all characters are digits.
 			if ($requireInt == true && !ctype_digit($value)) return false;
 			$this->Customer->clear();
 			// Uses a different table for other controllers.
 			if ($customTable != 'customers') $this->Customer->table($customTable);
 			if ($requireInt == false) {
+				// Looks for a string value in a specified column.
 				$this->Customer->where($column, '"' . $value . '"');
 			} else {
+				// Loooks for an integer value in a specified column.
 				$this->Customer->where($column, $value);
 			}
 			$this->Customer->select();
+			// Returns the appropriate value if the element exists or not.
 			if ($this->Customer->rowCount() != 0) {
 				return true;
 			} else {

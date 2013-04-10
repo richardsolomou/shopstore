@@ -18,16 +18,26 @@
 			header('Location: ' . BASE_PATH . '/search/liveSearch');
 		}
 
+		/**
+		 * Gets products that match the string given and returns them.
+		 * 
+		 * @param  string $str String to search for.
+		 * @access public
+		 */
 		public function liveSearch($str = null)
 		{
+			// Only loads if the string has a length of more than 2 characters.
 			if (strlen($str) > 2) {
+				// Only loads the content for this method.
 				$this->ajax = true;
 				$this->Search->clear();
 				$this->Search->table('products');
+				// Looks for products with a similar title to the string.
 				$this->Search->like('product_name', $str);
 				$columns = array('product_ID', 'product_name');
 				$this->Search->select($columns);
 				$search = $this->Search->fetch(true);
+				// Gets the number of results.
 				$count = count($search);
 				self::set('count', $count);
 				self::set('search', $search);
