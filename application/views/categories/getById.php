@@ -1,11 +1,6 @@
 <article>
 
-	<h1>
-		<?php
-			echo $category['category_name'];
-			if (isset($_SESSION['SESS_ADMINLOGGEDIN'])) echo '<a href="' . BASE_PATH . '/categories/update/' . $category['category_ID'] . '" class="btn pull-right small">Edit</a>';
-		?>
-	</h1>
+	<h1><?php echo $category['category_name']; ?></h1>
 
 	<div class="items">
 

@@ -1,11 +1,6 @@
 <article>
 
-	<h1>
-		<?php
-			echo $product['product_name'];
-			if (isset($_SESSION['SESS_ADMINLOGGEDIN'])) echo '<a href="' . BASE_PATH . '/products/update/' . $product['product_ID'] . '" class="btn pull-right small">Edit</a>';
-		?>
-	</h1>
+	<h1><?php echo $product['product_name']; ?></h1>
 
 	<div class="items">
 
