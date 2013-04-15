@@ -12,46 +12,20 @@ layercms.webscrp = (function() {
 	// and disables features that are confusing or poorly thought out.
 	'use strict';
 
-	// Declares the variables that are to be used in this main function.
-	var	toggleShow,
-		toggleHide,
-		toggleShowHide,
-		loader,
-		getFormValue,
-		doAdd,
-		doEdit,
-		getAddForm,
-		getEditForm,
-		getAdministratorParams,
-		getCategoryParams,
-		getCurrencyParams,
-		getCustomerParams,
-		getProductParams,
-		getReviewParams,
-		getStoreParams,
-		doDelete,
-		toggleSidebar,
-		toggleSidebarCookies,
-		createCookie,
-		readCookie,
-		eraseCookie,
-		liveSearch,
-		loaded;
-
 	// Gets an element by ID and adds the 'displayBlock' class to it, making it visible.
-	toggleShow = function (div) { document.getElementById(div).classList.add('displayBlock'); };
+	var toggleShow = function (div) { document.getElementById(div).classList.add('displayBlock'); };
 
 	// Gets an element by ID and removes the 'displayBlock' class from it, making it invisible.
-	toggleHide = function (div) { document.getElementById(div).classList.remove('displayBlock'); };
+	var toggleHide = function (div) { document.getElementById(div).classList.remove('displayBlock'); };
 
 	// Gets an element by ID and toggles the 'displayBlock' class on it, making it visible
 	// if the class is currently invisible, or invisible if the class is already visible.
-	toggleShowHide = function (div) { document.getElementById(div).classList.toggle('displayBlock'); };
+	var toggleShowHide = function (div) { document.getElementById(div).classList.toggle('displayBlock'); };
 
 	// This is a universal function for AJAX XMLHttpRequest which gets the method to be used
 	// to call a page (GET/POST/DELETE), the URI to be called, some optional parameters to be
 	// sent with it, and the target div where the the response text will be displayed.
-	loader = function (method, url, params, target) {
+	var loader = function (method, url, params, target) {
 
 		var xhr;
 
@@ -79,11 +53,19 @@ layercms.webscrp = (function() {
 				document.getElementById(target).classList.add('loading');
 			}
 		}
+
+		if (url == 'uploadFile/') xhr.upload.addEventListener('progress', progressFunction, false);
 		
 		xhr.open(method, url, true);
 
 		if (method == 'POST') {
-			xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+			if (url == 'uploadFile/') {
+				xhr.setRequestHeader('Content-type', params.type);
+				xhr.setRequestHeader('Content-length', params.size);
+				xhr.setRequestHeader('X-File-Name', params.name);
+			} else {
+				xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+			}
 		}
 
 		xhr.send(params);
@@ -94,17 +76,65 @@ layercms.webscrp = (function() {
 
 	};
 
-	getFormValue = function (form, name) {
+	var uploadFile = function () {
+
+		var product_image = document.getElementById('product_image').files;
+
+		if (product_image.length == 0) {
+			alert('Please choose an image to upload.');
+			return;
+		}
+
+		var method = 'POST';
+		var url = 'uploadFile/';
+		var params = product_image[0];
+		var target = 'operationAlert';
+
+		loader(method, url, params, target);
+
+	};
+
+	var deleteImage = function (id) {
+
+		var method = 'POST';
+		var url = 'deleteImage/' + id;
+		var params = '';
+		var target = 'currentImage';
+
+		loader(method, url, params, target);
+
+	}
+
+	var progressFunction = function (e) {
+
+		var progressBar = document.getElementById('progressBar');
+		var percentageDiv = document.getElementById('percentageCalc');
+
+		if (e.lengthComputable) {
+			progressBar.max = e.total;
+			progressBar.value = e.loaded;
+			percentageDiv.innerHTML = Math.round(e.loaded / e.total * 100) + '%';
+		}
+
+	};
+
+	var getFormValue = function (form, name) {
+
+		if (name == 'product_image') {
+			var values = form[name].value.replace('C:\\fakepath\\', '');
+			return '&' + name + '=' + values;
+		}
 		if (form && form[name] && form[name].value) {
 			return '&' + name + '=' + form[name].value;
 		} else {
 			return '&' + name + '=';
 		}
+
 	};
 
 	// Creates and assigns the variables required to be sent to the loader function and gets all
 	// the input fields from the form page and assigns them to variables to be sent as parameters.
-	doAdd = function (obj, formID) {
+	var doAdd = function (obj, formID) {
 
 		var method = 'POST';
 		var url = 'insert/';
@@ -112,7 +142,7 @@ layercms.webscrp = (function() {
 		var target = 'operationAlert';
 
 		var form = document.getElementById(formID);
-		
+
 		switch (obj) {
 			case 'administrators':
 				break;
@@ -144,11 +174,13 @@ layercms.webscrp = (function() {
 
 		loader(method, url, params, target);
 
+		//refreshList();
+
 	};
 
 	// Creates and assigns the variables required to be sent to the loader function and gets all
 	// the input fields from the form page and assigns them to variables to be sent as parameters.
-	doEdit = function (obj, id, formID) {
+	var doEdit = function (obj, id, formID) {
 
 		var method = 'POST';
 		var url = 'update/' + id + '/';
@@ -189,11 +221,13 @@ layercms.webscrp = (function() {
 
 		loader(method, url, params, target);
 
+		//refreshList();
+
 	};
 
 	// Creates and assigns the variables required to be sent to the loader function in order to
 	// use it to call the form to add an object.
-	getAddForm = function () {
+	var getAddForm = function () {
 
 		var method = 'GET'
 		var url = 'insert/';
@@ -210,7 +244,7 @@ layercms.webscrp = (function() {
 
 	// Creates and assigns the variables required to be sent to the loader function in order to
 	// use it to call the form to edit an object.
-	getEditForm = function (id) {
+	var getEditForm = function (id) {
 
 		var method = 'GET';
 		var url = 'update/' + id;
@@ -227,7 +261,7 @@ layercms.webscrp = (function() {
 
 	// Creates and assigns the variables required to be sent to the loader function in order to
 	// use it to delete an object.
-	doDelete = function (id) {
+	var doDelete = function (id) {
 
 		var method = 'DELETE';
 		var url = 'delete/' + id;
@@ -236,9 +270,11 @@ layercms.webscrp = (function() {
 
 		loader(method, url, params, target);
 
+		//refreshList();
+
 	};
 
-	toggleSidebar = function () {
+	var toggleSidebar = function () {
 
 		var aside = document.querySelector('aside');
 		var article = document.querySelector('article');
@@ -255,7 +291,7 @@ layercms.webscrp = (function() {
 		}
 	};
 
-	toggleSidebarCookies = function () {
+	var toggleSidebarCookies = function () {
 		if (readCookie('hiddenSidebar') == null) {
 			createCookie('hiddenSidebar', 'hidden', 7);
 		} else {
@@ -263,7 +299,7 @@ layercms.webscrp = (function() {
 		}
 	}
 
-	createCookie = function (name, value, days) {
+	var createCookie = function (name, value, days) {
 
 		if (days) {
 			var date = new Date();
@@ -276,7 +312,7 @@ layercms.webscrp = (function() {
 
 	};
 
-	readCookie = function (name) {
+	var readCookie = function (name) {
 
 		var nameEQ = name + '=';
 		var ca = document.cookie.split(';');
@@ -289,9 +325,9 @@ layercms.webscrp = (function() {
 
 	};
 
-	eraseCookie = function (name) { createCookie(name, '', -1); };
+	var eraseCookie = function (name) { createCookie(name, '', -1); };
 
-	liveSearch = function (str, urlString) {
+	var liveSearch = function (str, urlString) {
 		
 		var liveSearch = document.getElementById('liveSearch');
 		var method = 'GET';
@@ -308,8 +344,23 @@ layercms.webscrp = (function() {
 
 	}
 
+	/**
+	 * Refreshes the list after every change in order to maintain only the current
+	 * existing records on the user's screen.
+	 */
+	var refreshList = function () {
+
+		var method = 'GET';
+		var url = 'getList/';
+		var params = '';
+		var target = 'list';
+
+		loader(method, url, params, target);
+
+	};
+
 	// Function to be called when the document is loaded on every page.
-	loaded = function () {
+	var loaded = function () {
 		toggleSidebar();
 	};
 
@@ -318,6 +369,8 @@ layercms.webscrp = (function() {
 		'toggleShow': toggleShow,
 		'toggleHide': toggleHide,
 		'toggleShowHide': toggleShowHide,
+		'uploadFile': uploadFile,
+		'deleteImage': deleteImage,
 		'doAdd': doAdd,
 		'doEdit': doEdit,
 		'getAddForm': getAddForm,
