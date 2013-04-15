@@ -274,6 +274,7 @@ layercms.webscrp = (function() {
 
 	};
 
+	// Toggles the right hand sidebar provide readability.
 	var toggleSidebar = function () {
 
 		var aside = document.querySelector('aside');
@@ -291,6 +292,7 @@ layercms.webscrp = (function() {
 		}
 	};
 
+	// Creates and erases the cookies for sidebar toggling.
 	var toggleSidebarCookies = function () {
 		if (readCookie('hiddenSidebar') == null) {
 			createCookie('hiddenSidebar', 'hidden', 7);
@@ -299,6 +301,7 @@ layercms.webscrp = (function() {
 		}
 	}
 
+	// Universal function for creating cookies.
 	var createCookie = function (name, value, days) {
 
 		if (days) {
@@ -312,6 +315,7 @@ layercms.webscrp = (function() {
 
 	};
 
+	// Universal function for reading cookies.
 	var readCookie = function (name) {
 
 		var nameEQ = name + '=';
@@ -325,8 +329,10 @@ layercms.webscrp = (function() {
 
 	};
 
+	// Universal function for deleting cookies.
 	var eraseCookie = function (name) { createCookie(name, '', -1); };
 
+	// Provides search suggestions for searched terms over 3 characters.
 	var liveSearch = function (str, urlString) {
 		
 		var liveSearch = document.getElementById('liveSearch');
