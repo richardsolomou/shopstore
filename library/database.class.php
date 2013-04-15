@@ -117,6 +117,11 @@
 			$this->_params = array();
 		}
 
+		public function lastId()
+		{
+			return $this->_connection->lastInsertId();
+		}
+
 		/**
 		 * Sets the table name to be used for accessing the database.
 		 * 
