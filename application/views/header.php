@@ -4,6 +4,7 @@
 		<meta charset="utf-8">
 		<title><?php echo $title; ?></title>
 		<link rel="stylesheet" href="<?php echo BASE_PATH . '/templates/css/style.css'; ?>" media="all">
+		<link rel="icon" href="<?php echo BASE_PATH . '/templates/img/favicon.ico'; ?>" type="image/x-icon">
 		<!--[if lt IE 9]>
 				<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->

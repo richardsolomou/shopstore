@@ -97,6 +97,14 @@
 					// Checks if the specified category exists.
 					if (self::_exists('category_ID', $_POST['category_ID'], true, 'categories')) {
 						$this->Product->clear();
+						$imageExtension = $_POST['product_image'];
+						if ($_POST['product_image'] != null) {
+							// Moves the image from the temporary folder.
+							$product_image = SERVER_ROOT . '\\templates\\img\\products\\tmp\\' . $_POST['product_image'];
+							// Gets the extension of the image.
+							$imageExtension = strrchr($product_image, '.');
+						}
+						// Creates the array of product values to be parsed.
 						$product = array(
 							'category_ID' => $_POST['category_ID'],
 							'product_name' => $_POST['product_name'],
@@ -104,10 +112,16 @@
 							'product_condition' => $_POST['product_condition'],
 							'product_price' => $_POST['product_price'],
 							'product_stock' => $_POST['product_stock'],
-							'product_image' => $_POST['product_image']
+							'product_image' => $imageExtension
 						);
 						// Inserts the product into the database.
 						$this->Product->insert($product);
+						if ($_POST['product_image'] != null) {
+							// Gets the product identifier of this request.
+							$lastId = $this->Product->lastId();
+							// Moves and renames the file based on its product_ID.
+							if (file_exists($product_image)) rename($product_image, SERVER_ROOT . '\\templates\\img\\products\\' . $lastId . $imageExtension);
+						}
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Product successfully inserted.');
 						self::set('alert', 'alert-success nomargin');
@@ -149,6 +163,8 @@
 					$this->Product->where('product_ID', $product_ID);
 					// Deletes the product from the database.
 					$this->Product->delete();
+					// Deletes the image.
+					self::deleteImage($product_ID);
 					// Returns the alert message to be sent to the user.
 					self::set('message', 'Product successfully deleted.');
 					self::set('alert', 'alert-success nomargin');
@@ -166,7 +182,7 @@
 		/**
 		 * Modifies a product in the database with the specified new attributes.
 		 * 
-		 * @param  int    $product_ID          Product identifier.
+		 * @param  int    $product_ID Product identifier.
 		 * @access public
 		 */
 		public function update($product_ID = null)
@@ -182,6 +198,13 @@
 						// Checks if the specified category exists.
 						if (self::_exists('category_ID', $_POST['category_ID'], true, 'categories')) {
 							$this->Product->clear();
+							$imageExtension = $_POST['product_image'];
+							if ($_POST['product_image'] != null) {
+								// Moves the image from the temporary folder.
+								$product_image = SERVER_ROOT . '\\templates\\img\\products\\tmp\\' . $_POST['product_image'];
+								// Gets the extension of the image.
+								$imageExtension = strrchr($product_image, '.');
+							}
 							// Looks for the product with that identifier.
 							$this->Product->where('product_ID', $product_ID, true);
 							$product = array(
@@ -191,10 +214,16 @@
 								'product_condition' => $_POST['product_condition'],
 								'product_price' => $_POST['product_price'],
 								'product_stock' => $_POST['product_stock'],
-								'product_image' => $_POST['product_image']
+								'product_image' => $imageExtension
 							);
 							// Updates the product.
 							$this->Product->update($product);
+							if ($_POST['product_image'] != null) {
+								// Deletes any previous images.
+								self::deleteImage($product_ID);
+								// Moves and renames the file based on its product_ID.
+								if (file_exists($product_image)) rename($product_image, SERVER_ROOT . '\\templates\\img\\products\\' . $product_ID . $imageExtension);
+							}
 							// Returns the alert message to be sent to the user.
 							self::set('message', 'Product successfully updated.');
 							self::set('alert', 'alert-success nomargin');
@@ -224,6 +253,105 @@
 			} else {
 				// Returns an unauthorized access page.
 				$this->_action = 'unauthorizedAccess';
+			}
+		}
+
+		/**
+		 * Uploads a file into a temporary folder.
+		 * 
+		 * @access public
+		 */
+		public function uploadFile()
+		{
+			// Only loads the content for this method.
+			$this->ajax = true;
+			// Checks if a file was uploaded.
+			if (array_key_exists('HTTP_X_FILE_NAME', $_SERVER) && array_key_exists('CONTENT_LENGTH', $_SERVER)) {
+				// Assigns the file and its filename to a variable.
+				$fileName = $_SERVER['HTTP_X_FILE_NAME'];
+				$file = file_get_contents('php://input');
+				// Creates the file in the temporary folder.
+				$tmpFilePath = SERVER_ROOT . '\\templates\\img\\products\\tmp\\' . $fileName;
+				$tmpFile = file_put_contents($tmpFilePath, $file);
+				// Creates the main attributes of the file.
+				$attributes = getimagesize($tmpFilePath);
+				$imageWidth = $attributes[0];
+				$imageHeight = $attributes[1];
+				$imageType = $attributes[2];
+				// Checks what type of file it is.
+				switch ($imageType) {
+					case IMAGETYPE_GIF:
+						$imageResource = imagecreatefromgif($tmpFilePath);
+						break;
+					case IMAGETYPE_JPEG:
+						$imageResource = imagecreatefromjpeg($tmpFilePath);
+						break;
+					case IMAGETYPE_PNG:
+						$imageResource = imagecreatefrompng($tmpFilePath);
+						break;
+					default:
+						// Deletes the temporary file since it's not an image.
+						unlink($tmpFilePath);
+						// Returns the alert message to be sent to the user.
+						self::set('message', 'File is not an image.');
+						self::set('alert', '');
+						$this->_action = 'delete';
+						return false;
+				}
+				// Resizes the image to create a smaller version.
+				$thumbnailHeight = intval($imageHeight / $imageWidth * 175);
+				$thumbnailResource = imagecreatetruecolor(175, $thumbnailHeight);
+				imagecopyresampled($thumbnailResource, $imageResource, 0, 0, 0, 0, 175, $thumbnailHeight, $imageWidth, $imageHeight);
+				switch ($imageType) {
+					case IMAGETYPE_GIF:
+						imagegif($thumbnailResource, $tmpFilePath);
+						break;
+					case IMAGETYPE_JPEG:
+						imagejpeg($thumbnailResource, $tmpFilePath, 85);
+						break;
+					case IMAGETYPE_PNG:
+						imagepng($thumbnailResource, $tmpFilePath);
+						break;
+					default:
+						// Deletes the temporary file since it's not an image.
+						unlink($tmpFilePath);
+						// Returns the alert message to be sent to the user.
+						self::set('message', 'File could not be resized.');
+						self::set('alert', '');
+						$this->_action = 'delete';
+						return false;
+				}
+				// Returns the alert message to be sent to the user.
+				self::set('message', 'File uploaded.');
+				self::set('alert', 'alert-success');
+				$this->_action = 'delete';
+	        }
+		}
+
+		/**
+		 * Deletes an image from the file system.
+		 * 
+		 * @param  int    $product_ID Product identifier.
+		 * @access public
+		 */
+		public function deleteImage($product_ID = null)
+		{
+			$this->ajax = true;
+			$imageGlobal = glob(strtolower(SERVER_ROOT . '/templates/img/products/' . $product_ID . '.' . '*'));
+			$imageArray = $imageGlobal ? $imageGlobal : array();
+			if ($imageArray != array()) {
+				foreach ($imageArray as $image) {
+					unlink($image);
+				}
+				// Returns the alert message to be sent to the user.
+				self::set('message', 'Image deleted.');
+				self::set('alert', 'alert-success');
+				$this->_action = 'delete';
+			} else {
+				// Returns the alert message to be sent to the user.
+				self::set('message', 'Image doesn\'t exist.');
+				self::set('alert', '');
+				$this->_action = 'delete';
 			}
 		}
 

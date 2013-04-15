@@ -52,8 +52,15 @@
                             <td><input type="text" id="product_stock" name="product_stock" required value="" pattern="[0-9]+"></td>
                         </tr>
                         <tr>
-                            <td><label for="product_image">Image:</label></td>
-                            <td><input type="file" id="product_image" name="product_image"></td>
+                            <td><label for="product_images">Image:</label></td>
+                            <td><input type="file" id="product_image" name="product_image" onchange="layercms.webscrp.uploadFile()"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="progressBar">Progress:</label></td>
+                            <td>
+                                <progress id="progressBar" max="100" value="0"></progress>
+                                <div id="percentageCalc"></div>
+                            </td>
                         </tr>
                     </table>
                 </td>

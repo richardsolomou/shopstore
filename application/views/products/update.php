@@ -62,16 +62,25 @@
                             <td class="tdright"><input type="text" id="product_stock" name="product_stock" required value="<?php echo $product['product_stock']; ?>" pattern="[0-9]+"></td>
                         </tr>
                         <tr>
-                            <td class="tdleft"><label for="product_image">Image:</label></td>
-                            <td class="tdright"><input type="file" id="product_image" name="product_image"></td>
+                            <td><label for="product_images">Image:</label></td>
+                            <td><input type="file" id="product_image" name="product_image" onchange="layercms.webscrp.uploadFile()"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="progressBar">Progress:</label></td>
+                            <td>
+                                <progress id="progressBar" max="100" value="0"></progress>
+                                <div id="percentageCalc"></div>
+                            </td>
                         </tr>
                         <?php if ($product['product_image'] != null) { ?>
                         <tr>
                             <td class="tdleft"></td>
                             <td class="tdright">
                                 <p>&nbsp;</p>
-                                <img src="<?php echo BASE_PATH . '/templates/img/products/' . $product['product_image']; ?>">
-                                <a href="javascript:void(0)" onclick="layercms.webscrp.productDeleteImage" class="deleteImage"><img src="<?php echo BASE_PATH . '/templates/img/delete.png'; ?>"></a>
+                                <div id="currentImage">
+                                    <img src="<?php echo BASE_PATH . '/templates/img/products/' . $product_ID . $product['product_image']; ?>">
+                                    <a href="javascript:void(0)" onclick="layercms.webscrp.deleteImage(<?php echo $product_ID; ?>)" class="deleteImage"><img src="<?php echo BASE_PATH . '/templates/img/delete.png'; ?>"></a>
+                                </div>
                             </td>
                         </tr>
                         <?php } ?>

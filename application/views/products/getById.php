@@ -8,7 +8,7 @@
             <tr>
             	<td>
             		<?php if ($product['product_image'] != null) {
-                        echo '<img src="' . BASE_PATH . '/templates/img/products/' . $product['product_image'] . '">';
+                        echo '<img src="' . BASE_PATH . '/templates/img/products/' . $product['product_ID'] . $product['product_image'] . '">';
                     } else {
                         echo '<img src="' . BASE_PATH . '/templates/img/' . 'NA.png' . '">';
                     } ?>
