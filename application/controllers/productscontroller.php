@@ -213,9 +213,12 @@
 								'product_description' => $_POST['product_description'],
 								'product_condition' => $_POST['product_condition'],
 								'product_price' => $_POST['product_price'],
-								'product_stock' => $_POST['product_stock'],
+								'product_stock' => $_POST['product_stock']
+							);
+							$imageArray = array(
 								'product_image' => $imageExtension
 							);
+							if ($imageExtension != null) $product = array_merge($product, $imageArray);
 							// Updates the product.
 							$this->Product->update($product);
 							if ($_POST['product_image'] != null) {
@@ -278,45 +281,31 @@
 				$imageWidth = $attributes[0];
 				$imageHeight = $attributes[1];
 				$imageType = $attributes[2];
+				// Resizes the image to create a smaller version.
+				$thumbnailHeight = intval($imageHeight / $imageWidth * 175);
+				$thumbnailResource = imagecreatetruecolor(175, $thumbnailHeight);
 				// Checks what type of file it is.
 				switch ($imageType) {
 					case IMAGETYPE_GIF:
 						$imageResource = imagecreatefromgif($tmpFilePath);
-						break;
-					case IMAGETYPE_JPEG:
-						$imageResource = imagecreatefromjpeg($tmpFilePath);
-						break;
-					case IMAGETYPE_PNG:
-						$imageResource = imagecreatefrompng($tmpFilePath);
-						break;
-					default:
-						// Deletes the temporary file since it's not an image.
-						unlink($tmpFilePath);
-						// Returns the alert message to be sent to the user.
-						self::set('message', 'File is not an image.');
-						self::set('alert', '');
-						$this->_action = 'delete';
-						return false;
-				}
-				// Resizes the image to create a smaller version.
-				$thumbnailHeight = intval($imageHeight / $imageWidth * 175);
-				$thumbnailResource = imagecreatetruecolor(175, $thumbnailHeight);
-				imagecopyresampled($thumbnailResource, $imageResource, 0, 0, 0, 0, 175, $thumbnailHeight, $imageWidth, $imageHeight);
-				switch ($imageType) {
-					case IMAGETYPE_GIF:
+						imagecopyresampled($thumbnailResource, $imageResource, 0, 0, 0, 0, 175, $thumbnailHeight, $imageWidth, $imageHeight);
 						imagegif($thumbnailResource, $tmpFilePath);
 						break;
 					case IMAGETYPE_JPEG:
+						$imageResource = imagecreatefromjpeg($tmpFilePath);
+						imagecopyresampled($thumbnailResource, $imageResource, 0, 0, 0, 0, 175, $thumbnailHeight, $imageWidth, $imageHeight);
 						imagejpeg($thumbnailResource, $tmpFilePath, 85);
 						break;
 					case IMAGETYPE_PNG:
+						$imageResource = imagecreatefrompng($tmpFilePath);
+						imagecopyresampled($thumbnailResource, $imageResource, 0, 0, 0, 0, 175, $thumbnailHeight, $imageWidth, $imageHeight);
 						imagepng($thumbnailResource, $tmpFilePath);
 						break;
 					default:
 						// Deletes the temporary file since it's not an image.
 						unlink($tmpFilePath);
 						// Returns the alert message to be sent to the user.
-						self::set('message', 'File could not be resized.');
+						self::set('message', 'File is not an image.');
 						self::set('alert', '');
 						$this->_action = 'delete';
 						return false;
