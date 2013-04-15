@@ -4,7 +4,7 @@
 
     <div id="operationAlert" class="showHide"></div>
 
-    <button href="javascript:void(0)" onclick="layercms.webscrp.getAddForm('customers')" class="btn">Add New Customer</button>    
+    <button href="javascript:void(0)" onclick="layercms.webscrp.getAddForm()" class="btn">Add New Currency</button>    
     <div id="message" class="showHide adminBar"></div>
 
     <table class="bordered hoverRed">

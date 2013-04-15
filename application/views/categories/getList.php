@@ -4,7 +4,7 @@
 
     <div id="operationAlert" class="showHide"></div>
 
-    <button href="javascript:void(0)" onclick="layercms.webscrp.getAddForm('categories')" class="btn">Add New Categories</button>    
+    <button href="javascript:void(0)" onclick="layercms.webscrp.getAddForm()" class="btn">Add New Category</button>    
     <div id="message" class="showHide adminBar"></div>
         
     <table class="bordered hoverRed">
