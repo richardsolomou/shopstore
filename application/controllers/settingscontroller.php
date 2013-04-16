@@ -21,7 +21,6 @@
 		/**
 		 * Returns all settings in the database.
 		 * 
-		 * @return array  Settings in the database.
 		 * @access public
 		 */
 		public function getList()

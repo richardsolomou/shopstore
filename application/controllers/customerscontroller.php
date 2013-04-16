@@ -21,7 +21,6 @@
 		/**
 		 * Returns all customers in the database.
 		 * 
-		 * @return array  Customers in the database.
 		 * @access public
 		 */
 		public function getList()

@@ -21,7 +21,6 @@
 		/**
 		 * Returns all currencies in the database.
 		 * 
-		 * @return array  Currencies in the database.
 		 * @access public
 		 */
 		public function getList()

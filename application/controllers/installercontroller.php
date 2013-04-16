@@ -30,8 +30,8 @@
 			if (DB_SETUP == false) {
 				// Destroys any logged in sessions.
 				unset($_SESSION['SESS_ADMINID']);
-            	unset($_SESSION['SESS_ADMINLOGGEDIN']);
-			} else {
+				unset($_SESSION['SESS_ADMINLOGGEDIN']);
+			} else{
 				// Sends the user to an already installed error page.
 				$this->_action = 'alreadyInstalled';
 			}
@@ -151,10 +151,10 @@
 		            $config[] = '?>';
 		            // Puts the contents in the configuration file.
 		            file_put_contents(SERVER_ROOT . '/library/' . 'config.php', implode(PHP_EOL, $config));
-		            // Creates the two sessions required for administrative
-		            // privileges.
-		            $_SESSION['SESS_ADMINID'] = 1;
-		            $_SESSION['SESS_ADMINLOGGEDIN'] = 1;
+					// Creates the two sessions required for administrative
+					// privileges.
+					$_SESSION['SESS_ADMINID'] = 1;
+					$_SESSION['SESS_ADMINLOGGEDIN'] = 1;
 		        } else {
 		        	// Returns the alert message to be sent to the user.
 		        	self::set('error', $error);
