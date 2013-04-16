@@ -159,7 +159,7 @@
 				if ($full == false) require_once SERVER_ROOT . '/application/views/' . 'navigation.php';
 			}
 
-			if ($this->_controller == 'Controller' || $this->_action == 'unauthorizedAccess') $this->_controller = null;
+			if ($this->_controller == 'Controller' || $this->_action == 'unauthorizedAccess' || $this->_action == 'alert') $this->_controller = null;
 			$viewLowerCase = strtolower(SERVER_ROOT . '/application/views/' . $this->_controller . '/' . $this->_action . '.php');
 			$viewGlobal = glob(strtolower(SERVER_ROOT . '/application/views/' . $this->_controller . '/' . '*'));
 			$viewArray = $viewGlobal ? $viewGlobal : array();

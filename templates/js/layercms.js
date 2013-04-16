@@ -139,7 +139,7 @@ layercms.webscrp = (function() {
 		var method = 'POST';
 		var url = 'insert/';
 		var params;
-		var target = 'operationAlert';
+		var target = 'addAlert';
 
 		var form = document.getElementById(formID);
 
@@ -174,8 +174,6 @@ layercms.webscrp = (function() {
 
 		loader(method, url, params, target);
 
-		//refreshList();
-
 	};
 
 	// Creates and assigns the variables required to be sent to the loader function and gets all
@@ -185,7 +183,7 @@ layercms.webscrp = (function() {
 		var method = 'POST';
 		var url = 'update/' + id + '/';
 		var params;
-		var target = 'operationAlert';
+		var target = 'edit_' + id;
 		
 		var form = document.getElementById(formID);
 
@@ -220,8 +218,6 @@ layercms.webscrp = (function() {
 		window.console.log('doEdit: ' + method + '\r\n' + url + '\r\n' + params + '\r\n' + target);
 
 		loader(method, url, params, target);
-
-		//refreshList();
 
 	};
 
@@ -266,11 +262,9 @@ layercms.webscrp = (function() {
 		var method = 'DELETE';
 		var url = 'delete/' + id;
 		var params = '';
-		var target = 'operationAlert';
+		var target = 'edit_' + id;
 
 		loader(method, url, params, target);
-
-		//refreshList();
 
 	};
 
@@ -349,21 +343,6 @@ layercms.webscrp = (function() {
 		loader(method, url, params, target);
 
 	}
-
-	/**
-	 * Refreshes the list after every change in order to maintain only the current
-	 * existing records on the user's screen.
-	 */
-	var refreshList = function () {
-
-		var method = 'GET';
-		var url = 'getList/';
-		var params = '';
-		var target = 'list';
-
-		loader(method, url, params, target);
-
-	};
 
 	// Function to be called when the document is loaded on every page.
 	var loaded = function () {

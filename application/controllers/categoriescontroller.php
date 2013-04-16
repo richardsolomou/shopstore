@@ -91,12 +91,14 @@
 						$this->Category->insert($category);
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Category successfully inserted.');
-						self::set('alert', 'alert-success nomargin');
+						self::set('alert', 'alert-success');
 					} else {
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Category parent does not exist.');
 						self::set('alert', '');
 					}
+					// Show an alert.
+					$this->_action = 'alert';
 				}
 			} else {
 				// Returns an unauthorized access page.
@@ -130,13 +132,15 @@
 					} else {
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Category has products under it.');
-						self::set('alert', '');
+						self::set('alert', 'nomargin');
 					}
 				} else {
 					// Returns the alert message to be sent to the user.
 					self::set('message', 'Category does not exist.');
-					self::set('alert', '');
+					self::set('alert', 'nomargin');
 				}
+				// Show an alert.
+				$this->_action = 'alert';
 			} else {
 				// Returns an unauthorized access page.
 				$this->_action = 'unauthorizedAccess';
@@ -179,18 +183,20 @@
 							} else {
 								// Returns the alert message to be sent to the user.
 								self::set('message', 'Category is the same as the parent.');
-								self::set('alert', '');
+								self::set('alert', 'nomargin');
 							}
 						} else {
 							// Returns the alert message to be sent to the user.
 							self::set('message', 'Category parent does not exist.');
-							self::set('alert', '');
+							self::set('alert', 'nomargin');
 						}
 					} else {
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Category does not exist.');
-						self::set('alert', '');
+						self::set('alert', 'nomargin');
 					}
+					// Show an alert.
+					$this->_action = 'alert';
 				} else {
 					// Returns the category's values from the database.
 					$category = self::_getCatById($category_ID);

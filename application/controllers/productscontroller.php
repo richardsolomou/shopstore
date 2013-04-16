@@ -123,12 +123,14 @@
 						}
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Product successfully inserted.');
-						self::set('alert', 'alert-success nomargin');
+						self::set('alert', 'alert-success');
 					} else {
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Category does not exist.');
 						self::set('alert', '');
 					}
+					// Show an alert.
+					$this->_action = 'alert';
 				// Default action for GET requests.
 				} else {
 					// Gets the currency ID from the website settings table and
@@ -170,8 +172,10 @@
 				} else {
 					// Returns the alert message to be sent to the user.
 					self::set('message', 'Product does not exist.');
-					self::set('alert', '');
+					self::set('alert', 'nomargin');
 				}
+				// Show an alert.
+				$this->_action = 'alert';
 			} else {
 				// Returns an unauthorized access page.
 				$this->_action = 'unauthorizedAccess';
@@ -229,17 +233,18 @@
 							// Returns the alert message to be sent to the user.
 							self::set('message', 'Product successfully updated.');
 							self::set('alert', 'alert-success nomargin');
-							return true;
 						} else {
 							// Returns the alert message to be sent to the user.
 							self::set('message', 'Category does not exist.');
-							self::set('alert', '');
+							self::set('alert', 'nomargin');
 						}
 					} else {
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Product does not exist.');
-						self::set('alert', '');
+						self::set('alert', 'nomargin');
 					}
+					// Show an alert.
+					$this->_action = 'alert';
 				// Default action for GET requests.
 				} else {
 					// Returns the product's values from the database.
@@ -311,13 +316,13 @@
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'File is not an image.');
 						self::set('alert', '');
-						$this->_action = 'delete';
+						$this->_action = 'alert';
 						return false;
 				}
 				// Returns the alert message to be sent to the user.
 				self::set('message', 'File uploaded.');
 				self::set('alert', 'alert-success');
-				$this->_action = 'delete';
+				$this->_action = 'alert';
 	        }
 		}
 

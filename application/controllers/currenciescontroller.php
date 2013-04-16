@@ -62,12 +62,14 @@
 						$this->Currency->insert($currency);
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Currency successfully inserted.');
-						self::set('alert', 'alert-success nomargin');
+						self::set('alert', 'alert-success');
 					} catch (PDOException $e) {
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Currency could not be inserted.');
 						self::set('alert', '');
 					}
+					// Show an alert.
+					$this->_action = 'alert';
 				}
 			} else {
 				// Returns an unauthorized access page.
@@ -103,13 +105,15 @@
 					} else {
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Currency is the default currency.');
-						self::set('alert', '');
+						self::set('alert', 'nomargin');
 					}
 				} else {
 					// Returns the alert message to be sent to the user.
 					self::set('message', 'Currency does not exist.');
-					self::set('alert', '');
+					self::set('alert', 'nomargin');
 				}
+				// Show an alert.
+				$this->_action = 'alert';
 			} else {
 				// Returns an unauthorized access page.
 				$this->_action = 'unauthorizedAccess';
@@ -132,24 +136,33 @@
 				if (isset($_POST['operation'])) {
 					// Checks if the specified currency exists.
 					if (self::_exists('currency_ID', $currency_ID, true)) {
-						$this->Currency->clear();
-						// Looks for the currency with that identifier.
-						$this->Currency->where('currency_ID', $currency_ID, true);
-						$currency = array(
-							'currency_name' => $_POST['currency_name'],
-							'currency_code' => $_POST['currency_code'],
-							'currency_symbol' => $_POST['currency_symbol']
-						);
-						// Updates the currency.
-						$this->Currency->update($currency);
-						// Returns the alert message to be sent to the user.
-						self::set('message', 'Currency successfully updated.');
-						self::set('alert', 'alert-success nomargin');
+						// Checks if the code is less than 4 characters.
+						if (strlen($_POST['currency_code']) <= 3) {
+							$this->Currency->clear();
+							// Looks for the currency with that identifier.
+							$this->Currency->where('currency_ID', $currency_ID, true);
+							$currency = array(
+								'currency_name' => $_POST['currency_name'],
+								'currency_code' => $_POST['currency_code'],
+								'currency_symbol' => $_POST['currency_symbol']
+							);
+							// Updates the currency.
+							$this->Currency->update($currency);
+							// Returns the alert message to be sent to the user.
+							self::set('message', 'Currency successfully updated.');
+							self::set('alert', 'alert-success nomargin');
+						} else {
+							// Returns the alert message to be sent to the user.
+							self::set('message', 'Currency code is more than 3 characters.');
+							self::set('alert', 'nomargin');
+						}
 					} else {
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Currency does not exist.');
-						self::set('alert', '');
+						self::set('alert', 'nomargin');
 					}
+					// Show an alert.
+					$this->_action = 'alert';
 				// Default action for GET requests.
 				} else {
 					// Returns the currency's values from the database.

@@ -218,6 +218,7 @@ table textarea { width: 90%; height: 150px; }
 
 tr.showHide, div.showHide { display: none; }
 .displayBlock { display: block!important; }
+.displayRowBlock { display: table-row!important; }
 
 a.showHide {
     font-size: 75%;

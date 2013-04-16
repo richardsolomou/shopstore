@@ -69,12 +69,14 @@
 						$this->Customer->insert($customer);
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Customer successfully inserted.');
-						self::set('alert', 'alert-success nomargin');
+						self::set('alert', 'alert-success');
 					} else {
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Customer username already exists.');
 						self::set('alert', '');
 					}
+					// Show an alert.
+					$this->_action = 'alert';
 				}
 			} else {
 				// Returns an unauthorized access page.
@@ -107,8 +109,10 @@
 				} else {
 					// Returns the alert message to be sent to the user.
 					self::set('message', 'Customer does not exist.');
-					self::set('alert', '');
+					self::set('alert', 'nomargin');
 				}
+				// Show an alert.
+				$this->_action = 'alert';
 			} else {
 				// Returns an unauthorized access page.
 				$this->_action = 'unauthorizedAccess';
@@ -152,8 +156,10 @@
 					} else {
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Customer does not exist.');
-						self::set('alert', '');
+						self::set('alert', 'nomargin');
 					}
+					// Show an alert.
+					$this->_action = 'alert';
 				// Default action for GET requests.
 				} else {
 					// Returns the customer's values from the database.

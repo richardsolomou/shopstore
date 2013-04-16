@@ -25,7 +25,6 @@
                         <td class="lefted"><?php echo $setting['setting_value']; ?></td>
                         <td class="operations">
                             <button href="javascript:void(0)" onclick="layercms.webscrp.getEditForm(<?php echo $setting['setting_ID']; ?>)" class="btn">Edit</button>
-                            <button href="javascript:void(0)" onclick="layercms.webscrp.doDelete(<?php echo $setting['setting_ID']; ?>)" class="btn">Delete</button>
                         </td>
                     </tr>
                     <tr class="noHover">

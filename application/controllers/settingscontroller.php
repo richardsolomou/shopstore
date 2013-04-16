@@ -72,8 +72,10 @@
 					} else {
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Setting does not exist.');
-						self::set('alert', '');
+						self::set('alert', 'nomargin');
 					}
+					// Show an alert.
+					$this->_action = 'alert';
 				// Default action for GET requests.
 				} else {
 					// Fetches the currencies.
