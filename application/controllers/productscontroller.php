@@ -63,7 +63,6 @@
 		/**
 		 * Returns all products in the database.
 		 * 
-		 * @return array  Products in the database.
 		 * @access public
 		 */
 		public function getList()
@@ -276,6 +275,8 @@
 				// Creates the file in the temporary folder.
 				$tmpFilePath = SERVER_ROOT . '\\templates\\img\\products\\tmp\\' . $fileName;
 				$tmpFile = file_put_contents($tmpFilePath, $file);
+				// Add permissions to the file.
+				chmod($tmpFilePath, 0666);
 				// Creates the main attributes of the file.
 				$attributes = getimagesize($tmpFilePath);
 				$imageWidth = $attributes[0];
@@ -297,7 +298,10 @@
 						imagejpeg($thumbnailResource, $tmpFilePath, 85);
 						break;
 					case IMAGETYPE_PNG:
+						imagealphablending($thumbnailResource, false);
+						imagesavealpha($thumbnailResource, true);
 						$imageResource = imagecreatefrompng($tmpFilePath);
+						imagealphablending($imageResource, true);
 						imagecopyresampled($thumbnailResource, $imageResource, 0, 0, 0, 0, 175, $thumbnailHeight, $imageWidth, $imageHeight);
 						imagepng($thumbnailResource, $tmpFilePath);
 						break;

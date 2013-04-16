@@ -5,33 +5,23 @@
     float: left;
     background: #fff;
     border: 1px solid #e5e5e5;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
     text-align: center;
     position: relative;
-    padding-bottom: 3.5em;
+    padding-bottom: 3.3em;
     overflow: hidden;
 }
 
-.itemEntry h3 { font-weight: bold; padding-top: 1em;}
-
-.itemEntry a img {
-    -webkit-border-radius: 0 0 10px 10px;
-    -moz-border-radius: 0 0 10px 10px;
-    border-radius: 0 0 10px 10px;
-}
+.itemEntry h3 { font-weight: bold; padding-top: 1em; }
 
 .itemEntry:not(:hover) { opacity: 0.6; }
 
-.itemEntry a { display: block; text-decoration: none; }
+.itemEntry a { display: block; text-decoration: none; color: #fff; }
+.itemEntry a:not(.addToBasket) { height: 150px; }
+.itemEntry a h3 { background-color: rgba(0, 0, 0, 0.5); padding-bottom: 10px; }
 
 a.addToBasket {
     background: #e5e5e5;
     color: #444;
-    -webkit-border-radius: 0 0 10px 10px;
-    -moz-border-radius: 0 0 10px 10px;
-    border-radius: 0 0 10px 10px;
     bottom: 0;
     position: absolute;
     width: 130px;
