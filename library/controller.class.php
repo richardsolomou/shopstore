@@ -94,8 +94,15 @@
 				// Stores the categories of the website in a variable.
 				$categories = $this->$model->query('SELECT * FROM categories', true);
 				self::set('categories', $categories);
-				// Sets the title of the current page according to the controller.
-				$pageTitle = $this->_controller != 'Controller' ? $this->_controller : 'Home';
+				// Sets the title of the current page and based on the controller.
+				if ($this->_controller == 'Controller') {
+					$pageTitle = 'Home';
+					// Stores the products of the website in a variable.
+					$products = $this->$model->query('SELECT * FROM products', true);
+					self::set('products', $products);
+				} else {
+					$pageTitle = $this->_controller;
+				}
 				self::set('pageTitle', $pageTitle);
 				self::set('title', $settings['setting_value'] . ' &raquo; ' . $pageTitle);
 				self::set('website_name', $settings['setting_value']);
