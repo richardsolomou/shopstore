@@ -28,8 +28,8 @@
                     <tr class="centered">
                         <td><?php echo $category1['category_ID']; ?></td>
                         <td class="lefted"><?php echo $category1['category_name']; ?></td>
-                        <td class="lefted"><?php echo $productNumber ?></td>
-                        <td class="lefted"><?php echo $category_parent ?></td>
+                        <td class="lefted"><?php echo $productNumber; ?></td>
+                        <td class="lefted"><?php echo $category_parent; ?></td>
                         <td class="operations">
                             <button href="javascript:void(0)" onclick="layercms.webscrp.getEditForm(<?php echo $category1['category_ID']; ?>)" class="btn">Edit</button>
                             <button href="javascript:void(0)" onclick="layercms.webscrp.doDelete(<?php echo $category1['category_ID']; ?>)" class="btn">Delete</button>
