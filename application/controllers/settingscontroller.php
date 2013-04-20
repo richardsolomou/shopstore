@@ -96,6 +96,68 @@
 		}
 
 		/**
+		 * Resets the database to the default settings.
+		 * 
+		 * @access public
+		 */
+		public function resetDatabase()
+		{
+			if (isset($_POST['operation'])) {
+				$products = self::_getProducts();
+	            foreach ($products as $product) {
+	            	$imageGlobal = glob(strtolower(SERVER_ROOT . '/templates/img/products/' . $product['product_ID'] . '.' . '*'));
+					foreach ($imageGlobal as $image) {
+						unlink($image);
+					}
+	            }
+	            // Unsets any sessions.
+	            unset($_SESSION['SESS_ADMINID']);
+	            unset($_SESSION['SESS_ADMINLOGGEDIN']);
+	            unset($_SESSION['SESS_LOGGEDIN']);
+				unset($_SESSION['SESS_CUSTOMERID']);
+	            // Creates a configuration array with the content to include
+	        	// in the configuration file to be created.
+	            $config[] = '<?php' . PHP_EOL;
+	            $config[] = '    /**';
+	            $config[] = '     * Set the under-development environment variable.';
+	            $config[] = '     */';
+	            $config[] = '    define (\'DEVELOPMENT_ENVIRONMENT\', true);' . PHP_EOL;
+	            $config[] = '    /**';
+	            $config[] = '     * Set configuration variables.';
+	            $config[] = '     */';
+	            $config[] = '    define(\'DB_HOST\', \'\');';
+	            $config[] = '    define(\'DB_USER\', \'\');';
+	            $config[] = '    define(\'DB_PASS\', \'\');';
+	            $config[] = '    define(\'DB_NAME\', \'\');' . PHP_EOL;
+	            $config[] = '    /**';
+	            $config[] = '     * Automatically set by the installer.';
+	            $config[] = '     */';
+	            $config[] = '    define(\'DB_SETUP\', false);' . PHP_EOL;
+	            $config[] = '?>';
+	            // Puts the contents in the configuration file.
+	            file_put_contents(SERVER_ROOT . '/library/config.php', implode(PHP_EOL, $config));
+	            // Sends the user to the installer
+            	header('Location: ' . BASE_PATH . '/installer');
+            }
+		}
+
+		/**
+		 * Returns product values in a variable.
+		 * 
+		 * @return array     Returns the product values.
+		 * @access protected
+		 */
+		protected function _getProducts()
+		{
+			$this->Settings->clear();
+			// Uses the products table.
+			$this->Settings->table('products');
+			$this->Settings->select();
+			// Returns the result of the products.
+			return $this->Settings->fetch(true);
+		}
+
+		/**
 		 * Returns currency values in a variable.
 		 * 
 		 * @return array     Returns the currency values.

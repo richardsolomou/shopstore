@@ -5,6 +5,8 @@
     <div id="operationAlert" class="showHide"></div>
 
     <div id="message" class="showHide adminBar"></div>
+    
+    <p><a href="<?php echo BASE_PATH . '/settings/resetDatabase'; ?>" class="btn">Reset Database</a></p>
 
     <table class="bordered hoverRed">
         <thead>
@@ -33,5 +35,6 @@
             <?php } ?>
         </tbody>
     </table>
+
 
 </article>
