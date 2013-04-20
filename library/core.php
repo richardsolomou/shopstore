@@ -6,7 +6,7 @@
 	function __autoload($className)
 	{
 		if (file_exists($libraryClass = SERVER_ROOT . '/library/' . strtolower($className) . '.class.php')) {
-			// Includes the inflect, main controller and database classes.
+			// Includes the main controller and database classes.
 			require_once $libraryClass;
 		} else if (file_exists($controllerClass = SERVER_ROOT . '/application/controllers/' . strtolower($className) . '.php')) {
 			// Includes the element controllers for categories, customers, etc.

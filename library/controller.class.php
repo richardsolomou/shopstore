@@ -86,7 +86,7 @@
 		{
 			// Checks if the database has been setup.
 			if (DB_SETUP == true) {
-				$model = ucfirst(Inflect::singularize($this->_controller));
+				$model = $this->_controller;
 				$this->$model = $model != 'Controller' ? new $model : new Model;
 				// Stores the settings of the website in a variable.
 				$settings = $this->$model->query('SELECT `setting_value` FROM `settings` WHERE `setting_column` = "website_name"');
