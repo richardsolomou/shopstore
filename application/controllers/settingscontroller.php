@@ -27,10 +27,10 @@
 		{
 			// Checks if the user has sufficient privileges.
 			if (self::isAdmin()) {
-				$this->Setting->clear();
-				$this->Setting->select();
+				$this->Settings->clear();
+				$this->Settings->select();
 				// Fetches all the settings.
-				$settings = $this->Setting->fetch(true);
+				$settings = $this->Settings->fetch(true);
 				// Fetches all the currencies.
 				$currencies = self::_getCurrencies();
 				self::set('settings', $settings);
@@ -57,15 +57,15 @@
 				if (isset($_POST['operation'])) {
 					// Checks if the setting exists.
 					if (self::_exists('setting_ID', $setting_ID, true)) {
-						$this->Setting->clear();
+						$this->Settings->clear();
 						// Looks for the setting with that identifier.
-						$this->Setting->where('setting_ID', $setting_ID, true);
+						$this->Settings->where('setting_ID', $setting_ID, true);
 						$setting = array(
 							'setting_column' => $_POST['setting_column'],
 							'setting_value' => $_POST['setting_value']
 						);
 						// Updates the setting.
-						$this->Setting->update($setting);
+						$this->Settings->update($setting);
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Setting successfully updated.');
 						self::set('alert', 'alert-success nomargin');
@@ -103,12 +103,12 @@
 		 */
 		protected function _getCurrencies()
 		{
-			$this->Setting->clear();
+			$this->Settings->clear();
 			// Uses the currencies table.
-			$this->Setting->table('currencies');
-			$this->Setting->select();
+			$this->Settings->table('currencies');
+			$this->Settings->select();
 			// Returns the results of the currencies.
-			return $this->Setting->fetch(true);
+			return $this->Settings->fetch(true);
 		}
 
 		/**
@@ -122,12 +122,12 @@
 		{
 			// Checks if the setting exists.
 			if (self::_exists('setting_ID', $setting_ID, true)) {
-				$this->Setting->clear();
+				$this->Settings->clear();
 				// Looks for the setting with that identifier.
-				$this->Setting->where('setting_ID', $setting_ID);
-				$this->Setting->select();
+				$this->Settings->where('setting_ID', $setting_ID);
+				$this->Settings->select();
 				// Returns the results of the setting.
-				return $this->Setting->fetch();
+				return $this->Settings->fetch();
 			} else {
 				return false;
 			}
@@ -144,12 +144,12 @@
 		{
 			// Checks if the setting column value exists.
 			if (self::_exists('setting_column', $setting_column, false)) {
-				$this->Setting->clear();
+				$this->Settings->clear();
 				// Looks for the setting with that value.
-				$this->Setting->where('setting_column', '"' . $setting_column . '"');
-				$this->Setting->select();
+				$this->Settings->where('setting_column', '"' . $setting_column . '"');
+				$this->Settings->select();
 				// Returns the results of the setting.
-				return $this->Setting->fetch();
+				return $this->Settings->fetch();
 			} else {
 				return false;
 			}
@@ -169,19 +169,19 @@
 		{
 			// Checks if not all characters are digits.
 			if ($requireInt == true && !ctype_digit($value)) return false;
-			$this->Setting->clear();
+			$this->Settings->clear();
 			// Uses a different table for other controllers.
-			if ($customTable != 'settings') $this->Setting->table($customTable);
+			if ($customTable != 'settings') $this->Settings->table($customTable);
 			if ($requireInt == false) {
 				// Looks for a string value in a specified column.
-				$this->Setting->where($column, '"' . $value . '"');
+				$this->Settings->where($column, '"' . $value . '"');
 			} else {
 				// Loooks for an integer value in a specified column.
-				$this->Setting->where($column, $value);
+				$this->Settings->where($column, $value);
 			}
-			$this->Setting->select();
+			$this->Settings->select();
 			// Returns the appropriate value if the element exists or not.
-			if ($this->Setting->rowCount() != 0) {
+			if ($this->Settings->rowCount() != 0) {
 				return true;
 			} else {
 				return false;

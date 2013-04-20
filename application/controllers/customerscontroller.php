@@ -27,10 +27,10 @@
 		{
 			// Checks if the user has sufficient privileges.
 			if (self::isAdmin()) {
-				$this->Customer->clear();
-				$this->Customer->select();
+				$this->Customers->clear();
+				$this->Customers->select();
 				// Fetches all the customers.
-				$customers = $this->Customer->fetch(true);
+				$customers = $this->Customers->fetch(true);
 				self::set('customers', $customers);
 			} else {
 				// Returns an unauthorized access page.
@@ -53,7 +53,7 @@
 				if (isset($_POST['operation'])) {
 					// Checks if the username is not taken.
 					if (!self::_exists('customer_username', $_POST['customer_username'])) {
-						$this->Customer->clear();
+						$this->Customers->clear();
 						$customer = array(
 							'customer_username'  => $_POST['customer_username'],
 							'customer_password'  => $_POST['customer_password'],
@@ -66,7 +66,7 @@
 							'customer_email'     => $_POST['customer_email']
 						);
 						// Inserts the customer into the database.
-						$this->Customer->insert($customer);
+						$this->Customers->insert($customer);
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Customer successfully inserted.');
 						self::set('alert', 'alert-success');
@@ -98,11 +98,11 @@
 				$this->ajax = true;
 				// Checks if the customer exists.
 				if (self::_exists('customer_ID', $customer_ID, true)) {
-					$this->Customer->clear();
+					$this->Customers->clear();
 					// Looks for the customer with that identifier.
-					$this->Customer->where('customer_ID', $customer_ID);
+					$this->Customers->where('customer_ID', $customer_ID);
 					// Deletes the customer from the database.
-					$this->Customer->delete();
+					$this->Customers->delete();
 					// Returns the alert message to be sent to the user.
 					self::set('message', 'Customer successfully deleted.');
 					self::set('alert', 'alert-success nomargin');
@@ -131,15 +131,15 @@
 			if (self::isAdmin()) {
 				// Only loads the content for this method.
 				$this->ajax = true;
+				// Checks if this was a POST request.
 				if (isset($_POST['operation'])) {
 					// Checks if the specified customer exists.
 					if (self::_exists('customer_ID', $customer_ID, true)) {
-						$this->Customer->clear();
+						$this->Customers->clear();
 						// Looks for the customer with that identifier.
-						$this->Customer->where('customer_ID', $customer_ID, true);
+						$this->Customers->where('customer_ID', $customer_ID, true);
 						$customer = array(
 							'customer_username'  => $_POST['customer_username'],
-							'customer_password'  => $_POST['customer_password'],
 							'customer_firstname' => $_POST['customer_firstname'],
 							'customer_lastname'  => $_POST['customer_lastname'],
 							'customer_address1'  => $_POST['customer_address1'],
@@ -148,8 +148,12 @@
 							'customer_phone'     => $_POST['customer_phone'],
 							'customer_email'     => $_POST['customer_email']
 						);
+						if ($_POST['customer_password'] != '') {
+							$passwordArray = array('customer_password' => $_POST['customer_password']);
+							$customer = array_merge($customer, $passwordArray);
+						}
 						// Updates the customer.
-						$this->Customer->update($customer);
+						$this->Customers->update($customer);
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Customer successfully updated.');
 						self::set('alert', 'alert-success nomargin');
@@ -184,12 +188,12 @@
 		{
 			// Checks if the customer exists.
 			if (self::_exists('customer_ID', $customer_ID, true)) {
-				$this->Customer->clear();
+				$this->Customers->clear();
 				// Looks for the customer with that identifier.
-				$this->Customer->where('customer_ID', $customer_ID);
-				$this->Customer->select();
+				$this->Customers->where('customer_ID', $customer_ID);
+				$this->Customers->select();
 				// Returns the results of the customer.
-				return $this->Customer->fetch();
+				return $this->Customers->fetch();
 			} else {
 				return false;
 			}
@@ -209,19 +213,19 @@
 		{
 			// Checks if not all characters are digits.
 			if ($requireInt == true && !ctype_digit($value)) return false;
-			$this->Customer->clear();
+			$this->Customers->clear();
 			// Uses a different table for other controllers.
-			if ($customTable != 'customers') $this->Customer->table($customTable);
+			if ($customTable != 'customers') $this->Customers->table($customTable);
 			if ($requireInt == false) {
 				// Looks for a string value in a specified column.
-				$this->Customer->where($column, '"' . $value . '"');
+				$this->Customers->where($column, '"' . $value . '"');
 			} else {
 				// Loooks for an integer value in a specified column.
-				$this->Customer->where($column, $value);
+				$this->Customers->where($column, $value);
 			}
-			$this->Customer->select();
+			$this->Customers->select();
 			// Returns the appropriate value if the element exists or not.
-			if ($this->Customer->rowCount() != 0) {
+			if ($this->Customers->rowCount() != 0) {
 				return true;
 			} else {
 				return false;

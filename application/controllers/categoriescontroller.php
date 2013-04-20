@@ -23,7 +23,7 @@
 		 * the results of that category as well as products under it to the view
 		 * presentation.
 		 * 
-		 * @param  int $category_ID Category identifier.
+		 * @param  int    $category_ID Category identifier.
 		 * @access public
 		 */
 		public function getById($category_ID = null)
@@ -51,10 +51,10 @@
 		{
 			// Checks if the user has sufficient privileges.
 			if (self::isAdmin()) {
-				$this->Category->clear();
-				$this->Category->select();
+				$this->Categories->clear();
+				$this->Categories->select();
 				// Fetches all the categories.
-				$categories = $this->Category->fetch(true);
+				$categories = $this->Categories->fetch(true);
 				// Calls another instance of this class to get the number of
 				// products under each category.
 				$categoryDispatch = new CategoriesController('categories', '_getProductCountByCat');
@@ -82,13 +82,13 @@
 				if (isset($_POST['operation'])) {
 					// Checks if the specified category parent exists.
 					if (self::_exists('category_ID', $_POST['category_parent_ID'], true)) {
-						$this->Category->clear();
+						$this->Categories->clear();
 						$category = array(
 							'category_name' => $_POST['category_name'],
 							'category_parent_ID' => $_POST['category_parent_ID']
 						);
 						// Inserts the category into the database.
-						$this->Category->insert($category);
+						$this->Categories->insert($category);
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Category successfully inserted.');
 						self::set('alert', 'alert-success');
@@ -121,11 +121,11 @@
 				// Checks if the specified category exists.
 				if (self::_exists('category_ID', $category_ID, true)) {
 					if (self::_getProductCountByCat($category_ID) == 0) {
-						$this->Category->clear();
+						$this->Categories->clear();
 						// Looks for the category with that identifier.
-						$this->Category->where('category_ID', $category_ID);
+						$this->Categories->where('category_ID', $category_ID);
 						// Deletes the category from the database.
-						$this->Category->delete();
+						$this->Categories->delete();
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Category successfully deleted.');
 						self::set('alert', 'alert-success nomargin');
@@ -168,15 +168,15 @@
 							// Checks if the specified category parent is not the
 							// same as the current category.
 							if ($_POST['category_parent_ID'] != $category_ID) {
-								$this->Category->clear();
+								$this->Categories->clear();
 								// Looks for the category with that identifier.
-								$this->Category->where('category_ID', $category_ID, true);
+								$this->Categories->where('category_ID', $category_ID, true);
 								$category = array(
 									'category_name' => $_POST['category_name'],
 									'category_parent_ID' => $_POST['category_parent_ID']
 								);
 								// Updates the category.
-								$this->Category->update($category);
+								$this->Categories->update($category);
 								// Returns the alert message to be sent to the user.
 								self::set('message', 'Category successfully updated.');
 								self::set('alert', 'alert-success nomargin');
@@ -220,12 +220,12 @@
 		{
 			// Checks if the specified category exists.
 			if (self::_exists('category_ID', $category_ID, true)) {
-				$this->Category->clear();
+				$this->Categories->clear();
 				// Looks for the category with that identifier.
-				$this->Category->where('category_ID', $category_ID);
-				$this->Category->select();
+				$this->Categories->where('category_ID', $category_ID);
+				$this->Categories->select();
 				// Returns the result of the category.
-				return $this->Category->fetch();
+				return $this->Categories->fetch();
 			} else {
 				return false;
 			}
@@ -242,14 +242,14 @@
 		{
 			// Checks if the specified category exists.
 			if (self::_exists('category_ID', $category_ID, true)) {
-				$this->Category->clear();
+				$this->Categories->clear();
 				// Uses the products table.
-				$this->Category->table('products');
+				$this->Categories->table('products');
 				// Looks for the product category with that identifier.
-				$this->Category->where('category_ID', $category_ID);
-				$this->Category->select();
+				$this->Categories->where('category_ID', $category_ID);
+				$this->Categories->select();
 				// Returns the results of the products.
-				return $this->Category->fetch(true);
+				return $this->Categories->fetch(true);
 			} else {
 				return false;
 			}
@@ -266,14 +266,14 @@
 		{
 			// Checks if the specified category exists.
 			if (self::_exists('category_ID', $category_ID, true)) {
-				$this->Category->clear();
+				$this->Categories->clear();
 				// Uses the products table.
-				$this->Category->table('products');
+				$this->Categories->table('products');
 				// Looks for the product category with that identifier.
-				$this->Category->where('category_ID', $category_ID);
-				$this->Category->select();
+				$this->Categories->where('category_ID', $category_ID);
+				$this->Categories->select();
 				// Returns the number of results of products.
-				return $this->Category->rowCount();
+				return $this->Categories->rowCount();
 			} else {
 				// Category wasn't found in any product, so returns a count of 0.
 				return 0;
@@ -295,17 +295,17 @@
 			if ($requireInt == true && !ctype_digit($value)) return false;
 			// Allows for the category parent to have a root parent.
 			if ($column == 'category_ID' && $value == '0') return true;
-			$this->Category->clear();
+			$this->Categories->clear();
 			if ($requireInt == false) {
 				// Looks for a string value in a specified column.
-				$this->Category->where($column, '"' . $value . '"');
+				$this->Categories->where($column, '"' . $value . '"');
 			} else {
 				// Loooks for an integer value in a specified column.
-				$this->Category->where($column, $value);
+				$this->Categories->where($column, $value);
 			}
-			$this->Category->select();
+			$this->Categories->select();
 			// Returns the appropriate value if the element exists or not.
-			if ($this->Category->rowCount() != 0) {
+			if ($this->Categories->rowCount() != 0) {
 				return true;
 			} else {
 				return false;

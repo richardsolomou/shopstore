@@ -42,6 +42,7 @@
 				$reviewNumber = self::_getProductReviewNumber($product_ID);
 				// Calculates the average rating based on all reviews.
 				$reviewRatingAverage = 0;
+				$individualReview = 0;
 		        if ($reviewNumber > 0) foreach ($reviews as $individualReview) $reviewRatingAverage += $individualReview['review_rating'] / $reviewNumber;
 		        // Creates an instance of the customers controller to fetch
 		        // details for the customers in the reviews.
@@ -69,10 +70,10 @@
 		{
 			// Checks if the user has sufficient privileges.
 			if (self::isAdmin()) {
-				$this->Product->clear();
-				$this->Product->select();
+				$this->Products->clear();
+				$this->Products->select();
 				// Fetches all the products.
-				$products = $this->Product->fetch(true);
+				$products = $this->Products->fetch(true);
 				self::set('products', $products);
 			} else {
 				// Returns an unauthorized access page.
@@ -95,7 +96,7 @@
 				if (isset($_POST['operation'])) {
 					// Checks if the specified category exists.
 					if (self::_exists('category_ID', $_POST['category_ID'], true, 'categories')) {
-						$this->Product->clear();
+						$this->Products->clear();
 						$imageExtension = $_POST['product_image'];
 						if ($_POST['product_image'] != null) {
 							// Moves the image from the temporary folder.
@@ -114,10 +115,10 @@
 							'product_image' => $imageExtension
 						);
 						// Inserts the product into the database.
-						$this->Product->insert($product);
+						$this->Products->insert($product);
 						if ($_POST['product_image'] != null) {
 							// Gets the product identifier of this request.
-							$lastId = $this->Product->lastId();
+							$lastId = $this->Products->lastId();
 							// Moves and renames the file based on its product_ID.
 							if (file_exists($product_image)) rename($product_image, SERVER_ROOT . '\\templates\\img\\products\\' . $lastId . $imageExtension);
 						}
@@ -159,13 +160,15 @@
 				$this->ajax = true;
 				// Checks if the specified product exists.
 				if (self::_exists('product_ID', $product_ID, true)) {
-					$this->Product->clear();
+					$this->Products->clear();
 					// Looks for the product with that identifier.
-					$this->Product->where('product_ID', $product_ID);
+					$this->Products->where('product_ID', $product_ID);
 					// Deletes the product from the database.
-					$this->Product->delete();
+					$this->Products->delete();
 					// Deletes the image.
 					self::deleteImage($product_ID);
+					// Deletes all reviews for that product.
+					self::_deleteReviews($product_ID);
 					// Returns the alert message to be sent to the user.
 					self::set('message', 'Product successfully deleted.');
 					self::set('alert', 'alert-success nomargin');
@@ -200,7 +203,7 @@
 					if (self::_exists('product_ID', $product_ID, true)) {
 						// Checks if the specified category exists.
 						if (self::_exists('category_ID', $_POST['category_ID'], true, 'categories')) {
-							$this->Product->clear();
+							$this->Products->clear();
 							$imageExtension = $_POST['product_image'];
 							if ($_POST['product_image'] != null) {
 								// Moves the image from the temporary folder.
@@ -209,7 +212,7 @@
 								$imageExtension = strrchr($product_image, '.');
 							}
 							// Looks for the product with that identifier.
-							$this->Product->where('product_ID', $product_ID, true);
+							$this->Products->where('product_ID', $product_ID, true);
 							$product = array(
 								'category_ID' => $_POST['category_ID'],
 								'product_name' => $_POST['product_name'],
@@ -223,7 +226,7 @@
 							);
 							if ($imageExtension != null) $product = array_merge($product, $imageArray);
 							// Updates the product.
-							$this->Product->update($product);
+							$this->Products->update($product);
 							if ($_POST['product_image'] != null) {
 								// Deletes any previous images.
 								self::deleteImage($product_ID);
@@ -364,12 +367,12 @@
 		{
 			// Checks if the product exists.
 			if (self::_exists('product_ID', $product_ID, true)) {
-				$this->Product->clear();
+				$this->Products->clear();
 				// Looks for the product with that identifier.
-				$this->Product->where('product_ID', $product_ID);
-				$this->Product->select();
+				$this->Products->where('product_ID', $product_ID);
+				$this->Products->select();
 				// Returns the result of the product.
-				return $this->Product->fetch();
+				return $this->Products->fetch();
 			} else {
 				return false;
 			}
@@ -386,14 +389,14 @@
 		{
 			// Checks if the specified category exists.
 			if (self::_exists('category_ID', $category_ID, true, 'categories')) {
-				$this->Product->clear();
+				$this->Products->clear();
 				// Uses the categories table.
-				$this->Product->table('categories');
+				$this->Products->table('categories');
 				// Looks for the category with that identifier.
-				$this->Product->where('category_ID', $category_ID);
-				$this->Product->select();
+				$this->Products->where('category_ID', $category_ID);
+				$this->Products->select();
 				// Returns the result of the category.
-				return $this->Product->fetch();
+				return $this->Products->fetch();
 			} else {
 				return false;
 			}
@@ -410,14 +413,14 @@
 		{
 			// Checks if the setting column value exists.
 			if (self::_exists('setting_column', $setting_column, false, 'settings')) {
-				$this->Product->clear();
+				$this->Products->clear();
 				// Uses the settings table.
-				$this->Product->table('settings');
+				$this->Products->table('settings');
 				// Looks for the setting column with that value.
-				$this->Product->where('setting_column', '"' . $setting_column . '"');
-				$this->Product->select();
+				$this->Products->where('setting_column', '"' . $setting_column . '"');
+				$this->Products->select();
 				// Returns the result of the setting.
-				return $this->Product->fetch();
+				return $this->Products->fetch();
 			} else {
 				return false;
 			}
@@ -434,14 +437,14 @@
 		{
 			// Checks if the currency exists.
 			if (self::_exists('currency_ID', $currency_ID, true, 'currencies')) {
-				$this->Product->clear();
+				$this->Products->clear();
 				// Uses the currencies table.
-				$this->Product->table('currencies');
+				$this->Products->table('currencies');
 				// Looks for a currency with that identifier.
-				$this->Product->where('currency_ID', $currency_ID);
-				$this->Product->select();
+				$this->Products->where('currency_ID', $currency_ID);
+				$this->Products->select();
 				// Returns the result of that currency.
-				return $this->Product->fetch();
+				return $this->Products->fetch();
 			} else {
 				return false;
 			}
@@ -458,14 +461,14 @@
 		{
 			// Checks if the product exists.
 			if (self::_exists('product_ID', $product_ID, true)) {
-				$this->Product->clear();
+				$this->Products->clear();
 				// Uses the reviews table
-				$this->Product->table('reviews');
+				$this->Products->table('reviews');
 				// Looks for a review with that product identifier
-				$this->Product->where('product_ID', $product_ID);
-				$this->Product->select();
+				$this->Products->where('product_ID', $product_ID);
+				$this->Products->select();
 				// Returns the results of the reviews.
-				return $this->Product->fetch(true);
+				return $this->Products->fetch(true);
 			} else {
 				return false;
 			}
@@ -482,16 +485,37 @@
 		{
 			// Checks if the product exists.
 			if (self::_exists('product_ID', $product_ID, true)) {
-				$this->Product->clear();
+				$this->Products->clear();
 				// Uses the reviews table.
-				$this->Product->table('reviews');
+				$this->Products->table('reviews');
 				// Looks for a review with that product identifier.
-				$this->Product->where('product_ID', $product_ID);
-				$this->Product->select();
+				$this->Products->where('product_ID', $product_ID);
+				$this->Products->select();
 				// Returns the number of results of reviews.
-				return $this->Product->rowCount();
+				return $this->Products->rowCount();
 			} else {
 				return false;
+			}
+		}
+
+		/**
+		 * Deletes the reviews of the specified product.
+		 * 
+		 * @param  int       $product_ID Product identifier.
+		 * @access protected
+		 */
+		protected function _deleteReviews($product_ID = null)
+		{
+			// Checks if the product exists.
+			if (self::_exists('product_ID', $product_ID, true)) {
+				$this->Products->clear();
+				// Uses the reviews table.
+				$this->Products->table('reviews');
+				// Looks for a review with that product identifier.
+				$this->Products->where('product_ID', $product_ID);
+				$this->Products->select();
+				// Deletes the reviews.
+				$this->Products->delete();
 			}
 		}
 
@@ -509,19 +533,19 @@
 		{
 			// Checks if not all characters are digits.
 			if ($requireInt == true && !ctype_digit($value)) return false;
-			$this->Product->clear();
+			$this->Products->clear();
 			// Uses a different table for other controllers.
-			if ($customTable != 'products') $this->Product->table($customTable);
+			if ($customTable != 'products') $this->Products->table($customTable);
 			if ($requireInt == false) {
 				// Looks for a string value in a specified column.
-				$this->Product->where($column, '"' . $value . '"');
+				$this->Products->where($column, '"' . $value . '"');
 			} else {
 				// Loooks for an integer value in a specified column.
-				$this->Product->where($column, $value);
+				$this->Products->where($column, $value);
 			}
-			$this->Product->select();
+			$this->Products->select();
 			// Returns the appropriate value if the element exists or not.
-			if ($this->Product->rowCount() != 0) {
+			if ($this->Products->rowCount() != 0) {
 				return true;
 			} else {
 				return false;

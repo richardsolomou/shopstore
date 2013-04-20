@@ -27,10 +27,10 @@
 		{
 			// Checks if the user has sufficient privileges.
 			if (self::isAdmin()) {
-				$this->Currency->clear();
-				$this->Currency->select();
+				$this->Currencies->clear();
+				$this->Currencies->select();
 				// Fetches all the categories.
-				$currencies = $this->Currency->fetch(true);
+				$currencies = $this->Currencies->fetch(true);
 				self::set('currencies', $currencies);
 			} else {
 				// Returns an unauthorized access page.
@@ -52,14 +52,14 @@
 				// Checks if this was a POST request.
 				if (isset($_POST['operation'])) {
 					try {
-						$this->Currency->clear();
+						$this->Currencies->clear();
 						$currency = array(
 							'currency_name' => $_POST['currency_name'],
 							'currency_code' => $_POST['currency_code'],
 							'currency_symbol' => $_POST['currency_symbol']
 						);
 						// Inserts the currency into the database.
-						$this->Currency->insert($currency);
+						$this->Currencies->insert($currency);
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Currency successfully inserted.');
 						self::set('alert', 'alert-success');
@@ -94,11 +94,11 @@
 					// Checks if the specified currency is not the default.
 					$settingsCurrency = self::_getSettingByColumn('currency_ID');
 					if ($settingsCurrency['setting_value'] != $currency_ID) {
-						$this->Currency->clear();
+						$this->Currencies->clear();
 						// Looks for the currency with that identifier.
-						$this->Currency->where('currency_ID', $currency_ID);
+						$this->Currencies->where('currency_ID', $currency_ID);
 						// Deletes the currency from the database.
-						$this->Currency->delete();
+						$this->Currencies->delete();
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Currency successfully deleted.');
 						self::set('alert', 'alert-success nomargin');
@@ -138,16 +138,16 @@
 					if (self::_exists('currency_ID', $currency_ID, true)) {
 						// Checks if the code is less than 4 characters.
 						if (strlen($_POST['currency_code']) <= 3) {
-							$this->Currency->clear();
+							$this->Currencies->clear();
 							// Looks for the currency with that identifier.
-							$this->Currency->where('currency_ID', $currency_ID, true);
+							$this->Currencies->where('currency_ID', $currency_ID, true);
 							$currency = array(
 								'currency_name' => $_POST['currency_name'],
 								'currency_code' => $_POST['currency_code'],
 								'currency_symbol' => $_POST['currency_symbol']
 							);
 							// Updates the currency.
-							$this->Currency->update($currency);
+							$this->Currencies->update($currency);
 							// Returns the alert message to be sent to the user.
 							self::set('message', 'Currency successfully updated.');
 							self::set('alert', 'alert-success nomargin');
@@ -187,12 +187,12 @@
 		{
 			// Checks if the currency exists.
 			if (self::_exists('currency_ID', $currency_ID, true)) {
-				$this->Currency->clear();
+				$this->Currencies->clear();
 				// Looks for the currency with that identifier.
-				$this->Currency->where('currency_ID', $currency_ID);
-				$this->Currency->select();
+				$this->Currencies->where('currency_ID', $currency_ID);
+				$this->Currencies->select();
 				// Returns the results of the currency.
-				return $this->Currency->fetch();
+				return $this->Currencies->fetch();
 			} else {
 				return false;
 			}
@@ -209,14 +209,14 @@
 		{
 			// Checks if the setting column value exists.
 			if (self::_exists('setting_column', $setting_column, false, 'settings')) {
-				$this->Currency->clear();
+				$this->Currencies->clear();
 				// Uses the settings table.
-				$this->Currency->table('settings');
+				$this->Currencies->table('settings');
 				// Looks for the setting column with that value.
-				$this->Currency->where('setting_column', '"' . $setting_column . '"');
-				$this->Currency->select();
+				$this->Currencies->where('setting_column', '"' . $setting_column . '"');
+				$this->Currencies->select();
 				// Returns the result of the setting.
-				return $this->Currency->fetch();
+				return $this->Currencies->fetch();
 			} else {
 				return false;
 			}
@@ -236,19 +236,19 @@
 		{
 			// Checks if not all characters are digits.
 			if ($requireInt == true && !ctype_digit($value)) return false;
-			$this->Currency->clear();
+			$this->Currencies->clear();
 			// Uses a different table for other controllers.
-			if ($customTable != 'currencies') $this->Currency->table($customTable);
+			if ($customTable != 'currencies') $this->Currencies->table($customTable);
 			if ($requireInt == false) {
 				// Looks for a string value in a specified column.
-				$this->Currency->where($column, '"' . $value . '"');
+				$this->Currencies->where($column, '"' . $value . '"');
 			} else {
 				// Loooks for an integer value in a specified column.
-				$this->Currency->where($column, $value);
+				$this->Currencies->where($column, $value);
 			}
-			$this->Currency->select();
+			$this->Currencies->select();
 			// Returns the appropriate value if the element exists or not.
-			if ($this->Currency->rowCount() != 0) {
+			if ($this->Currencies->rowCount() != 0) {
 				return true;
 			} else {
 				return false;
