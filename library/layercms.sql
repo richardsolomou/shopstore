@@ -42,7 +42,7 @@ CREATE TABLE customers (
 	UNIQUE KEY `customer_username` (`customer_username`)
 );
 
-CREATE TABLE basketItems (
+CREATE TABLE basket (
 	basket_ID int unsigned NOT NULL auto_increment,
 	basket_quantity int unsigned NOT NULL default "1",
 	order_ID int unsigned NOT NULL,
