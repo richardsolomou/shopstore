@@ -22,7 +22,7 @@
 
 			<?php if (isset($admin)) { ?>
 			<div class="adminBar">
-				<p>Welcome <?php echo $admin['admin_firstname'] . ' ' . $admin['admin_lastname']; ?><span class='pull-right'>Currently logged in as <strong><?php echo $admin['admin_username']; ?></strong>. <a href="<?php echo BASE_PATH . '/logout'; ?>">Logout?</a></span></p>
+				<p>Welcome <?php echo $admin['admin_firstname'] . ' ' . $admin['admin_lastname']; ?><span class='pull-right'>Currently logged in as <strong><?php echo $admin['admin_username']; ?></strong>. <a href="<?php echo BASE_PATH . '/account/logout/admin'; ?>">Logout?</a></span></p>
 				<hr class="margin1">
 				<ul>
 					<li><a href="<?php echo BASE_PATH . '/categories/getList'; ?>">Categories</a></li>

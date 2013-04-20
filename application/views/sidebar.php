@@ -3,32 +3,35 @@
     <div id="hideSidebar" onclick="layercms.webscrp.toggleSidebarCookies();layercms.webscrp.toggleSidebar();">Toggle</div>
     <div id="asideContent">
 
-        <?php if(!isset($_SESSION['SESS_LOGGEDIN']) || !isset($_SESSION['SESS_CUSTOMERID'])) { ?>
-        
-            <form action="<?php echo BASE_PATH . '/login'; ?>" id="login" method="post">
+        <p></p>
 
-                <input type="hidden" name="login" value="true">
+        <h3>Customer.</h3>
+        <div id="login_2"></div>
+        
+        <?php if(!isset($_SESSION['SESS_LOGGEDIN']) || !isset($_SESSION['SESS_CUSTOMERID'])) { ?>
+
+            <form method="post" id="loginForm_2">
+                
+                <input type="hidden" name="operation" id="operation" value="true">
+                <input type="hidden" name="admin" id="admin" value="0">
 
                 <table class="table3">
-                    <tr><td><label for="customer_username">Username:</label></td></tr>
-                    <tr><td class="nopadding nomargin"><input type="text" id="customer_username" name="customer_username" required value="" pattern="[a-zA-Z0-9]+"></td></tr>
-                    <tr><td><label for="customer_password">Password:</label></td></tr>
-                    <tr><td class="nopadding nomargin"><input type="password" id="customer_password" name="customer_password" required value="" pattern="[a-zA-Z0-9]+"></td></tr>
-                    <tr><td><input type="submit" class="btn" name="login" value="Login"></td></tr>
+                    <tr><td class="nopadding nomargin"><input type="text" id="username" placeholder="Username" name="username" required value="" pattern="[a-zA-Z0-9]+"></td></tr>
+                    <tr><td class="nopadding nomargin"><input type="password" id="password" placeholder="Password" name="password" required value="" pattern="[a-zA-Z0-9]+"></td></tr>
+                    <tr><td><input type="submit" class="btn" name="login" value="Login" onclick="layercms.webscrp.login(2, '<?php echo BASE_PATH; ?>'); return false;"></td></tr>
                 </table>
 
             </form>
 
         <?php } else { ?>
 
-            <p>Currently logged in.</p>
-            <p><a href="<?php echo BASE_PATH . '/logout'; ?>" class="btn">Logout</a></p>
+            <p class="centered"><button onclick="layercms.webscrp.logout(2, '<?php echo BASE_PATH; ?>', 0); return false;" class="btn">Logout</button></p>
         
         <?php } ?>
 
-        <section id="headerShoppingBasket">
-            Drag &amp; Drop Items Here!
-        </section>
+        <hr>
+
+        <p>&nbsp;</p>
 
         <h3>Shopping Basket</h3>
         <table class="shoppingBasket">
