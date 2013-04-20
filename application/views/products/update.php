@@ -42,12 +42,12 @@
                         <td class="tdright">
                             <select id="product_condition" name="product_condition" required>
                                 <option value="">-- None --</option>
-                                <option value="1" <?php if ($product['product_condition'] == 1) echo 'selected'; ?>>New</option>
-                                <option value="2" <?php if ($product['product_condition'] == 2) echo 'selected'; ?>>Refurbished</option>
-                                <option value="3" <?php if ($product['product_condition'] == 3) echo 'selected'; ?>>Used - Like New</option>
-                                <option value="4" <?php if ($product['product_condition'] == 4) echo 'selected'; ?>>Used - Very Good</option>
-                                <option value="5" <?php if ($product['product_condition'] == 5) echo 'selected'; ?>>Used - Good</option>
-                                <option value="6" <?php if ($product['product_condition'] == 6) echo 'selected'; ?>>Used - Acceptable</option>
+                                <option value="New" <?php if ($product['product_condition'] == 'New') echo 'selected'; ?>>New</option>
+                                <option value="Refurbished" <?php if ($product['product_condition'] == 'Refurbished') echo 'selected'; ?>>Refurbished</option>
+                                <option value="Used - Like New" <?php if ($product['product_condition'] == 'Used - Like New') echo 'selected'; ?>>Used - Like New</option>
+                                <option value="Used - Very Good" <?php if ($product['product_condition'] == 'Used - Very Good') echo 'selected'; ?>>Used - Very Good</option>
+                                <option value="Used - Good" <?php if ($product['product_condition'] == 'Used - Good') echo 'selected'; ?>>Used - Good</option>
+                                <option value="Used - Acceptable" <?php if ($product['product_condition'] == 'Used - Acceptable') echo 'selected'; ?>>Used - Acceptable</option>
                             </select>
                         </td>
                     </tr>

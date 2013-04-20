@@ -51,6 +51,11 @@
             		<?php } ?>
             	</td>
             </tr>
+            <tr>
+            	<td colspan="2">
+            		<p>This item is: <strong><?php echo $product['product_condition']; ?></strong></p>
+            	</td>
+            </tr>
         </table>
 	    <hr>
 		<p class="centered"><a href="<?php echo BASE_PATH . '/reviews/insert/' . $product['product_ID']; ?>" class="btn">Review this product</a></p>

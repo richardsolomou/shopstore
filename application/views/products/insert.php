@@ -32,12 +32,12 @@
                         <td>
                             <select id="product_condition" name="product_condition" required>
                                 <option value="">-- None --</option>
-                                <option value="1">New</option>
-                                <option value="2">Refurbished</option>
-                                <option value="3">Used - Like New</option>
-                                <option value="4">Used - Very Good</option>
-                                <option value="5">Used - Good</option>
-                                <option value="6">Used - Acceptable</option>
+                                <option value="New">New</option>
+                                <option value="Refurbished">Refurbished</option>
+                                <option value="Used - Like New">Used - Like New</option>
+                                <option value="Used - Very Good">Used - Very Good</option>
+                                <option value="Used - Good">Used - Good</option>
+                                <option value="Used - Acceptable">Used - Acceptable</option>
                             </select>
                         </td>
                     </tr>
