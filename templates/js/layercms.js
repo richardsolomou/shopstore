@@ -145,6 +145,7 @@ layercms.webscrp = (function() {
 
 		switch (obj) {
 			case 'administrators':
+				params = getFormValue(form, 'admin_username') + getFormValue(form, 'admin_password') + getFormValue(form, 'admin_firstname') + getFormValue(form, 'admin_lastname') + getFormValue(form, 'admin_email');
 				break;
 			case 'categories':
 				params = getFormValue(form, 'category_name') + getFormValue(form, 'category_parent_ID');
@@ -268,6 +269,30 @@ layercms.webscrp = (function() {
 
 	};
 
+	var login = function (id, urlString) {
+
+		var form = document.getElementById('loginForm_' + id);
+
+		var method = 'POST';
+		var url = urlString + '/account/login';
+		var params = getFormValue(form, 'username') + getFormValue(form, 'password') + getFormValue(form, 'admin') + '&operation=true';
+		var target = 'login_' + id;
+
+		loader(method, url, params, target);
+
+	};
+
+	var logout = function (id, urlString, admin) {
+
+		var method = 'POST';
+		var url = urlString + '/account/logout';
+		var params = 'admin=' + admin;
+		var target = 'login_' + id;
+
+		loader(method, url, params, target);
+
+	};
+
 	// Toggles the right hand sidebar provide readability.
 	var toggleSidebar = function () {
 
@@ -364,6 +389,8 @@ layercms.webscrp = (function() {
 		'toggleSidebar': toggleSidebar,
 		'toggleSidebarCookies': toggleSidebarCookies,
 		'liveSearch': liveSearch,
+		'login': login,
+		'logout': logout,
 		'loaded': loaded
 	};
 

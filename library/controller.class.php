@@ -149,6 +149,21 @@
 		}
 
 		/**
+		 * Checks if the current user is a logged in customer.
+		 * 
+		 * @return boolean Returns whether or not a customer is logged in.
+		 * @access public
+		 * */
+		public function isCustomer()
+		{
+			if (isset($_SESSION['SESS_LOGGEDIN']) && isset($_SESSION['SESS_CUSTOMERID'])) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		/**
 		 * Extracts the variables array in the view to be used from static pages.
 		 * Responsible for the creation of the main template of every page as
 		 * well as for handling AJAX calls and requests in order to remove the
