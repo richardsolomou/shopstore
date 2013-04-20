@@ -81,7 +81,7 @@
 		        }
 		        try {
 		        	// Creates the required tables.
-			        $db_conn->query('CREATE TABLE products (product_ID int unsigned NOT NULL auto_increment, category_ID int unsigned NOT NULL, product_name varchar(100) NOT NULL, product_description text NULL, product_condition varchar(8) NOT NULL default "New", product_price varchar(8) NOT NULL default "0.00", product_stock int unsigned NOT NULL, product_image varchar(255) default NULL, PRIMARY KEY (product_ID));');
+			        $db_conn->query('CREATE TABLE products (product_ID int unsigned NOT NULL auto_increment, category_ID int unsigned NOT NULL, product_name varchar(100) NOT NULL, product_description text NULL, product_condition varchar(100) NOT NULL default "New", product_price varchar(8) NOT NULL default "0.00", product_stock int unsigned NOT NULL, product_image varchar(255) default NULL, PRIMARY KEY (product_ID));');
 			        $db_conn->query('CREATE TABLE reviews (review_ID int unsigned NOT NULL auto_increment, product_ID int unsigned NOT NULL, review_subject varchar(50) NOT NULL, review_description text NULL, review_rating int unsigned NOT NULL, customer_ID int unsigned NOT NULL, PRIMARY KEY (review_ID));');
 			        $db_conn->query('CREATE TABLE categories (category_ID int unsigned NOT NULL auto_increment, category_name varchar(50) NOT NULL, category_parent_ID int NULL default "0", PRIMARY KEY (category_ID));');
 			        $db_conn->query('CREATE TABLE customers (customer_ID int unsigned NOT NULL auto_increment, customer_username varchar(50) NOT NULL, customer_password varchar(50) NOT NULL, customer_firstname varchar(50) NOT NULL, customer_lastname varchar(50) NOT NULL, customer_address1 varchar(150) NOT NULL, customer_address2 varchar(150) NULL, customer_postcode varchar(10) NOT NULL, customer_phone varchar(20) NOT NULL, customer_email varchar(150) NOT NULL, PRIMARY KEY (customer_ID), UNIQUE KEY `customer_username` (`customer_username`));');
@@ -150,7 +150,7 @@
 		            $config[] = '    define(\'DB_SETUP\', true);' . PHP_EOL;
 		            $config[] = '?>';
 		            // Puts the contents in the configuration file.
-		            file_put_contents(SERVER_ROOT . '/library/' . 'config.php', implode(PHP_EOL, $config));
+		            file_put_contents(SERVER_ROOT . '/library/config.php', implode(PHP_EOL, $config));
 					// Creates the two sessions required for administrative
 					// privileges.
 					$_SESSION['SESS_ADMINID'] = 1;

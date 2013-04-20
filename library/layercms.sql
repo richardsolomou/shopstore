@@ -3,7 +3,7 @@ CREATE TABLE products (
 	category_ID int unsigned NOT NULL,
 	product_name varchar(100) NOT NULL,
 	product_description text NULL,
-	product_condition varchar(8) NOT NULL default "New",
+	product_condition varchar(30) NOT NULL default "New",
 	product_price varchar(8) NOT NULL default "0.00",
 	product_stock int unsigned NOT NULL,
 	product_image varchar(255) default NULL,
