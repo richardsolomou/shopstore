@@ -2,9 +2,9 @@
 
 	/**
 	 * Extends the Model class in order to serve as the main element model
-	 * for the Customers controller class.
+	 * for the Categories controller class.
 	 */
-	class Customer extends Model
+	class Categories extends Model
 	{
 		
 	}

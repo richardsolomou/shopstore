@@ -2,9 +2,9 @@
 
 	/**
 	 * Extends the Model class in order to serve as the main element model
-	 * for the Products controller class.
+	 * for the Currencies controller class.
 	 */
-	class Product extends Model
+	class Currencies extends Model
 	{
 		
 	}
