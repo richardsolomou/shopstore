@@ -85,6 +85,55 @@
 		}
 
 		/**
+		 * Allows a user to register as a customer the database.
+		 * 
+		 * @access public
+		 */
+		public function add()
+		{
+			// Checks if the user has sufficient privileges.
+			if (!self::isCustomer()) {
+				// Checks if this was a POST request.
+				if (isset($_POST['operation'])) {
+					// Only loads the content for this method.
+					$this->ajax = true;
+					// Checks if the username is not taken.
+					if (!self::_exists('customer_username', $_POST['customer_username'])) {
+						$this->Customers->clear();
+						$customer = array(
+							'customer_username'  => $_POST['customer_username'],
+							'customer_password'  => $_POST['customer_password'],
+							'customer_firstname' => $_POST['customer_firstname'],
+							'customer_lastname'  => $_POST['customer_lastname'],
+							'customer_address1'  => $_POST['customer_address1'],
+							'customer_address2'  => $_POST['customer_address2'],
+							'customer_postcode'  => $_POST['customer_postcode'],
+							'customer_phone'     => $_POST['customer_phone'],
+							'customer_email'     => $_POST['customer_email']
+						);
+						// Inserts the customer into the database.
+						$this->Customers->insert($customer);
+						// Sets the customer session variables.
+						$_SESSION['SESS_LOGGEDIN'] = 1;
+						$_SESSION['SESS_CUSTOMERID'] = $this->Customers->lastId();
+						// Returns the alert message to be sent to the user.
+						self::set('message', 'Customer successfully inserted.');
+						self::set('alert', 'alert-success');
+					} else {
+						// Returns the alert message to be sent to the user.
+						self::set('message', 'Customer username already exists.');
+						self::set('alert', '');
+					}
+					// Show an alert.
+					$this->_action = 'alert';
+				}
+			} else {
+				// Returns an unauthorized access page.
+				$this->_action = 'unauthorizedAccess';
+			}
+		}
+
+		/**
 		 * Removes a customer from the database.
 		 * 
 		 * @param  int    $customer_ID Customer identifier.
@@ -98,14 +147,25 @@
 				$this->ajax = true;
 				// Checks if the customer exists.
 				if (self::_exists('customer_ID', $customer_ID, true)) {
-					$this->Customers->clear();
-					// Looks for the customer with that identifier.
-					$this->Customers->where('customer_ID', $customer_ID);
-					// Deletes the customer from the database.
-					$this->Customers->delete();
-					// Returns the alert message to be sent to the user.
-					self::set('message', 'Customer successfully deleted.');
-					self::set('alert', 'alert-success nomargin');
+					// Checks if the customer is currently logged in.
+					if ($_SESSION['SESS_CUSTOMERID'] != $customer_ID) {
+						// Deletes all reviews from that customer.
+						self::_deleteReviews($customer_ID);
+						// Deletes all basket item records from that customer.
+						self::_deleteFromBasket($customer_ID);
+						$this->Customers->clear();
+						// Looks for the customer with that identifier.
+						$this->Customers->where('customer_ID', $customer_ID);
+						// Deletes the customer from the database.
+						$this->Customers->delete();
+						// Returns the alert message to be sent to the user.
+						self::set('message', 'Customer successfully deleted.');
+						self::set('alert', 'alert-success nomargin');
+					} else {
+						// Returns the alert message to be sent to the user.
+						self::set('message', 'Customer is currently logged in.');
+						self::set('alert', 'nomargin');
+					}
 				} else {
 					// Returns the alert message to be sent to the user.
 					self::set('message', 'Customer does not exist.');
@@ -196,6 +256,46 @@
 				return $this->Customers->fetch();
 			} else {
 				return false;
+			}
+		}
+
+		/**
+		 * Deletes the reviews from the specified customer.
+		 * 
+		 * @param  int       $customer_ID Customer identifier.
+		 * @access protected
+		 */
+		protected function _deleteReviews($customer_ID = null)
+		{
+			// Checks if the product exists.
+			if (self::_exists('customer_ID', $customer_ID, true)) {
+				$this->Customers->clear();
+				// Uses the reviews table.
+				$this->Customers->table('reviews');
+				// Looks for a review with that product identifier.
+				$this->Customers->where('customer_ID', $customer_ID);
+				// Deletes the reviews.
+				$this->Customers->delete();
+			}
+		}
+
+		/**
+		 * Deletes the specified customer's basket items.
+		 * 
+		 * @param  int       $customer_ID Customer identifier.
+		 * @access protected
+		 */
+		protected function _deleteFromBasket($customer_ID = null)
+		{
+			// Checks if the product exists.
+			if (self::_exists('customer_ID', $customer_ID, true)) {
+				$this->Customers->clear();
+				// Uses the basket table.
+				$this->Customers->table('basket');
+				// Looks for a basket item with that product identifier.
+				$this->Customers->where('customer_ID', $customer_ID);
+				// Deletes the basket item.
+				$this->Customers->delete();
 			}
 		}
 
