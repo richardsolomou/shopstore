@@ -168,23 +168,64 @@
 				if (isset($_POST['operation'])) {
 					// Checks if the specified basket item exists.
 					if (self::_exists('basket_ID', $basket_ID, true)) {
+						// Gets the basket item's values.
+						$basketItem = self::_getBasketItemById($basket_ID);
+						// Checks if the quantity is zero.
+						if ($_POST['basket_quantity'] == 0) {
+							// Increases the stock back.
+							self::_increaseStock($basket_ID, $_POST['basket_quantity'], self::_checkStock($basketItem['product_ID']));
+							// Deletes the basket item.
+							self::delete($basket_ID);
+							return;
+						}
+						if ($_POST['basket_quantity'] == $basketItem['basket_quantity']) {
+							// Returns the alert message to be sent to the user.
+							self::set('message', 'No changes made.');
+							self::set('alert', 'alert-info');
+							$this->_action = 'alert';
+							return;
+						}
 						// Checks if the product exists.
 						if (self::_exists('product_ID', $_POST['product_ID'], true, 'products')) {
+							// Gets the product's current stock.
+							$productStock = self::_checkStock($basketItem['product_ID']);
+							// Check if the stock is zero.
+							if ($productStock == 0 && ($_POST['basket_quantity'] > $basketItem['basket_quantity'])) {
+								// Returns the alert message to be sent to the user.
+								self::set('message', 'There is no more stock available.');
+								self::set('alert', '');
+								$this->_action = 'alert';
+								return;
+							}
 							// Checks if the customer exists.
 							if (self::_exists('customer_ID', $_POST['customer_ID'], true, 'customers')) {
-								$this->Basket->clear();
-								// Looks for the basket item with that identifier.
-								$this->Basket->where('basket_ID', $basket_ID);
-								$basket = array(
-									'basket_quantity' => $_POST['basket_quantity'],
-									'product_ID'      => $_POST['product_ID'],
-									'customer_ID'     => $_POST['customer_ID']
-								);
-								// Updates the basket item.
-								$this->Basket->update($basket);
-								// Returns the alert message to be sent to the user.
-								self::set('message', 'Basket item successfully updated.');
-								self::set('alert', 'alert-success');
+								// Check if there is enough stock.
+								if (self::_checkStock($basketItem['product_ID']) >= ($_POST['basket_quantity'] - $basketItem['basket_quantity'])) {
+									$this->Basket->clear();
+									// Looks for the basket item with that identifier.
+									$this->Basket->where('basket_ID', $basket_ID, true);
+									$basket = array(
+										'basket_quantity' => $_POST['basket_quantity'],
+										'product_ID'      => $_POST['product_ID'],
+										'customer_ID'     => $_POST['customer_ID'],
+										'basket_quantity' => $_POST['basket_quantity']
+									);
+									// Updates the basket item.
+									$this->Basket->update($basket);
+									// Reduce the available stock of the product.
+									if ($_POST['basket_quantity'] > $basketItem['basket_quantity']) {
+										self::_reduceStock($basket_ID, ($_POST['basket_quantity'] - $basketItem['basket_quantity']), $productStock);
+									} else {
+										self::_increaseStock($basket_ID, ($basketItem['basket_quantity'] - $_POST['basket_quantity']), $productStock);
+									}
+									// Returns the alert message to be sent to the user.
+									self::set('message', 'Basket item successfully updated.');
+									self::set('alert', 'alert-success');
+								} else {
+									// Returns the alert message to be sent to the user.
+									self::set('message', 'There is not enough stock available for this product.');
+									self::set('alert', '');
+								}
 							} else {
 								// Returns the alert message to be sent to the user.
 								self::set('message', 'Customer does not exist.');
@@ -268,6 +309,38 @@
 			}
 			// Show an alert.
 			$this->_action = 'alert';
+		}
+
+		/**
+		 * Returns all basket items in the database.
+		 * Does the same thing as getList but is used for AJAX calls instead.
+		 * 
+		 * @access public
+		 */
+		public function getTable()
+		{
+			$this->ajax = true;
+			// Checks if the user has sufficient privileges.
+			if (self::isCustomer()) {
+				$this->Basket->clear();
+				// Looks up items for this customer.
+				$this->Basket->where('customer_ID', $_SESSION['SESS_CUSTOMERID']);
+				$this->Basket->select();
+				// Fetches all the basket items.
+				$basketItems = $this->Basket->fetch(true);
+				// Gets a list of all the products in the database.
+				$products = self::_getProducts();
+				// Gets the currency ID from the website settings table and the
+				// respective symbol from the currencies table.
+				$settingsCurrency = self::_getSettingByColumn('currency_ID');
+				$currencySymbol = self::_getCurrencyById($settingsCurrency['setting_value']);
+				self::set('products', $products);
+				self::set('basketItems', $basketItems);
+				self::set('currencySymbol', $currencySymbol['currency_symbol']);
+			} else {
+				// Returns an empty basket page.
+				$this->_action = 'empty';
+			}
 		}
 
 		/**

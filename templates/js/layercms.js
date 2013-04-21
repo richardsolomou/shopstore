@@ -182,10 +182,10 @@ layercms.webscrp = (function() {
 
 	// Creates and assigns the variables required to be sent to the loader function and gets all
 	// the input fields from the form page and assigns them to variables to be sent as parameters.
-	var doEdit = function (obj, id, formID, target, url) {
+	var doEdit = function (obj, id, formID, target, url, refreshBasket) {
 
 		var method = 'POST';
-		url = (url == null) ? 'update/' + id + '/' : url;
+		url = (url == null) ? 'update/' + id : url;
 		var params;
 		if (target == null) target = 'edit_' + id;
 		
@@ -226,6 +226,10 @@ layercms.webscrp = (function() {
 
 		loader(method, url, params, target);
 
+		if (refreshBasket != null) {
+			loader('GET', refreshBasket, null, 'getTable');
+		}
+
 	};
 
 	// Creates and assigns the variables required to be sent to the loader function and gets all
@@ -237,6 +241,24 @@ layercms.webscrp = (function() {
 		var params = 'operation=edit' + getFormValue(form, 'basket_quantity');
 
 		window.console.log('addMore: ' + method + '\r\n' + url + '\r\n' + params + '\r\n' + target);
+
+		loader(method, url, params, target);
+
+	};
+
+	// Creates and assigns the variables required to be sent to the loader function and gets all
+	// the input fields from the form page and assigns them to variables to be sent as parameters.
+	var addStock = function (id, formID, target, url) {
+
+		var method = 'POST';
+		url = (url == null) ? 'update/' + id : url;
+		if (target == null) target = 'edit_' + id;
+		
+		var form = document.getElementById(formID);
+
+		var params = 'operation=edit' + getFormValue(form, 'product_ID') + getFormValue(form, 'product_stock');
+
+		window.console.log('addStock: ' + method + '\r\n' + url + '\r\n' + params + '\r\n' + target);
 
 		loader(method, url, params, target);
 
@@ -261,10 +283,10 @@ layercms.webscrp = (function() {
 
 	// Creates and assigns the variables required to be sent to the loader function in order to
 	// use it to call the form to edit an object.
-	var getEditForm = function (id) {
+	var getEditForm = function (id, url) {
 
 		var method = 'GET';
-		var url = 'update/' + id;
+		url = (url == null) ? 'update/' + id : url;
 		var params = '';
 		var target = 'edit_' + id;
 
@@ -404,6 +426,7 @@ layercms.webscrp = (function() {
 		'doAdd': doAdd,
 		'doEdit': doEdit,
 		'addMore': addMore,
+		'addStock': addStock,
 		'getAddForm': getAddForm,
 		'getEditForm': getEditForm,
 		'doDelete': doDelete,

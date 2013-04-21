@@ -44,7 +44,7 @@ CREATE TABLE customers (
 
 CREATE TABLE basket (
 	basket_ID int unsigned NOT NULL auto_increment,
-	basket_quantity int unsigned NOT NULL default "1",
+	basket_quantity int unsigned NULL default "1",
 	product_ID int unsigned NOT NULL,
 	customer_ID int unsigned NOT NULL,
 	PRIMARY KEY (basket_ID)
