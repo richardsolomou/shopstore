@@ -94,14 +94,21 @@
 				$this->ajax = true;
 				// Checks if the administrator exists.
 				if (self::_exists('admin_ID', $admin_ID, true)) {
-					$this->Administrators->clear();
-					// Looks for the administrator with that identifier.
-					$this->Administrators->where('admin_ID', $admin_ID);
-					// Deletes the administrator from the database.
-					$this->Administrators->delete();
-					// Returns the alert message to be sent to the user.
-					self::set('message', 'Administrator successfully deleted.');
-					self::set('alert', 'alert-success nomargin');
+					// Checks if the administrator is currently logged in.
+					if ($_SESSION['SESS_ADMINID'] != $admin_ID) {
+						$this->Administrators->clear();
+						// Looks for the administrator with that identifier.
+						$this->Administrators->where('admin_ID', $admin_ID);
+						// Deletes the administrator from the database.
+						$this->Administrators->delete();
+						// Returns the alert message to be sent to the user.
+						self::set('message', 'Administrator successfully deleted.');
+						self::set('alert', 'alert-success nomargin');
+					} else {
+						// Returns the alert message to be sent to the user.
+						self::set('message', 'Administrator is currently logged in.');
+						self::set('alert', 'nomargin');
+					}
 				} else {
 					// Returns the alert message to be sent to the user.
 					self::set('message', 'Administrator does not exist.');
