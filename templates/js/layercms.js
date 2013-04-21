@@ -411,6 +411,18 @@ layercms.webscrp = (function() {
 
 	}
 
+	var submitOrder = function (formID, url, refreshBasket) {
+
+		var method = 'POST';
+		var form = document.getElementById(formID);
+		var params = 'operation=true' + getFormValue(form, 'customer_ID') + getFormValue(form, 'order_total');
+		var target = 'operationAlert';
+
+		loader(method, url, params, target);
+		loader('GET', refreshBasket, '', 'getTable');
+
+	}
+
 	// Function to be called when the document is loaded on every page.
 	var loaded = function () {
 		toggleSidebar();
@@ -435,6 +447,7 @@ layercms.webscrp = (function() {
 		'liveSearch': liveSearch,
 		'login': login,
 		'logout': logout,
+		'submitOrder': submitOrder,
 		'loaded': loaded
 	};
 
