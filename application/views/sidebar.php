@@ -1,6 +1,6 @@
 <aside>
 
-    <div id="hideSidebar" onclick="layercms.webscrp.toggleSidebarCookies();layercms.webscrp.toggleSidebar();">Toggle</div>
+    <div id="hideSidebar" class="highlight" onclick="layercms.webscrp.toggleSidebarCookies();layercms.webscrp.toggleSidebar();">Toggle</div>
     <div id="asideContent">
 
         <p></p>
@@ -32,6 +32,8 @@
         <hr>
 
         <p>&nbsp;</p>
+
+        <div id="sideBarAlert"></div>
 
         <h3>Shopping Basket</h3>
         <table class="shoppingBasket">

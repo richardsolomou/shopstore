@@ -7,19 +7,13 @@
 }
 
 #hideSidebar {
-	background: #A60000;
-    color: #f4f4f4;
-    padding: 0 4px;
-    -webkit-border-radius: 5px 0 5px 0;
-    -moz-border-radius: 5px 0 5px 0;
-    border-radius: 5px 0 5px 0;
     text-align: center;
     width: 40px;
     float: right;
     font-size: 80%;
     padding: 3px;
-    cursor: pointer;
 }
+
 aside.hiddenSidebar { width: 40px; overflow: hidden; }
 article.hiddenSidebar { width: 630px; }
 #asideContent.hiddenSidebar { display: none; }
