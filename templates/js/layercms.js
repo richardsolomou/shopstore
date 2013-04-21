@@ -134,12 +134,12 @@ layercms.webscrp = (function() {
 
 	// Creates and assigns the variables required to be sent to the loader function and gets all
 	// the input fields from the form page and assigns them to variables to be sent as parameters.
-	var doAdd = function (obj, formID) {
+	var doAdd = function (obj, formID, target, url) {
 
 		var method = 'POST';
-		var url = 'insert/';
+		url = (url == null) ? 'insert/' : url;
 		var params;
-		var target = 'addAlert';
+		if (target == null) target = 'addAlert';
 
 		var form = document.getElementById(formID);
 
@@ -165,6 +165,9 @@ layercms.webscrp = (function() {
 			case 'settings':
 				params = getFormValue(form, 'setting_column') + getFormValue(form, 'setting_value');
 				break;
+			case 'basket':
+				params = getFormValue(form, 'basket_quantity') + getFormValue(form, 'customer_ID') + getFormValue(form, 'product_ID');
+				break;
 			default:
 				params = '';
 		}
@@ -179,12 +182,12 @@ layercms.webscrp = (function() {
 
 	// Creates and assigns the variables required to be sent to the loader function and gets all
 	// the input fields from the form page and assigns them to variables to be sent as parameters.
-	var doEdit = function (obj, id, formID) {
+	var doEdit = function (obj, id, formID, target, url) {
 
 		var method = 'POST';
-		var url = 'update/' + id + '/';
+		url = (url == null) ? 'update/' + id + '/' : url;
 		var params;
-		var target = 'edit_' + id;
+		if (target == null) target = 'edit_' + id;
 		
 		var form = document.getElementById(formID);
 
@@ -209,6 +212,9 @@ layercms.webscrp = (function() {
 				break;
 			case 'settings':
 				params = getFormValue(form, 'setting_ID') + getFormValue(form, 'setting_column') + getFormValue(form, 'setting_value');
+				break;
+			case 'basket':
+				params = getFormValue(form, 'basket_quantity') + getFormValue(form, 'customer_ID') + getFormValue(form, 'product_ID');
 				break;
 			default:
 				params = '';
