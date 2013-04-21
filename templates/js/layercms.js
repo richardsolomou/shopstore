@@ -283,12 +283,12 @@ layercms.webscrp = (function() {
 
 	// Creates and assigns the variables required to be sent to the loader function in order to
 	// use it to call the form to edit an object.
-	var getEditForm = function (id, url) {
+	var getEditForm = function (id, url, target) {
 
 		var method = 'GET';
 		url = (url == null) ? 'update/' + id : url;
 		var params = '';
-		var target = 'edit_' + id;
+		if (target == null) target = 'edit_' + id;
 
 		if (document.getElementById(target).classList.contains('displayBlock')) {
 			toggleHide(target);
@@ -300,12 +300,12 @@ layercms.webscrp = (function() {
 
 	// Creates and assigns the variables required to be sent to the loader function in order to
 	// use it to delete an object.
-	var doDelete = function (id) {
+	var doDelete = function (id, url, target) {
 
 		var method = 'DELETE';
-		var url = 'delete/' + id;
+		url = (url == null) ? 'delete/' + id : url;
 		var params = '';
-		var target = 'edit_' + id;
+		if (target == null) target = 'edit_' + id;
 
 		loader(method, url, params, target);
 
