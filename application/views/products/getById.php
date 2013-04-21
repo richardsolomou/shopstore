@@ -53,6 +53,9 @@
 			        	<?php } else { ?>
 			        		<p><div class="alert">Only logged in customers may purchase products.</div></p>
 			        	<?php } ?>
+			        	<hr><p><span class="green"><strong>IN STOCK</strong></span>: <?php echo $product['product_stock']; ?></p>
+			        <?php } else { ?>
+			        	<hr><p><span class="red"><strong>OUT OF STOCK</strong></span></p>
         			<?php } ?>
 				</td>
             </tr>
@@ -60,15 +63,6 @@
             	<td colspan="2">
             		<p><strong>Description:</strong></p>
             		<?php echo $product['product_description']; ?>
-            	</td>
-            </tr>
-            <tr>
-            	<td colspan="2">
-            		<?php if ($product['product_stock'] != 0) { ?>
-            			<p><span="green"><strong>In stock</strong></span>: <?php echo $product['product_stock']; ?></p>
-            		<?php } else { ?>
-            			<p><span="red"><strong>Out of stock</strong></span></p>
-            		<?php } ?>
             	</td>
             </tr>
             <tr>

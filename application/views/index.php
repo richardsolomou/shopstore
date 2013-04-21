@@ -14,9 +14,8 @@
 
 	<?php foreach ($products as $product) { ?>
 		<?php $image = ($product['product_image'] != null) ? BASE_PATH . '/templates/img/products/' . $product['product_ID'] . $product['product_image'] : BASE_PATH . '/templates/img/' . 'NA.png'; ?>
-		<div class="itemEntry" style="background: url('<?php echo $image; ?>');">
-			<a href="<?php echo BASE_PATH . '/products/getById/' . $product['product_ID']; ?>"><h3><?php echo $product['product_name'] ?></h3></a>
-			<a href="<?php echo BASE_PATH . '/basket/insert/' . $product['product_ID']; ?>" class="addToBasket">Add To Basket</a>
+		<div class="itemEntry" style="background: url('<?php echo $image; ?>') no-repeat;" onclick="location.href='<?php echo BASE_PATH . '/products/getById/' . $product['product_ID']; ?>'">
+			<h3><?php echo $product['product_name'] ?></h3>
 		</div>
 	<?php } ?>
 
