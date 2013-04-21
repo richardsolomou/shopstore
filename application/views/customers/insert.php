@@ -16,6 +16,7 @@
                         <td><label for="customer_password">Password:</label></td>
                         <td><input type="password" id="customer_password" name="customer_password" required value="" pattern="[a-zA-Z0-9]+"></td>
                     </tr>
+                    <tr><td colspan="2"><hr></td></tr>
                     <tr>
                         <td><label for="customer_firstname">First Name:</label></td>
                         <td><input type="text" id="customer_firstname" name="customer_firstname" required value="" pattern="[a-zA-Z ]+"></td>
@@ -24,6 +25,7 @@
                         <td><label for="customer_lastname">Last Name:</label></td>
                         <td><input type="text" id="customer_lastname" name="customer_lastname" required value="" pattern="[a-zA-Z ]+"></td>
                     </tr>
+                    <tr><td colspan="2"><hr></td></tr>
                     <tr>
                         <td><label for="customer_address1">Address 1:</label></td>
                         <td><input type="text" id="customer_address1" name="customer_address1" required value=""></td>
@@ -36,6 +38,7 @@
                         <td><label for="customer_postcode">Postcode:</label></td>
                         <td><input type="text" id="customer_postcode" name="customer_postcode" required value=""></td>
                     </tr>
+                    <tr><td colspan="2"><hr></td></tr>
                     <tr>
                         <td><label for="customer_phone">Phone Number:</label></td>
                         <td><input type="text" id="customer_phone" name="customer_phone" required value="" pattern="[0-9 ]+"></td>

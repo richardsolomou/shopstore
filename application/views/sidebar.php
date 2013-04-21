@@ -18,9 +18,13 @@
                 <table class="table3">
                     <tr><td class="nopadding nomargin"><input type="text" id="username" placeholder="Username" name="username" required value="" pattern="[a-zA-Z0-9]+"></td></tr>
                     <tr><td class="nopadding nomargin"><input type="password" id="password" placeholder="Password" name="password" required value="" pattern="[a-zA-Z0-9]+"></td></tr>
-                    <tr><td><input type="submit" class="btn" name="login" value="Login" onclick="layercms.webscrp.login(2, '<?php echo BASE_PATH; ?>'); return false;"></td></tr>
+                    <tr>
+                        <td>
+                            <input type="submit" class="btn" name="login" value="Login" onclick="layercms.webscrp.login(2, '<?php echo BASE_PATH; ?>'); return false;">&nbsp;&raquo;&nbsp;
+                            <a href="<?php echo BASE_PATH . '/customers/add'; ?>" class="highlight big">Register</a>
+                        </td>
+                    </tr>
                 </table>
-
             </form>
 
         <?php } else { ?>
@@ -30,8 +34,6 @@
         <?php } ?>
 
         <hr>
-
-        <p>&nbsp;</p>
 
         <div id="sideBarAlert"></div>
 
