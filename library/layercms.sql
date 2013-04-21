@@ -47,6 +47,7 @@ CREATE TABLE basket (
 	basket_quantity int unsigned NULL default "1",
 	product_ID int unsigned NOT NULL,
 	customer_ID int unsigned NOT NULL,
+	order_ID int unsigned NULL,
 	PRIMARY KEY (basket_ID)
 );
 
