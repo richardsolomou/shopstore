@@ -16,6 +16,7 @@
                         $productName = $product['product_name'];
                         $productPrice = $product['product_price'];
                         $productImage = $product['product_image'];
+                        $productStock = $product['product_stock'];
                     }
                 }
                 $totalPrice += $productPrice * $item['basket_quantity'];
@@ -27,8 +28,8 @@
                             <input type="hidden" name="basket_ID" id="basket_ID" value="<?php echo $item['basket_ID']; ?>">
                             <input type="hidden" name="customer_ID" id="customer_ID" value="<?php echo $item['customer_ID']; ?>">
                             <input type="hidden" name="product_ID" id="product_ID" value="<?php echo $item['product_ID']; ?>">
-                            <input type="text" class="smaller" id="basket_quantity" placeholder="Quantity" name="basket_quantity" onfocusout="layercms.webscrp.doEdit('basket', <?php echo $item['product_ID']; ?>, 'updateBasket_<?php echo $item['basket_ID']; ?>', 'operationAlert', null, '<?php echo BASE_PATH . '/basket/getTable/' . $item['product_ID']; ?>')" required value="<?php echo $item['basket_quantity']; ?>" pattern="[0-9]+">
-                            <br><span id="productStockLeft"><?php echo $product['product_stock']; ?></span> left
+                            <input type="text" class="smaller" id="basket_quantity" placeholder="Quantity" name="basket_quantity" onfocusout="layercms.webscrp.doEdit('basket', <?php echo $item['basket_ID']; ?>, 'updateBasket_<?php echo $item['basket_ID']; ?>', 'operationAlert', null, '<?php echo BASE_PATH . '/basket/getTable/' . $item['product_ID']; ?>')" required value="<?php echo $item['basket_quantity']; ?>" pattern="[0-9]+">
+                            <br><span id="productStockLeft_<?php echo $item['basket_ID']; ?>"><?php echo $productStock; ?></span> left
                         </form>
                     </td>
                     <td><?php echo $currencySymbol . $productPrice; ?></td>

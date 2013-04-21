@@ -78,7 +78,7 @@
 									$this->Basket->insert($basket);
 									// Reduce the available stock of the product.
 									$lastId = $this->Basket->lastId();
-									self::_reduceStock($lastId, $_POST['basket_quantity'], self::_checkStock($_POST['product_ID']));
+									self::_reduceStock($_POST['product_ID'], $_POST['basket_quantity'], self::_checkStock($_POST['product_ID']));
 									// Returns the alert message to be sent to the user.
 									self::set('message', 'Basket item successfully inserted.');
 									self::set('alert', 'alert-success');
@@ -173,7 +173,7 @@
 						// Checks if the quantity is zero.
 						if ($_POST['basket_quantity'] == 0) {
 							// Increases the stock back.
-							self::_increaseStock($basket_ID, $_POST['basket_quantity'], self::_checkStock($basketItem['product_ID']));
+							self::_increaseStock($_POST['product_ID'], $_POST['basket_quantity'], self::_checkStock($_POST['product_ID']));
 							// Deletes the basket item.
 							self::delete($basket_ID);
 							return;
@@ -188,7 +188,7 @@
 						// Checks if the product exists.
 						if (self::_exists('product_ID', $_POST['product_ID'], true, 'products')) {
 							// Gets the product's current stock.
-							$productStock = self::_checkStock($basketItem['product_ID']);
+							$productStock = self::_checkStock($_POST['product_ID']);
 							// Check if the stock is zero.
 							if ($productStock == 0 && ($_POST['basket_quantity'] > $basketItem['basket_quantity'])) {
 								// Returns the alert message to be sent to the user.
@@ -200,23 +200,20 @@
 							// Checks if the customer exists.
 							if (self::_exists('customer_ID', $_POST['customer_ID'], true, 'customers')) {
 								// Check if there is enough stock.
-								if (self::_checkStock($basketItem['product_ID']) >= ($_POST['basket_quantity'] - $basketItem['basket_quantity'])) {
+								if (self::_checkStock($_POST['product_ID']) >= ($_POST['basket_quantity'] - $basketItem['basket_quantity'])) {
 									$this->Basket->clear();
 									// Looks for the basket item with that identifier.
 									$this->Basket->where('basket_ID', $basket_ID, true);
 									$basket = array(
-										'basket_quantity' => $_POST['basket_quantity'],
-										'product_ID'      => $_POST['product_ID'],
-										'customer_ID'     => $_POST['customer_ID'],
 										'basket_quantity' => $_POST['basket_quantity']
 									);
 									// Updates the basket item.
 									$this->Basket->update($basket);
 									// Reduce the available stock of the product.
 									if ($_POST['basket_quantity'] > $basketItem['basket_quantity']) {
-										self::_reduceStock($basket_ID, ($_POST['basket_quantity'] - $basketItem['basket_quantity']), $productStock);
+										self::_reduceStock($_POST['product_ID'], ($_POST['basket_quantity'] - $basketItem['basket_quantity']), $productStock);
 									} else {
-										self::_increaseStock($basket_ID, ($basketItem['basket_quantity'] - $_POST['basket_quantity']), $productStock);
+										self::_increaseStock($_POST['product_ID'], ($basketItem['basket_quantity'] - $_POST['basket_quantity']), $productStock);
 									}
 									// Returns the alert message to be sent to the user.
 									self::set('message', 'Basket item successfully updated.');
@@ -287,7 +284,7 @@
 							// Updates the basket item.
 							$this->Basket->update($basket);
 							// Reduce the available stock of the product.
-							self::_reduceStock($basket_ID, $_POST['basket_quantity'], self::_checkStock($basketItem['product_ID']));
+							self::_reduceStock($basketItem['product_ID'], $_POST['basket_quantity'], self::_checkStock($basketItem['product_ID']));
 							// Returns the alert message to be sent to the user.
 							self::set('message', 'Basket item successfully updated.');
 							self::set('alert', 'alert-success');
