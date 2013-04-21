@@ -203,7 +203,7 @@ table textarea { width: 90%; height: 150px; }
 }
 
 .adminBar ul { margin-left: 1em; }
-.adminBar ul li { float: left; margin-left: 1.6em; }
+.adminBar ul li { float: left; margin-left: 0.9em; }
 .adminBar ul li a { padding: 8px; color: #222; background: #fafafa; border: 1px solid #e5e5e5; display: block; }
 .adminBar ul li a:hover, .adminBar ul li.active a { background: #fff; border: 1px solid #fff; }
 

@@ -31,6 +31,8 @@
 					<li><a href="<?php echo BASE_PATH . '/customers/getList'; ?>">Customers</a></li>
 					<li><a href="<?php echo BASE_PATH . '/administrators/getList'; ?>">Administrators</a></li>
 					<li><a href="<?php echo BASE_PATH . '/currencies/getList'; ?>">Currencies</a></li>
+					<li><a href="<?php echo BASE_PATH . '/orders/getList'; ?>">Orders</a></li>
+					<li><a href="<?php echo BASE_PATH . '/reports/getList'; ?>">Reports</a></li>
 					<li><a href="<?php echo BASE_PATH . '/settings/getList'; ?>">Settings</a></li>
 				</ul>
 				<div class="cleaner">&nbsp;</div>
