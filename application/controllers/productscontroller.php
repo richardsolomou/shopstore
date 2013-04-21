@@ -170,15 +170,17 @@
 				$this->ajax = true;
 				// Checks if the specified product exists.
 				if (self::_exists('product_ID', $product_ID, true)) {
+					// Deletes the image.
+					self::deleteImage($product_ID);
+					// Deletes all reviews for that product.
+					self::_deleteReviews($product_ID);
+					// Deletes all basket item records for that product.
+					self::_deleteFromBasket($product_ID);
 					$this->Products->clear();
 					// Looks for the product with that identifier.
 					$this->Products->where('product_ID', $product_ID);
 					// Deletes the product from the database.
 					$this->Products->delete();
-					// Deletes the image.
-					self::deleteImage($product_ID);
-					// Deletes all reviews for that product.
-					self::_deleteReviews($product_ID);
 					// Returns the alert message to be sent to the user.
 					self::set('message', 'Product successfully deleted.');
 					self::set('alert', 'alert-success nomargin');
@@ -367,6 +369,56 @@
 		}
 
 		/**
+		 * Adds more stock to a product.
+		 * 
+		 * @param  int    $product_ID Product identifier.
+		 * @access public
+		 */
+		public function addStock($product_ID = null)
+		{
+			// Checks if the user has sufficient privileges.
+			if (self::isAdmin()) {
+				// Only loads the content for this method.
+				$this->ajax = true;
+				// Checks if this was a POST request.
+				if (isset($_POST['operation'])) {
+					// Checks if the specified product exists.
+					if (self::_exists('product_ID', $product_ID, true)) {
+						// Gets the current values of the product.
+						$productItem = self::_getProductById($product_ID);
+						$newStock = $productItem['product_stock'] + $_POST['product_stock'];
+						$this->Products->clear();
+						// Looks for the product with that identifier.
+						$this->Products->where('product_ID', $product_ID, true);
+						$product = array(
+							'product_stock' => $newStock
+						);
+						// Updates the product.
+						$this->Products->update($product);
+						// Returns the alert message to be sent to the user.
+						self::set('message', 'Product successfully updated.');
+						self::set('alert', 'alert-success nomargin');
+					} else {
+						// Returns the alert message to be sent to the user.
+						self::set('message', 'Product does not exist.');
+						self::set('alert', 'nomargin');
+					}
+					// Show an alert.
+					$this->_action = 'alert';
+				// Default action for GET requests.
+				} else {
+					// Returns the product's values from the database.
+					$product = self::_getProductById($product_ID);
+					self::set('product', $product);
+					self::set('product_ID', $product_ID);
+				}
+			} else {
+				// Returns an unauthorized access page.
+				$this->_action = 'unauthorizedAccess';
+			}
+		}
+
+		/**
 		 * Returns product values in a variable.
 		 * 
 		 * @param  int       $product_ID Product identifier.
@@ -523,8 +575,27 @@
 				$this->Products->table('reviews');
 				// Looks for a review with that product identifier.
 				$this->Products->where('product_ID', $product_ID);
-				$this->Products->select();
 				// Deletes the reviews.
+				$this->Products->delete();
+			}
+		}
+
+		/**
+		 * Deletes the specified product from the basket.
+		 * 
+		 * @param  int       $product_ID Product identifier.
+		 * @access protected
+		 */
+		protected function _deleteFromBasket($product_ID = null)
+		{
+			// Checks if the product exists.
+			if (self::_exists('product_ID', $product_ID, true)) {
+				$this->Products->clear();
+				// Uses the basket table.
+				$this->Products->table('basket');
+				// Looks for a basket item with that product identifier.
+				$this->Products->where('product_ID', $product_ID);
+				// Deletes the basket item.
 				$this->Products->delete();
 			}
 		}

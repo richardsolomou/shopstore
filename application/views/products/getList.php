@@ -33,6 +33,7 @@
                         <td class="operations">
                             <button href="javascript:void(0)" onclick="layercms.webscrp.getEditForm(<?php echo $product['product_ID']; ?>)" class="btn">Edit</button>
                             <button href="javascript:void(0)" onclick="layercms.webscrp.doDelete(<?php echo $product['product_ID']; ?>)" class="btn">Delete</button>
+                            <button href="javascript:void(0)" onclick="layercms.webscrp.getEditForm(<?php echo $product['product_ID']; ?>, '<?php echo BASE_PATH . '/products/addStock/' . $product['product_ID']; ?>')" class="btn">Add Stock</button>
                         </td>
                     </tr>
                     <tr class="noHover">
