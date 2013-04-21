@@ -8,11 +8,11 @@ body, input, textarea, select, button{
     font-family: 'Open Sans', sans-serif!important;
 }
 
-a, aside:not(.hiddenSidebar) {
-    transition: all .1s linear; 
-    -o-transition: all .1s linear; 
-    -moz-transition: all .1s linear; 
-    -webkit-transition: all .1s linear;
+a, aside:not(.hiddenSidebar), .itemEntry {
+    transition: all .2s linear; 
+    -o-transition: all .2s linear; 
+    -moz-transition: all .2s linear; 
+    -webkit-transition: all .2s linear;
     outline: 0;
 }
 
@@ -89,6 +89,9 @@ a {
     color: #A60000;
     text-decoration: none;
 }
+
+.red { color: #A60000!important; }
+.green { color: #468847!important; }
 
 a:hover { text-decoration: none; }
 

@@ -9,27 +9,18 @@
     position: relative;
     padding-bottom: 3.3em;
     overflow: hidden;
+    cursor: pointer;
 }
 
-.itemEntry h3 { font-weight: bold; padding-top: 1em; }
+.itemEntry h3 {
+    font-weight: bold;
+    position: absolute;
+    padding: 1em 0;
+    right:0;
+    left: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+}
 
 .itemEntry:not(:hover) { opacity: 0.6; }
-
-.itemEntry a { display: block; text-decoration: none; color: #fff; }
-.itemEntry a:not(.addToBasket) { height: 150px; }
-.itemEntry a h3 { background-color: rgba(0, 0, 0, 0.5); padding-bottom: 10px; }
-
-a.addToBasket {
-    background: #e5e5e5;
-    color: #444;
-    bottom: 0;
-    position: absolute;
-    width: 130px;
-    padding: 10px;
-    margin-bottom: -1px;
-}
-
-a.addToBasket:hover {
-    background: #444;
-    color: #e5e5e5;
-}
