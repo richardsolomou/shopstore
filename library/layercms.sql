@@ -53,8 +53,6 @@ CREATE TABLE basket (
 
 CREATE TABLE orders (
 	order_ID int unsigned NOT NULL auto_increment,
-	order_date DATETIME NOT NULL default "0000-00-00 00:00:00",
-	order_status varchar(15) NOT NULL,
 	order_total float NOT NULL,
 	customer_ID int unsigned NOT NULL,
 	PRIMARY KEY (order_ID)
