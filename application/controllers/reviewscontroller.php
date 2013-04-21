@@ -88,11 +88,11 @@
 					if (self::_exists('product_ID', $_POST['product_ID'], true, 'products')) {
 						$this->Reviews->clear();
 						$review = array(
-							'product_ID' => $_POST['product_ID'],
-							'review_subject' => $_POST['review_subject'],
+							'product_ID'         => $_POST['product_ID'],
+							'review_subject'     => $_POST['review_subject'],
 							'review_description' => $_POST['review_description'],
-							'review_rating' => $_POST['review_rating'],
-							'customer_ID' => $customer_ID
+							'review_rating'      => $_POST['review_rating'],
+							'customer_ID'        => $customer_ID
 						);
 						// Inserts the review into the database.
 						$this->Reviews->insert($review);
@@ -176,11 +176,11 @@
 							// Looks for the review with that identifier.
 							$this->Reviews->where('review_ID', $review_ID, true);
 							$review = array(
-								'product_ID' => $_POST['product_ID'],
-								'review_subject' => $_POST['review_subject'],
+								'product_ID'         => $_POST['product_ID'],
+								'review_subject'     => $_POST['review_subject'],
 								'review_description' => $_POST['review_description'],
-								'review_rating' => $_POST['review_rating'],
-								'customer_ID' => $_POST['customer_ID']
+								'review_rating'      => $_POST['review_rating'],
+								'customer_ID'        => $customer_ID
 							);
 							// Updates the review.
 							$this->Reviews->update($review);
