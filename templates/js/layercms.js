@@ -214,7 +214,7 @@ layercms.webscrp = (function() {
 				params = getFormValue(form, 'setting_ID') + getFormValue(form, 'setting_column') + getFormValue(form, 'setting_value');
 				break;
 			case 'basket':
-				params = getFormValue(form, 'basket_quantity') + getFormValue(form, 'customer_ID') + getFormValue(form, 'product_ID');
+				params = getFormValue(form, 'basket_ID') + getFormValue(form, 'basket_quantity') + getFormValue(form, 'customer_ID') + getFormValue(form, 'product_ID');
 				break;
 			default:
 				params = '';
@@ -223,6 +223,20 @@ layercms.webscrp = (function() {
 		params = 'operation=edit' + params;
 
 		window.console.log('doEdit: ' + method + '\r\n' + url + '\r\n' + params + '\r\n' + target);
+
+		loader(method, url, params, target);
+
+	};
+
+	// Creates and assigns the variables required to be sent to the loader function and gets all
+	// the input fields from the form page and assigns them to variables to be sent as parameters.
+	var addMore = function (formID, target, url) {
+
+		var method = 'POST';
+		var form = document.getElementById(formID);
+		var params = 'operation=edit' + getFormValue(form, 'basket_quantity');
+
+		window.console.log('addMore: ' + method + '\r\n' + url + '\r\n' + params + '\r\n' + target);
 
 		loader(method, url, params, target);
 
@@ -389,6 +403,7 @@ layercms.webscrp = (function() {
 		'deleteImage': deleteImage,
 		'doAdd': doAdd,
 		'doEdit': doEdit,
+		'addMore': addMore,
 		'getAddForm': getAddForm,
 		'getEditForm': getEditForm,
 		'doDelete': doDelete,
