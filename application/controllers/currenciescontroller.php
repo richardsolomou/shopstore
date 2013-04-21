@@ -54,8 +54,8 @@
 					try {
 						$this->Currencies->clear();
 						$currency = array(
-							'currency_name' => $_POST['currency_name'],
-							'currency_code' => $_POST['currency_code'],
+							'currency_name'   => $_POST['currency_name'],
+							'currency_code'   => $_POST['currency_code'],
 							'currency_symbol' => $_POST['currency_symbol']
 						);
 						// Inserts the currency into the database.
@@ -142,8 +142,8 @@
 							// Looks for the currency with that identifier.
 							$this->Currencies->where('currency_ID', $currency_ID, true);
 							$currency = array(
-								'currency_name' => $_POST['currency_name'],
-								'currency_code' => $_POST['currency_code'],
+								'currency_name'   => $_POST['currency_name'],
+								'currency_code'   => $_POST['currency_code'],
 								'currency_symbol' => $_POST['currency_symbol']
 							);
 							// Updates the currency.

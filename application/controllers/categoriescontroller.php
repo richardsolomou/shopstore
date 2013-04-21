@@ -84,7 +84,7 @@
 					if (self::_exists('category_ID', $_POST['category_parent_ID'], true)) {
 						$this->Categories->clear();
 						$category = array(
-							'category_name' => $_POST['category_name'],
+							'category_name'      => $_POST['category_name'],
 							'category_parent_ID' => $_POST['category_parent_ID']
 						);
 						// Inserts the category into the database.
@@ -172,7 +172,7 @@
 								// Looks for the category with that identifier.
 								$this->Categories->where('category_ID', $category_ID, true);
 								$category = array(
-									'category_name' => $_POST['category_name'],
+									'category_name'      => $_POST['category_name'],
 									'category_parent_ID' => $_POST['category_parent_ID']
 								);
 								// Updates the category.

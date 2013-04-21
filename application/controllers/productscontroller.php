@@ -47,6 +47,9 @@
 		        // Creates an instance of the customers controller to fetch
 		        // details for the customers in the reviews.
 		        $customerDispatch = new CustomersController('customers', '_getCustomerById');
+		        // Checks if the product is currently in the basket.
+		        $inBasket = null;
+		        if (self::isCustomer()) $inBasket = self::_checkIfInBasket($product_ID, $_SESSION['SESS_CUSTOMERID']);
 				self::set('product', $product);
 				self::set('reviews', $reviews);
 				self::set('reviewNumber', $reviewNumber);
@@ -55,6 +58,7 @@
 				self::set('customerDispatch', $customerDispatch);
 				self::set('productCategory', $productCategory['category_name']);
 				self::set('currencySymbol', $currencySymbol['currency_symbol']);
+				self::set('inBasket', $inBasket);
 			} else {
 				// Returns a 404 error page.
 				notFound();
@@ -106,13 +110,13 @@
 						}
 						// Creates the array of product values to be parsed.
 						$product = array(
-							'category_ID' => $_POST['category_ID'],
-							'product_name' => $_POST['product_name'],
+							'category_ID'         => $_POST['category_ID'],
+							'product_name'        => $_POST['product_name'],
 							'product_description' => $_POST['product_description'],
-							'product_condition' => $_POST['product_condition'],
-							'product_price' => $_POST['product_price'],
-							'product_stock' => $_POST['product_stock'],
-							'product_image' => $imageExtension
+							'product_condition'   => $_POST['product_condition'],
+							'product_price'       => $_POST['product_price'],
+							'product_stock'       => $_POST['product_stock'],
+							'product_image'       => $imageExtension
 						);
 						// Inserts the product into the database.
 						$this->Products->insert($product);
@@ -214,12 +218,12 @@
 							// Looks for the product with that identifier.
 							$this->Products->where('product_ID', $product_ID, true);
 							$product = array(
-								'category_ID' => $_POST['category_ID'],
-								'product_name' => $_POST['product_name'],
+								'category_ID'         => $_POST['category_ID'],
+								'product_name'        => $_POST['product_name'],
 								'product_description' => $_POST['product_description'],
-								'product_condition' => $_POST['product_condition'],
-								'product_price' => $_POST['product_price'],
-								'product_stock' => $_POST['product_stock']
+								'product_condition'   => $_POST['product_condition'],
+								'product_price'       => $_POST['product_price'],
+								'product_stock'       => $_POST['product_stock']
 							);
 							$imageArray = array(
 								'product_image' => $imageExtension
@@ -516,6 +520,34 @@
 				$this->Products->select();
 				// Deletes the reviews.
 				$this->Products->delete();
+			}
+		}
+
+		/**
+		 * Checks if the current item is in the basket.
+		 * 
+		 * @param  int       $product_ID  Product identifier.
+		 * @param  int       $customer_ID Customer identifier.
+		 * @return string                 Returns the quantity in the basket.
+		 * @access protected
+		 */
+		protected function _checkIfInBasket($product_ID = null, $customer_ID = null)
+		{
+			// Checks if the product exists.
+			if (self::_exists('product_ID', $product_ID, true)) {
+				// Checks if the customer exists.
+				if (self::_exists('customer_ID', $customer_ID, true, 'customers')) {
+					$this->Products->clear();
+					// Uses the basket table.
+					$this->Products->table('basket');
+					// Looks for the product with that product identifier.
+					$this->Products->where('product_ID', $product_ID);
+					// Looks for the customer with that customer identifier.
+					$this->Products->where('customer_ID', $customer_ID);
+					$this->Products->select();
+					// Returns the number of results of basket items.
+					return $this->Products->rowCount();
+				}
 			}
 		}
 

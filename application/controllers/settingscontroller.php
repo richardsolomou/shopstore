@@ -62,7 +62,7 @@
 						$this->Settings->where('setting_ID', $setting_ID, true);
 						$setting = array(
 							'setting_column' => $_POST['setting_column'],
-							'setting_value' => $_POST['setting_value']
+							'setting_value'  => $_POST['setting_value']
 						);
 						// Updates the setting.
 						$this->Settings->update($setting);
