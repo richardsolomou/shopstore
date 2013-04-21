@@ -49,7 +49,13 @@
 		        $customerDispatch = new CustomersController('customers', '_getCustomerById');
 		        // Checks if the product is currently in the basket.
 		        $inBasket = null;
-		        if (self::isCustomer()) $inBasket = self::_checkIfInBasket($product_ID, $_SESSION['SESS_CUSTOMERID']);
+		        if (self::isCustomer()) {
+		        	$inBasket = self::_checkIfInBasket($product_ID, $_SESSION['SESS_CUSTOMERID']);
+			        if ($inBasket != 0) {
+			        	$basket_ID = self::_getBasketID($product_ID, $_SESSION['SESS_CUSTOMERID']);
+			        	self::set('basket_ID', $basket_ID);
+			        }
+			    }
 				self::set('product', $product);
 				self::set('reviews', $reviews);
 				self::set('reviewNumber', $reviewNumber);
@@ -547,8 +553,43 @@
 					$this->Products->select();
 					// Returns the number of results of basket items.
 					return $this->Products->rowCount();
+				} else {
+					return false;
 				}
+			} else {
+				return false;
 			}
+		}
+
+		/**
+		 * Gets the basket identifier for that specific product.
+		 *
+		 * @param  int       $product_ID  Product identifier.
+		 * @param  int       $customer_ID Customer identifier.
+		 * @return int                    Returns the basket identifier.
+		 * @access protected
+		 */
+		protected function _getBasketID($product_ID = null, $customer_ID = null)
+		{
+			// Checks if the product exists.
+			if (self::_exists('product_ID', $product_ID, true)) {
+				// Checks if the customer exists.
+				if (self::_exists('customer_ID', $customer_ID, true, 'customers')) {
+					$this->Products->clear();
+					// Uses the basket table.
+		        	$this->Products->table('basket');
+		        	// Looks for the customer and product with those identifiers.
+		        	$this->Products->where('customer_ID', $customer_ID);
+		        	$this->Products->where('product_ID', $product_ID);
+		        	$this->Products->select();
+		        	// Returns the basket identifier.
+		        	return $this->Products->fetch();
+		        } else {
+		        	return false;
+		        }
+	        } else {
+	        	return false;
+	        }
 		}
 
 		/**

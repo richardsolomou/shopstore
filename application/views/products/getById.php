@@ -32,7 +32,27 @@
 						}
 					?>
 					<?php if ($product['product_stock'] != 0) { ?>
-        			<p><a href="<?php echo BASE_PATH . '/basket/insert/' . $product['product_ID']; ?>" class="highlight big">Add to Basket</a></p>
+						<?php if (isset($_SESSION['SESS_LOGGEDIN'])) { ?>
+							<?php if ($inBasket == 0) { ?>
+								<form id="addToBasket" name="addToBasket" onsubmit="layercms.webscrp.doAdd('basket', 'addToBasket', 'sideBarAlert', '<?php echo BASE_PATH . '/basket/insert'; ?>'); return false;" method="post">
+									<input type="hidden" name="operation" id="operation" value="true">
+									<input type="hidden" name="customer_ID" id="customer_ID" value="<?php echo $_SESSION['SESS_CUSTOMERID']; ?>">
+									<input type="hidden" name="product_ID" id="product_ID" value="<?php echo $product['product_ID']; ?>">
+									<input type="text" class="smaller" id="basket_quantity" placeholder="Quantity" name="basket_quantity" required value="" pattern="[0-9]+">
+			        				<input type="submit" class="highlight big" value="Add to Basket">
+			        			</form>
+			        		<?php } else { ?>
+			        			<form id="addMore" name="addMore" onsubmit="layercms.webscrp.addMore('addMore', 'sideBarAlert', '<?php echo BASE_PATH . '/basket/addMore/' . $basket_ID['basket_ID']; ?>'); return false;" method="post">
+									<input type="hidden" name="operation" id="operation" value="true">
+									<input type="hidden" name="customer_ID" id="customer_ID" value="<?php echo $_SESSION['SESS_CUSTOMERID']; ?>">
+									<input type="hidden" name="product_ID" id="product_ID" value="<?php echo $product['product_ID']; ?>">
+									<input type="text" class="smaller" id="basket_quantity" placeholder="Quantity" name="basket_quantity" required value="" pattern="[0-9]+">
+			        				<input type="submit" class="highlight big" value="Add More!">
+			        			</form>
+			        		<?php } ?>
+			        	<?php } else { ?>
+			        		<p><div class="alert">Only logged in customers may purchase products.</div></p>
+			        	<?php } ?>
         			<?php } ?>
 				</td>
             </tr>
