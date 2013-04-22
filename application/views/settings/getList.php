@@ -30,7 +30,7 @@
                         </td>
                     </tr>
                     <tr class="noHover">
-                        <td colspan="5"><div class="showHide" id="edit_<?php echo $setting['setting_ID']; ?>"></div></td>
+                        <td colspan="4"><div class="showHide" id="edit_<?php echo $setting['setting_ID']; ?>"></div></td>
                     </tr>
             <?php } ?>
         </tbody>

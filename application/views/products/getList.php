@@ -37,7 +37,7 @@
                         </td>
                     </tr>
                     <tr class="noHover">
-                        <td colspan="5"><div class="showHide" id="edit_<?php echo $product['product_ID']; ?>"></div></td>
+                        <td colspan="4"><div class="showHide" id="edit_<?php echo $product['product_ID']; ?>"></div></td>
                     </tr>
             <?php } ?>
         </tbody>
