@@ -216,6 +216,9 @@ layercms.webscrp = (function() {
 			case 'basket':
 				params = getFormValue(form, 'basket_ID') + getFormValue(form, 'basket_quantity') + getFormValue(form, 'customer_ID') + getFormValue(form, 'product_ID');
 				break;
+			case 'orders':
+				params = getFormValue(form, 'order_ID') + getFormValue(form, 'order_total') + getFormValue(form, 'customer_ID');
+				break;
 			default:
 				params = '';
 		}

@@ -147,7 +147,9 @@ table a { text-decoration: none; }
 
 table.hoverRed tbody tr:hover td, table.hoverRed tbody tr:hover th { background-color: #bf3030; color: #fff; cursor: pointer; }
 table.hoverRed tbody tr.noHover:hover td, table.hoverRed tbody tr.noHover:hover th { background-color: inherit; color: inherit; cursor: inherit; }
-table.hoverRed tbody tr:hover td a:not(.btn), table.hoverRed tbody tr:hover th a:not(.btn) { color: #fff; }
+table.hoverRed tbody tr:hover td a:not(.btn, .productLink), table.hoverRed tbody tr:hover th a:not(.btn) { color: #fff; }
+
+.productLink:hover { background: #f4f4f4; }
 
 table thead { background: #f4f4f4; }
 
