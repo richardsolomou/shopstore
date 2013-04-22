@@ -32,6 +32,37 @@
                             </select>
                         </td>
                     </tr>
+                    <tr>
+                        <td colspan="2">
+                            <table class="bordered hoverRed nomargin">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th class="lefted">Quantity</th>
+                                        <th class="lefted">Product</th>
+                                        <th class="lefted">Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                            <?php
+                                foreach ($orderedProducts as $orderedProduct) {
+                                    foreach ($products as $product) {
+                                        if ($orderedProduct['product_ID'] == $product['product_ID']) {
+                                            $productName = $product['product_name']; ?>
+                                    <tr>
+                                        <td><?php echo $orderedProduct['item_ID']; ?></td>
+                                        <td><?php echo $orderedProduct['item_quantity']; ?></td>
+                                        <td><a href="<?php echo BASE_PATH . '/products/getById/' . $product['product_ID']; ?>" class="productLink"><?php echo $product['product_name']; ?></a></td>
+                                        <td><?php echo $product['product_price']; ?></td>
+                                    </tr>
+                            <?php       }
+                                    }
+                                }
+                            ?>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
                 </table>
             </td>
             <td>

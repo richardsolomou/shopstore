@@ -1,6 +1,6 @@
 <article>
 
-    <h1><?php echo $pageTitle ?></h1>
+    <h1>Completed Orders</h1>
 
     <div id="operationAlert" class="showHide"></div>
 

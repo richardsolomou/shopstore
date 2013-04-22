@@ -170,11 +170,11 @@
 				// Default action for GET requests.
 				} else {
 					// Returns the order's values from the database.
-					$order = self::_getOrderById($order_ID);
 					self::set('order_ID', $order_ID);
-					self::set('order', $order);
+					self::set('order', self::_getOrderById($order_ID));
 					self::set('products', self::_getProducts());
 					self::set('customers', self::_getCustomers());
+					self::set('orderedProducts', self::_getItemsByOrder($order_ID));
 					$settingsCurrency = self::_getSettingByColumn('currency_ID');
 					$currencySymbol = self::_getCurrencyById($settingsCurrency['setting_value']);
 					self::set('currencySymbol', $currencySymbol['currency_symbol']);
