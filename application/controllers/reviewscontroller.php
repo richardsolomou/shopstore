@@ -32,10 +32,8 @@
 				// Fetches all the reviews.
 				$reviews = $this->Reviews->fetch(true);
 				// Fetches all the customers and products.
-				$customers = self::_getCustomers();
-				$products = self::_getProducts();
-				self::set('customers', $customers);
-				self::set('products', $products);
+				self::set('customers', self::_getCustomers());
+				self::set('products', self::_getProducts());
 				self::set('reviews', $reviews);
 			} else {
 				// Returns an unauthorized access page.

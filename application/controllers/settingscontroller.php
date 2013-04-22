@@ -31,10 +31,9 @@
 				$this->Settings->select();
 				// Fetches all the settings.
 				$settings = $this->Settings->fetch(true);
-				// Fetches all the currencies.
-				$currencies = self::_getCurrencies();
 				self::set('settings', $settings);
-				self::set('currencies', $currencies);
+				// Fetches all the currencies.
+				self::set('currencies', self::_getCurrencies());
 			} else {
 				// Returns an unauthorized access page.
 				$this->_action = 'unauthorizedAccess';

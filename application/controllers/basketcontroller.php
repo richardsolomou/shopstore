@@ -33,13 +33,12 @@
 				$this->Basket->select();
 				// Fetches all the basket items.
 				$basketItems = $this->Basket->fetch(true);
-				// Gets a list of all the products in the database.
-				$products = self::_getProducts();
 				// Gets the currency ID from the website settings table and the
 				// respective symbol from the currencies table.
 				$settingsCurrency = self::_getSettingByColumn('currency_ID');
 				$currencySymbol = self::_getCurrencyById($settingsCurrency['setting_value']);
-				self::set('products', $products);
+				// Gets a list of all the products in the database.
+				self::set('products', self::_getProducts());
 				self::set('basketItems', $basketItems);
 				self::set('currencySymbol', $currencySymbol['currency_symbol']);
 			} else {
