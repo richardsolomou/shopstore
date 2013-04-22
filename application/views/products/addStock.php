@@ -12,6 +12,9 @@
             <td>
                 <table class="table3">
                     <tr>
+                        <td colspan="2">Current Stock: <?php echo $product['product_stock']; ?></td>
+                    </tr>
+                    <tr>
                         <td class="tdleft"><label for="product_stock">Stock:</label></td>
                         <td class="tdright"><input type="text" id="product_stock" name="product_stock" required value="" pattern="[0-9]+"></td>
                     </tr>
