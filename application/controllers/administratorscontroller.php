@@ -64,7 +64,7 @@
 						// Inserts the administrator into the database.
 						$this->Administrators->insert($administrator);
 						// Returns the alert message to be sent to the user.
-						self::set('message', 'Administrator successfully inserted.');
+						self::set('message', 'Administrator successfully added.');
 						self::set('alert', 'alert-success');
 					} else {
 						// Returns the alert message to be sent to the user.

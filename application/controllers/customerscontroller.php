@@ -117,7 +117,7 @@
 						$_SESSION['SESS_LOGGEDIN'] = 1;
 						$_SESSION['SESS_CUSTOMERID'] = $this->Customers->lastId();
 						// Returns the alert message to be sent to the user.
-						self::set('message', 'Customer successfully inserted.');
+						self::set('message', 'Customer successfully created.');
 						self::set('alert', 'alert-success');
 					} else {
 						// Returns the alert message to be sent to the user.

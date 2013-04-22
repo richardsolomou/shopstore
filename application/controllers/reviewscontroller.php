@@ -97,7 +97,7 @@
 						// Inserts the review into the database.
 						$this->Reviews->insert($review);
 						// Returns the alert message to be sent to the user.
-						self::set('message', 'Review successfully inserted.');
+						self::set('message', 'Review successfully created.');
 						self::set('alert', 'alert-success');
 					} else {
 						// Returns the alert message to be sent to the user.

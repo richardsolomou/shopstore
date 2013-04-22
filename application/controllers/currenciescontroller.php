@@ -61,11 +61,11 @@
 						// Inserts the currency into the database.
 						$this->Currencies->insert($currency);
 						// Returns the alert message to be sent to the user.
-						self::set('message', 'Currency successfully inserted.');
+						self::set('message', 'Currency successfully added.');
 						self::set('alert', 'alert-success');
 					} catch (PDOException $e) {
 						// Returns the alert message to be sent to the user.
-						self::set('message', 'Currency could not be inserted.');
+						self::set('message', 'Currency could not be added.');
 						self::set('alert', '');
 					}
 					// Show an alert.

@@ -90,7 +90,7 @@
 						// Inserts the category into the database.
 						$this->Categories->insert($category);
 						// Returns the alert message to be sent to the user.
-						self::set('message', 'Category successfully inserted.');
+						self::set('message', 'Category successfully created.');
 						self::set('alert', 'alert-success');
 					} else {
 						// Returns the alert message to be sent to the user.

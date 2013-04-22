@@ -133,7 +133,7 @@
 							if (file_exists($product_image)) rename($product_image, SERVER_ROOT . '\\templates\\img\\products\\' . $lastId . $imageExtension);
 						}
 						// Returns the alert message to be sent to the user.
-						self::set('message', 'Product successfully inserted.');
+						self::set('message', 'Product successfully created.');
 						self::set('alert', 'alert-success');
 					} else {
 						// Returns the alert message to be sent to the user.
