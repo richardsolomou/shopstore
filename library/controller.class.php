@@ -94,12 +94,12 @@
 				// Stores the categories of the website in a variable.
 				$categories = $this->$model->query('SELECT * FROM categories', true);
 				self::set('categories', $categories);
+				// Stores the products of the website in a variable.
+				$products = $this->$model->query('SELECT * FROM products', true);
+				self::set('products', $products);
 				// Sets the title of the current page and based on the controller.
 				if ($this->_controller == 'Controller') {
 					$pageTitle = 'Home';
-					// Stores the products of the website in a variable.
-					$products = $this->$model->query('SELECT * FROM products', true);
-					self::set('products', $products);
 				} else {
 					$pageTitle = $this->_controller;
 				}
@@ -113,6 +113,12 @@
 					$this->$model->select();
 					self::set('admin', $this->$model->fetch());
 				}
+				self::set('basketItems', self::_getBasket($model));
+				// Gets the currency ID from the website settings table and the
+				// respective symbol from the currencies table.
+				$settingsCurrency = self::_getSettingByColumn($model, 'currency_ID');
+				$currencySymbol = self::_getCurrencyById($model, $settingsCurrency['setting_value']);
+				self::set('currencySymbol', $currencySymbol['currency_symbol']);
 			} else {
 				// Database was not setup, forward to installer.
 				self::set('title', 'LayerCMS Installer');
@@ -142,6 +148,119 @@
 		public function isAdmin()
 		{
 			if (isset($_SESSION['SESS_ADMINLOGGEDIN']) && isset($_SESSION['SESS_ADMINID'])) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		/**
+		 * Returns all basket items in the database.
+		 *
+		 * @param  string    $model Model to be used for this operation.
+		 * @return array            Items in the basket.
+		 * @access protected
+		 */
+		protected function _getBasket($model)
+		{
+			// Checks if the user has sufficient privileges.
+			if (self::isCustomer()) {
+				$this->$model->clear();
+				$this->$model->table('basket');
+				// Looks up items for this customer.
+				$this->$model->where('customer_ID', $_SESSION['SESS_CUSTOMERID']);
+				$this->$model->select();
+				// Fetches all the basket items.
+				return $this->$model->fetch(true);
+			} else {
+				return array();
+			}
+		}
+
+		/**
+		 * Returns a specified setting from the database.
+		 *
+		 * @param  string    $model          Model to be used for this operation.
+		 * @param  string    $setting_column Name of the setting's column.
+		 * @return array                     Settings of the database.
+		 * @access protected
+		 */
+		protected function _getSettingByColumn($model, $setting_column = null)
+		{
+			// Checks if the setting column value exists.
+			if (self::_exists($model, 'setting_column', $setting_column, false, 'settings')) {
+				$this->$model->clear();
+				// Uses the settings table.
+				$this->$model->table('settings');
+				// Looks for the setting column with that value.
+				$this->$model->where('setting_column', '"' . $setting_column . '"');
+				$this->$model->select();
+				// Returns the result of the setting.
+				return $this->$model->fetch();
+			} else {
+				return false;
+			}
+		}
+
+		/**
+		 * Returns the values of the currency that was selected.
+		 *
+		 * @param  string    $model       Model to be used for this operation.
+		 * @param  int       $currency_ID Currency identifier.
+		 * @return string                 Returns the values of the currency.
+		 * @access protected
+		 */
+		protected function _getCurrencyById($model, $currency_ID = null)
+		{
+			// Checks if the currency exists.
+			if (self::_exists($model, 'currency_ID', $currency_ID, true, 'currencies')) {
+				$this->$model->clear();
+				// Uses the currencies table.
+				$this->$model->table('currencies');
+				// Looks for a currency with that identifier.
+				$this->$model->where('currency_ID', $currency_ID);
+				$this->$model->select();
+				// Returns the result of that currency.
+				return $this->$model->fetch();
+			} else {
+				return false;
+			}
+		}
+
+		/**
+		 * Checks if a review exists in the database with the given attributes.
+		 *
+		 * @param  string    $model       Model to be used for this operation.
+		 * @param  string    $column      Name of the column to search on.
+		 * @param  string    $value       Value to search for.
+		 * @param  boolean   $requireInt  Requires the value sent to be an integer.
+		 * @param  string    $customTable Uses a table from another controller.
+		 * @return boolean                Does the review exist?
+		 * @access protected
+		 */
+		protected function _exists($model, $column = null, $value = null, $requireInt = false, $customTable = null)
+		{
+			// Checks if not all characters are digits.
+			if ($requireInt == true && !ctype_digit($value)) return false;
+			// Allows for the category parent to have a root parent.
+			if ($model == 'Categories' && $column == 'category_ID' && $value == '0') return true;
+			$this->$model->clear();
+			// Uses a different table for other controllers.
+			if ($customTable == null) {
+				$this->$model->table($model);
+			} else {
+				$this->$model->table($customTable);
+			}
+			if ($requireInt == false) {
+				// Looks for a string value in a specified column.
+				$this->$model->where($column, '"' . $value . '"');
+			} else {
+				// Loooks for an integer value in a specified column.
+				$this->$model->where($column, $value);
+			}
+			$this->$model->select();
+			// Returns the appropriate value if the element exists or not.
+			if ($this->$model->rowCount() != 0) {
 				return true;
 			} else {
 				return false;

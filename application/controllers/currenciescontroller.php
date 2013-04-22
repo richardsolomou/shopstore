@@ -90,9 +90,9 @@
 				// Only loads the content for this method.
 				$this->ajax = true;
 				// Checks if the currency exists.
-				if (self::_exists('currency_ID', $currency_ID, true)) {
+				if (self::_exists('Currencies', 'currency_ID', $currency_ID, true)) {
 					// Checks if the specified currency is not the default.
-					$settingsCurrency = self::_getSettingByColumn('currency_ID');
+					$settingsCurrency = self::_getSettingByColumn('Currencies', 'currency_ID');
 					if ($settingsCurrency['setting_value'] != $currency_ID) {
 						$this->Currencies->clear();
 						// Looks for the currency with that identifier.
@@ -135,7 +135,7 @@
 				// Checks if this was a POST request.
 				if (isset($_POST['operation'])) {
 					// Checks if the specified currency exists.
-					if (self::_exists('currency_ID', $currency_ID, true)) {
+					if (self::_exists('Currencies', 'currency_ID', $currency_ID, true)) {
 						// Checks if the code is less than 4 characters.
 						if (strlen($_POST['currency_code']) <= 3) {
 							$this->Currencies->clear();
@@ -166,7 +166,7 @@
 				// Default action for GET requests.
 				} else {
 					// Returns the currency's values from the database.
-					$currency = self::_getCurrencyById($currency_ID);
+					$currency = self::_getCurrencyById('Currencies', $currency_ID);
 					self::set('currency', $currency);
 					self::set('currency_ID', $currency_ID);
 				}
@@ -176,84 +176,6 @@
 			}
 		}
 
-		/**
-		 * Returns currency values in a variable.
-		 * 
-		 * @param  int       $currency_ID Currency identifier.
-		 * @return array                  Returns the currency values.
-		 * @access protected
-		 */
-		protected function _getCurrencyById($currency_ID = null)
-		{
-			// Checks if the currency exists.
-			if (self::_exists('currency_ID', $currency_ID, true)) {
-				$this->Currencies->clear();
-				// Looks for the currency with that identifier.
-				$this->Currencies->where('currency_ID', $currency_ID);
-				$this->Currencies->select();
-				// Returns the results of the currency.
-				return $this->Currencies->fetch();
-			} else {
-				return false;
-			}
-		}
-
-		/**
-		 * Returns a specified setting from the database.
-		 *
-		 * @param  string    $setting_column Name of the setting's column.
-		 * @return array                     Settings of the database.
-		 * @access protected
-		 */
-		protected function _getSettingByColumn($setting_column = null)
-		{
-			// Checks if the setting column value exists.
-			if (self::_exists('setting_column', $setting_column, false, 'settings')) {
-				$this->Currencies->clear();
-				// Uses the settings table.
-				$this->Currencies->table('settings');
-				// Looks for the setting column with that value.
-				$this->Currencies->where('setting_column', '"' . $setting_column . '"');
-				$this->Currencies->select();
-				// Returns the result of the setting.
-				return $this->Currencies->fetch();
-			} else {
-				return false;
-			}
-		}
-
-		/**
-		 * Checks if a currency exists in the database with the given attributes.
-		 * 
-		 * @param  string    $column      Name of the column to search on.
-		 * @param  string    $value       Value to search for.
-		 * @param  boolean   $requireInt  Requires the value sent to be an integer.
-		 * @param  string    $customTable Uses a table from another controller.
-		 * @return boolean                Does the product exist?
-		 * @access protected
-		 */
-		protected function _exists($column = null, $value = null, $requireInt = false, $customTable = 'currencies')
-		{
-			// Checks if not all characters are digits.
-			if ($requireInt == true && !ctype_digit($value)) return false;
-			$this->Currencies->clear();
-			// Uses a different table for other controllers.
-			if ($customTable != 'currencies') $this->Currencies->table($customTable);
-			if ($requireInt == false) {
-				// Looks for a string value in a specified column.
-				$this->Currencies->where($column, '"' . $value . '"');
-			} else {
-				// Loooks for an integer value in a specified column.
-				$this->Currencies->where($column, $value);
-			}
-			$this->Currencies->select();
-			// Returns the appropriate value if the element exists or not.
-			if ($this->Currencies->rowCount() != 0) {
-				return true;
-			} else {
-				return false;
-			}
-		}
 	}
 
 ?>

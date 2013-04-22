@@ -29,7 +29,7 @@
 		public function getById($category_ID = null)
 		{
 			// Checks if the specified category exists.
-			if (self::_exists('category_ID', $category_ID, true)) {
+			if (self::_exists('Categories', 'category_ID', $category_ID, true)) {
 				// Gets the values of the category.
 				$category = self::_getCatById($category_ID);
 				// Gets the products under the category.
@@ -81,7 +81,7 @@
 				// Checks if this was a POST request.
 				if (isset($_POST['operation'])) {
 					// Checks if the specified category parent exists.
-					if (self::_exists('category_ID', $_POST['category_parent_ID'], true)) {
+					if (self::_exists('Categories', 'category_ID', $_POST['category_parent_ID'], true)) {
 						$this->Categories->clear();
 						$category = array(
 							'category_name'      => $_POST['category_name'],
@@ -119,7 +119,7 @@
 				// Only loads the content for this method.
 				$this->ajax = true;
 				// Checks if the specified category exists.
-				if (self::_exists('category_ID', $category_ID, true)) {
+				if (self::_exists('Categories', 'category_ID', $category_ID, true)) {
 					if (self::_getProductCountByCat($category_ID) == 0) {
 						$this->Categories->clear();
 						// Looks for the category with that identifier.
@@ -162,9 +162,9 @@
 				// Checks if this was a POST request.
 				if (isset($_POST['operation'])) {
 					// Checks if the specified category exists.
-					if (self::_exists('category_ID', $category_ID, true)) {
+					if (self::_exists('Categories', 'category_ID', $category_ID, true)) {
 						// Checks if the specified category parent exists.
-						if (self::_exists('category_ID', $_POST['category_parent_ID'], true)) {
+						if (self::_exists('Categories', 'category_ID', $_POST['category_parent_ID'], true)) {
 							// Checks if the specified category parent is not the
 							// same as the current category.
 							if ($_POST['category_parent_ID'] != $category_ID) {
@@ -219,7 +219,7 @@
 		protected function _getCatById($category_ID = null)
 		{
 			// Checks if the specified category exists.
-			if (self::_exists('category_ID', $category_ID, true)) {
+			if (self::_exists('Categories', 'category_ID', $category_ID, true)) {
 				$this->Categories->clear();
 				// Looks for the category with that identifier.
 				$this->Categories->where('category_ID', $category_ID);
@@ -241,7 +241,7 @@
 		protected function _getProductsByCat($category_ID = null)
 		{
 			// Checks if the specified category exists.
-			if (self::_exists('category_ID', $category_ID, true)) {
+			if (self::_exists('Categories', 'category_ID', $category_ID, true)) {
 				$this->Categories->clear();
 				// Uses the products table.
 				$this->Categories->table('products');
@@ -265,7 +265,7 @@
 		protected function _getProductCountByCat($category_ID = null)
 		{
 			// Checks if the specified category exists.
-			if (self::_exists('category_ID', $category_ID, true)) {
+			if (self::_exists('Categories', 'category_ID', $category_ID, true)) {
 				$this->Categories->clear();
 				// Uses the products table.
 				$this->Categories->table('products');
@@ -277,38 +277,6 @@
 			} else {
 				// Category wasn't found in any product, so returns a count of 0.
 				return 0;
-			}
-		}
-
-		/**
-		 * Checks if a category exists in the database with the given attributes.
-		 * 
-		 * @param  string    $column     Name of the column to search on.
-		 * @param  string    $value      Value to search for.
-		 * @param  boolean   $requireInt Requires the value sent to be an integer.
-		 * @return boolean               Does the category exist?
-		 * @access protected
-		 */
-		protected function _exists($column = null, $value = null, $requireInt = false)
-		{
-			// Checks if not all characters are digits.
-			if ($requireInt == true && !ctype_digit($value)) return false;
-			// Allows for the category parent to have a root parent.
-			if ($column == 'category_ID' && $value == '0') return true;
-			$this->Categories->clear();
-			if ($requireInt == false) {
-				// Looks for a string value in a specified column.
-				$this->Categories->where($column, '"' . $value . '"');
-			} else {
-				// Loooks for an integer value in a specified column.
-				$this->Categories->where($column, $value);
-			}
-			$this->Categories->select();
-			// Returns the appropriate value if the element exists or not.
-			if ($this->Categories->rowCount() != 0) {
-				return true;
-			} else {
-				return false;
 			}
 		}
 

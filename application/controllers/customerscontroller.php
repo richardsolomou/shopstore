@@ -52,7 +52,7 @@
 				// Checks if this was a POST request.
 				if (isset($_POST['operation'])) {
 					// Checks if the username is not taken.
-					if (!self::_exists('customer_username', $_POST['customer_username'])) {
+					if (!self::_exists('Customers', 'customer_username', $_POST['customer_username'])) {
 						$this->Customers->clear();
 						$customer = array(
 							'customer_username'  => $_POST['customer_username'],
@@ -98,7 +98,7 @@
 					// Only loads the content for this method.
 					$this->ajax = true;
 					// Checks if the username is not taken.
-					if (!self::_exists('customer_username', $_POST['customer_username'])) {
+					if (!self::_exists('Customers', 'customer_username', $_POST['customer_username'])) {
 						$this->Customers->clear();
 						$customer = array(
 							'customer_username'  => $_POST['customer_username'],
@@ -146,7 +146,7 @@
 				// Only loads the content for this method.
 				$this->ajax = true;
 				// Checks if the customer exists.
-				if (self::_exists('customer_ID', $customer_ID, true)) {
+				if (self::_exists('Customers', 'customer_ID', $customer_ID, true)) {
 					// Checks if the customer is currently logged in.
 					if (!isset($_SESSION['SESS_CUSTOMERID']) || ($_SESSION['SESS_CUSTOMERID'] != $customer_ID)) {
 						// Deletes all reviews from this customer.
@@ -196,7 +196,7 @@
 				// Checks if this was a POST request.
 				if (isset($_POST['operation'])) {
 					// Checks if the specified customer exists.
-					if (self::_exists('customer_ID', $customer_ID, true)) {
+					if (self::_exists('Customers', 'customer_ID', $customer_ID, true)) {
 						$this->Customers->clear();
 						// Looks for the customer with that identifier.
 						$this->Customers->where('customer_ID', $customer_ID, true);
@@ -249,7 +249,7 @@
 		protected function _getCustomerById($customer_ID = null)
 		{
 			// Checks if the customer exists.
-			if (self::_exists('customer_ID', $customer_ID, true)) {
+			if (self::_exists('Customers', 'customer_ID', $customer_ID, true)) {
 				$this->Customers->clear();
 				// Looks for the customer with that identifier.
 				$this->Customers->where('customer_ID', $customer_ID);
@@ -270,7 +270,7 @@
 		protected function _deleteReviews($customer_ID = null)
 		{
 			// Checks if the customer exists.
-			if (self::_exists('customer_ID', $customer_ID, true)) {
+			if (self::_exists('Customers', 'customer_ID', $customer_ID, true)) {
 				$this->Customers->clear();
 				// Uses the reviews table.
 				$this->Customers->table('reviews');
@@ -290,7 +290,7 @@
 		protected function _deleteFromBasket($customer_ID = null)
 		{
 			// Checks if the customer exists.
-			if (self::_exists('customer_ID', $customer_ID, true)) {
+			if (self::_exists('Customers', 'customer_ID', $customer_ID, true)) {
 				$this->Customers->clear();
 				// Uses the basket table.
 				$this->Customers->table('basket');
@@ -310,7 +310,7 @@
 		protected function _deleteFromItems($customer_ID = null)
 		{
 			// Checks if the customer exists.
-			if (self::_exists('customer_ID', $customer_ID, true)) {
+			if (self::_exists('Customers', 'customer_ID', $customer_ID, true)) {
 				$this->Customers->clear();
 				// Uses the basket table.
 				$this->Customers->table('items');
@@ -318,39 +318,6 @@
 				$this->Customers->where('customer_ID', $customer_ID);
 				// Deletes the basket item.
 				$this->Customers->delete();
-			}
-		}
-
-		/**
-		 * Checks if a customer exists in the database with the given attributes.
-		 * 
-		 * @param  string    $column      Name of the column to search on.
-		 * @param  string    $value       Value to search for.
-		 * @param  boolean   $requireInt  Requires the value sent to be an integer.
-		 * @param  string    $customTable Uses a table from another controller.
-		 * @return boolean                Does the customer exist?
-		 * @access protected
-		 */
-		protected function _exists($column = null, $value = null, $requireInt = false, $customTable = 'customers')
-		{
-			// Checks if not all characters are digits.
-			if ($requireInt == true && !ctype_digit($value)) return false;
-			$this->Customers->clear();
-			// Uses a different table for other controllers.
-			if ($customTable != 'customers') $this->Customers->table($customTable);
-			if ($requireInt == false) {
-				// Looks for a string value in a specified column.
-				$this->Customers->where($column, '"' . $value . '"');
-			} else {
-				// Loooks for an integer value in a specified column.
-				$this->Customers->where($column, $value);
-			}
-			$this->Customers->select();
-			// Returns the appropriate value if the element exists or not.
-			if ($this->Customers->rowCount() != 0) {
-				return true;
-			} else {
-				return false;
 			}
 		}
 

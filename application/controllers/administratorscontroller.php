@@ -52,7 +52,7 @@
 				// Checks if this was a POST request.
 				if (isset($_POST['operation'])) {
 					// Checks if the username is not taken.
-					if (!self::_exists('admin_username', $_POST['admin_username'])) {
+					if (!self::_exists('Administrators', 'admin_username', $_POST['admin_username'])) {
 						$this->Administrators->clear();
 						$administrator = array(
 							'admin_username'  => $_POST['admin_username'],
@@ -93,7 +93,7 @@
 				// Only loads the content for this method.
 				$this->ajax = true;
 				// Checks if the administrator exists.
-				if (self::_exists('admin_ID', $admin_ID, true)) {
+				if (self::_exists('Administrators', 'admin_ID', $admin_ID, true)) {
 					// Checks if the administrator is currently logged in.
 					if ($_SESSION['SESS_ADMINID'] != $admin_ID) {
 						$this->Administrators->clear();
@@ -137,7 +137,7 @@
 				// Checks if this was a POST request.
 				if (isset($_POST['operation'])) {
 					// Checks if the specified administrator exists.
-					if (self::_exists('admin_ID', $admin_ID, true)) {
+					if (self::_exists('Administrators', 'admin_ID', $admin_ID, true)) {
 						$this->Administrators->clear();
 						// Looks for the administrator with that identifier.
 						$this->Administrators->where('admin_ID', $admin_ID, true);
@@ -186,46 +186,13 @@
 		protected function _getAdminById($admin_ID = null)
 		{
 			// Checks if the administrator exists.
-			if (self::_exists('admin_ID', $admin_ID, true)) {
+			if (self::_exists('Administrators', 'admin_ID', $admin_ID, true)) {
 				$this->Administrators->clear();
 				// Looks for the administrator with that identifier.
 				$this->Administrators->where('admin_ID', $admin_ID);
 				$this->Administrators->select();
 				// Returns the results of the administrator.
 				return $this->Administrators->fetch();
-			} else {
-				return false;
-			}
-		}
-
-		/**
-		 * Checks if an administrator exists in the database with the given attributes.
-		 * 
-		 * @param  string    $column      Name of the column to search on.
-		 * @param  string    $value       Value to search for.
-		 * @param  boolean   $requireInt  Requires the value sent to be an integer.
-		 * @param  string    $customTable Uses a table from another controller.
-		 * @return boolean                Does the administrator exist?
-		 * @access protected
-		 */
-		protected function _exists($column = null, $value = null, $requireInt = false, $customTable = 'administrators')
-		{
-			// Checks if not all characters are digits.
-			if ($requireInt == true && !ctype_digit($value)) return false;
-			$this->Administrators->clear();
-			// Uses a different table for other controllers.
-			if ($customTable != 'administrators') $this->Administrators->table($customTable);
-			if ($requireInt == false) {
-				// Looks for a string value in a specified column.
-				$this->Administrators->where($column, '"' . $value . '"');
-			} else {
-				// Loooks for an integer value in a specified column.
-				$this->Administrators->where($column, $value);
-			}
-			$this->Administrators->select();
-			// Returns the appropriate value if the element exists or not.
-			if ($this->Administrators->rowCount() != 0) {
-				return true;
 			} else {
 				return false;
 			}

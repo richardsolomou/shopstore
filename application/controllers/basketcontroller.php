@@ -33,14 +33,9 @@
 				$this->Basket->select();
 				// Fetches all the basket items.
 				$basketItems = $this->Basket->fetch(true);
-				// Gets the currency ID from the website settings table and the
-				// respective symbol from the currencies table.
-				$settingsCurrency = self::_getSettingByColumn('currency_ID');
-				$currencySymbol = self::_getCurrencyById($settingsCurrency['setting_value']);
 				// Gets a list of all the products in the database.
 				self::set('products', self::_getProducts());
 				self::set('basketItems', $basketItems);
-				self::set('currencySymbol', $currencySymbol['currency_symbol']);
 			} else {
 				// Returns an unauthorized access page.
 				$this->_action = 'unauthorizedAccess';
@@ -61,11 +56,11 @@
 				// Checks if this was a POST request.
 				if (isset($_POST['operation'])) {
 					// Checks if the product exists.
-					if (self::_exists('product_ID', $_POST['product_ID'], true, 'products')) {
+					if (self::_exists('Basket', 'product_ID', $_POST['product_ID'], true, 'products')) {
 						// Check if there is enough stock.
 						if (self::_checkStock($_POST['product_ID']) >= $_POST['basket_quantity']) {
 							// Checks if the customer exists.
-							if (self::_exists('customer_ID', $_POST['customer_ID'], true, 'customers')) {
+							if (self::_exists('Basket', 'customer_ID', $_POST['customer_ID'], true, 'customers')) {
 								if (!self::_itemExists($_POST['product_ID'], $_POST['customer_ID'])) {
 									$this->Basket->clear();
 									$basket = array(
@@ -124,7 +119,7 @@
 			// Checks if the user has sufficient privileges.
 			if (self::isCustomer() || $admin != null) {
 				// Checks if the basket item exists.
-				if (self::_exists('basket_ID', $basket_ID, true)) {
+				if (self::_exists('Basket', 'basket_ID', $basket_ID, true)) {
 					// Gets the basket item's values for future reference.
 					$basketItem = self::_getBasketItemById($basket_ID);
 					// Increases the stock since the ordered quantity was deleted.
@@ -178,7 +173,7 @@
 				// Checks if this was a POST request.
 				if (isset($_POST['operation'])) {
 					// Checks if the specified basket item exists.
-					if (self::_exists('basket_ID', $basket_ID, true)) {
+					if (self::_exists('Basket', 'basket_ID', $basket_ID, true)) {
 						// Gets the basket item's values.
 						$basketItem = self::_getBasketItemById($basket_ID);
 						// Checks if the quantity is zero.
@@ -201,7 +196,7 @@
 							return;
 						}
 						// Checks if the product exists.
-						if (self::_exists('product_ID', $_POST['product_ID'], true, 'products')) {
+						if (self::_exists('Basket', 'product_ID', $_POST['product_ID'], true, 'products')) {
 							// Gets the product's current stock.
 							$productStock = self::_checkStock($_POST['product_ID']);
 							// Check if the stock is zero.
@@ -217,7 +212,7 @@
 								return;
 							}
 							// Checks if the customer exists.
-							if (self::_exists('customer_ID', $_POST['customer_ID'], true, 'customers')) {
+							if (self::_exists('Basket', 'customer_ID', $_POST['customer_ID'], true, 'customers')) {
 								// Check if there is enough stock.
 								if (self::_checkStock($_POST['product_ID']) >= ($_POST['basket_quantity'] - $basketItem['basket_quantity'])) {
 									$this->Basket->clear();
@@ -314,7 +309,7 @@
 				// Checks if this was a POST request.
 				if (isset($_POST['operation'])) {
 					// Checks if the specified basket item exists.
-					if (self::_exists('basket_ID', $basket_ID, true)) {
+					if (self::_exists('Basket', 'basket_ID', $basket_ID, true)) {
 						// Gets the basket item's values.
 						$basketItem = self::_getBasketItemById($basket_ID);
 						// Check if there is enough stock.
@@ -372,13 +367,8 @@
 				$basketItems = $this->Basket->fetch(true);
 				// Gets a list of all the products in the database.
 				$products = self::_getProducts();
-				// Gets the currency ID from the website settings table and the
-				// respective symbol from the currencies table.
-				$settingsCurrency = self::_getSettingByColumn('currency_ID');
-				$currencySymbol = self::_getCurrencyById($settingsCurrency['setting_value']);
 				self::set('products', $products);
 				self::set('basketItems', $basketItems);
-				self::set('currencySymbol', $currencySymbol['currency_symbol']);
 			} else {
 				// Returns an empty basket page.
 				$this->_action = 'empty';
@@ -395,7 +385,7 @@
 		protected function _getBasketItemById($basket_ID = null)
 		{
 			// Checks if the basket item exists.
-			if (self::_exists('basket_ID', $basket_ID, true)) {
+			if (self::_exists('Basket', 'basket_ID', $basket_ID, true)) {
 				$this->Basket->clear();
 				// Looks for the basket item with that identifier.
 				$this->Basket->where('basket_ID', $basket_ID);
@@ -529,87 +519,6 @@
 			$this->Basket->select();
 			// Returns the results of the customers.
 			return $this->Basket->fetch(true);
-		}
-
-		/**
-		 * Returns a specified setting from the database.
-		 *
-		 * @param  string    $setting_column Name of the setting's column.
-		 * @return array                     Settings of the database.
-		 * @access protected
-		 */
-		protected function _getSettingByColumn($setting_column = null)
-		{
-			// Checks if the setting column value exists.
-			if (self::_exists('setting_column', $setting_column, false, 'settings')) {
-				$this->Basket->clear();
-				// Uses the settings table.
-				$this->Basket->table('settings');
-				// Looks for the setting column with that value.
-				$this->Basket->where('setting_column', '"' . $setting_column . '"');
-				$this->Basket->select();
-				// Returns the result of the setting.
-				return $this->Basket->fetch();
-			} else {
-				return false;
-			}
-		}
-
-		/**
-		 * Returns the values of the currency that was selected.
-		 * 
-		 * @param  int       $currency_ID Currency identifier.
-		 * @return string                 Returns the values of the currency.
-		 * @access protected
-		 */
-		protected function _getCurrencyById($currency_ID = null)
-		{
-			// Checks if the currency exists.
-			if (self::_exists('currency_ID', $currency_ID, true, 'currencies')) {
-				$this->Basket->clear();
-				// Uses the currencies table.
-				$this->Basket->table('currencies');
-				// Looks for a currency with that identifier.
-				$this->Basket->where('currency_ID', $currency_ID);
-				$this->Basket->select();
-				// Returns the result of that currency.
-				return $this->Basket->fetch();
-			} else {
-				return false;
-			}
-		}
-
-		/**
-		 * Checks if a basket item exists in the database with the given attributes.
-		 * 
-		 * @param  string    $column      Name of the column to search on.
-		 * @param  string    $value       Value to search for.
-		 * @param  boolean   $requireInt  Requires the value sent to be an integer.
-		 * @param  string    $customTable Uses a table from another controller.
-		 * @return boolean                Does the basket item exist?
-		 * @access protected
-		 */
-		protected function _exists($column = null, $value = null, $requireInt = false, $customTable = 'basket')
-		{
-			// Checks if not all characters are digits.
-			if ($requireInt == true && !ctype_digit($value)) return false;
-			$this->Basket->clear();
-			// Uses a different table for other controllers.
-			if ($customTable != 'basket') $this->Basket->table($customTable);
-			if ($requireInt == false) {
-				// Looks for a string value in a specified column.
-				$this->Basket->where($column, '"' . $value . '"');
-			} else {
-				// Loooks for an integer value in a specified column.
-				$this->Basket->where($column, $value);
-			}
-			$this->Basket->select();
-			// Returns the appropriate value if the element exists or not.
-			if ($this->Basket->rowCount() != 0) {
-				return true;
-			} else {
-				return false;
-			}
 		}
 
 	}

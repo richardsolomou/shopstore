@@ -55,7 +55,7 @@
 				// Checks if this was a POST request.
 				if (isset($_POST['operation'])) {
 					// Checks if the setting exists.
-					if (self::_exists('setting_ID', $setting_ID, true)) {
+					if (self::_exists('Settings', 'setting_ID', $setting_ID, true)) {
 						$this->Settings->clear();
 						// Looks for the setting with that identifier.
 						$this->Settings->where('setting_ID', $setting_ID, true);
@@ -82,7 +82,7 @@
 					// Returns the setting's values from the database.
 					$setting = self::_getSettingById($setting_ID);
 					// Returns the currency used in the settings.
-					$currency_ID = self::_getSettingByColumn('currency_ID');
+					$currency_ID = self::_getSettingByColumn('Settings', 'currency_ID');
 					self::set('currency_ID', $currency_ID['setting_value']);
 					self::set('currencies', $currencies);
 					self::set('setting', $setting);
@@ -182,7 +182,7 @@
 		protected function _getSettingById($setting_ID = null)
 		{
 			// Checks if the setting exists.
-			if (self::_exists('setting_ID', $setting_ID, true)) {
+			if (self::_exists('Settings', 'setting_ID', $setting_ID, true)) {
 				$this->Settings->clear();
 				// Looks for the setting with that identifier.
 				$this->Settings->where('setting_ID', $setting_ID);
@@ -194,60 +194,6 @@
 			}
 		}
 
-		/**
-		 * Returns setting values in a variable based on the column provided.
-		 *
-		 * @param  string    $setting_column Name of the setting's column.
-		 * @return array                     Returns the setting values.
-		 * @access protected
-		 */
-		protected function _getSettingByColumn($setting_column = null)
-		{
-			// Checks if the setting column value exists.
-			if (self::_exists('setting_column', $setting_column, false)) {
-				$this->Settings->clear();
-				// Looks for the setting with that value.
-				$this->Settings->where('setting_column', '"' . $setting_column . '"');
-				$this->Settings->select();
-				// Returns the results of the setting.
-				return $this->Settings->fetch();
-			} else {
-				return false;
-			}
-		}
-
-		/**
-		 * Checks if a setting exists in the database with the given attributes.
-		 * 
-		 * @param  string    $column      Name of the column to search on.
-		 * @param  string    $value       Value to search for.
-		 * @param  boolean   $requireInt  Requires the value sent to be an integer.
-		 * @param  string    $customTable Uses a table from another controller.
-		 * @return boolean                Does the product exist?
-		 * @access protected
-		 */
-		protected function _exists($column = null, $value = null, $requireInt = false, $customTable = 'settings')
-		{
-			// Checks if not all characters are digits.
-			if ($requireInt == true && !ctype_digit($value)) return false;
-			$this->Settings->clear();
-			// Uses a different table for other controllers.
-			if ($customTable != 'settings') $this->Settings->table($customTable);
-			if ($requireInt == false) {
-				// Looks for a string value in a specified column.
-				$this->Settings->where($column, '"' . $value . '"');
-			} else {
-				// Loooks for an integer value in a specified column.
-				$this->Settings->where($column, $value);
-			}
-			$this->Settings->select();
-			// Returns the appropriate value if the element exists or not.
-			if ($this->Settings->rowCount() != 0) {
-				return true;
-			} else {
-				return false;
-			}
-		}
 	}
 
 ?>

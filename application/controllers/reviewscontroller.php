@@ -83,7 +83,7 @@
 					// Only loads the content for this operation.
 					$this->ajax = true;
 					// Checks if the specified product exists.
-					if (self::_exists('product_ID', $_POST['product_ID'], true, 'products')) {
+					if (self::_exists('Reviews', 'product_ID', $_POST['product_ID'], true, 'products')) {
 						$this->Reviews->clear();
 						$review = array(
 							'product_ID'         => $_POST['product_ID'],
@@ -130,7 +130,7 @@
 				// Only loads the content for this method.
 				$this->ajax = true;
 				// Checks if the specified review exists.
-				if (self::_exists('review_ID', $review_ID, true)) {
+				if (self::_exists('Reviews', 'review_ID', $review_ID, true)) {
 					$this->Reviews->clear();
 					// Looks for the review with that identifier.
 					$this->Reviews->where('review_ID', $review_ID);
@@ -167,9 +167,9 @@
 				// Checks if this was a POST request.
 				if (isset($_POST['operation'])) {
 					// Checks if the specified review exists.
-					if (self::_exists('review_ID', $review_ID, true)) {
+					if (self::_exists('Reviews', 'review_ID', $review_ID, true)) {
 						// Checks if the specified product exists.
-						if (self::_exists('product_ID', $_POST['product_ID'], true, 'products')) {
+						if (self::_exists('Reviews', 'product_ID', $_POST['product_ID'], true, 'products')) {
 							$this->Reviews->clear();
 							// Looks for the review with that identifier.
 							$this->Reviews->where('review_ID', $review_ID, true);
@@ -178,7 +178,7 @@
 								'review_subject'     => $_POST['review_subject'],
 								'review_description' => $_POST['review_description'],
 								'review_rating'      => $_POST['review_rating'],
-								'customer_ID'        => $customer_ID
+								'customer_ID'        => $_POST['customer_ID']
 							);
 							// Updates the review.
 							$this->Reviews->update($review);
@@ -224,7 +224,7 @@
 		protected function _getReviewById($review_ID = null)
 		{
 			// Checks if the specified review exists.
-			if (self::_exists('review_ID', $review_ID, true)) {
+			if (self::_exists('Reviews', 'review_ID', $review_ID, true)) {
 				$this->Reviews->clear();
 				// Looks for the review with that identifier.
 				$this->Reviews->where('review_ID', $review_ID);
@@ -266,39 +266,6 @@
 			$this->Reviews->select();
 			// Returns the results of the products.
 			return $this->Reviews->fetch(true);
-		}
-
-		/**
-		 * Checks if a review exists in the database with the given attributes.
-		 * 
-		 * @param  string    $column      Name of the column to search on.
-		 * @param  string    $value       Value to search for.
-		 * @param  boolean   $requireInt  Requires the value sent to be an integer.
-		 * @param  string    $customTable Uses a table from another controller.
-		 * @return boolean                Does the review exist?
-		 * @access protected
-		 */
-		protected function _exists($column = null, $value = null, $requireInt = false, $customTable = 'reviews')
-		{
-			// Checks if not all characters are digits.
-			if ($requireInt == true && !ctype_digit($value)) return false;
-			$this->Reviews->clear();
-			// Uses a different table for other controllers.
-			if ($customTable != 'reviews') $this->Reviews->table($customTable);
-			if ($requireInt == false) {
-				// Looks for a string value in a specified column.
-				$this->Reviews->where($column, '"' . $value . '"');
-			} else {
-				// Loooks for an integer value in a specified column.
-				$this->Reviews->where($column, $value);
-			}
-			$this->Reviews->select();
-			// Returns the appropriate value if the element exists or not.
-			if ($this->Reviews->rowCount() != 0) {
-				return true;
-			} else {
-				return false;
-			}
 		}
 
 	}
