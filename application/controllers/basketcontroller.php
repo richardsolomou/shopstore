@@ -43,8 +43,8 @@
 				self::set('basketItems', $basketItems);
 				self::set('currencySymbol', $currencySymbol['currency_symbol']);
 			} else {
-				// Returns an empty basket page.
-				$this->_action = 'empty';
+				// Returns an unauthorized access page.
+				$this->_action = 'unauthorizedAccess';
 			}
 		}
 
@@ -80,7 +80,7 @@
 									$lastId = $this->Basket->lastId();
 									self::_reduceStock($_POST['product_ID'], $_POST['basket_quantity'], self::_checkStock($_POST['product_ID']));
 									// Returns the alert message to be sent to the user.
-									self::set('message', 'Basket item successfully inserted.');
+									self::set('message', 'Basket item successfully added.');
 									self::set('alert', 'alert-success');
 								} else {
 									// Returns the alert message to be sent to the user.
@@ -118,35 +118,47 @@
 		 * @param  int    $basket_ID Basket item identifier.
 		 * @access public
 		 */
-		public function delete($basket_ID = null)
+		public function delete($basket_ID = null, $admin = null)
 		{
 			// Only loads the content for this method.
 			$this->ajax = true;
 			// Checks if the user has sufficient privileges.
-			if (self::isCustomer()) {
+			if (self::isCustomer() || $admin != null) {
 				// Checks if the basket item exists.
 				if (self::_exists('basket_ID', $basket_ID, true)) {
 					// Gets the basket item's values for future reference.
 					$basketItem = self::_getBasketItemById($basket_ID);
+					// Increases the stock since the ordered quantity was deleted.
+					self::_increaseStock($basketItem['product_ID'], $basketItem['basket_quantity'], self::_checkStock($basketItem['product_ID']));
 					$this->Basket->clear();
 					// Looks for the basket item with that identifier.
 					$this->Basket->where('basket_ID', $basket_ID);
 					// Deletes the basket item from the database.
 					$this->Basket->delete();
-					// Increases the stock since the ordered quantity was deleted.
-					self::_increaseStock($basketItem['product_ID'], $basketItem['basket_quantity'], self::_checkStock($_POST['product_ID']));
 					// Returns the alert message to be sent to the user.
 					self::set('message', 'Basket item successfully deleted.');
-					self::set('alert', 'alert-success');
+					if ($admin == null) {
+						self::set('alert', 'alert-success');
+					} else {
+						self::set('alert', 'alert-success nomargin');
+					}
 				} else {
 					// Returns the alert message to be sent to the user.
 					self::set('message', 'Basket item does not exist.');
-					self::set('alert', '');
+					if ($admin == null) {
+						self::set('alert', '');
+					} else {
+						self::set('alert', 'nomargin');
+					}
 				}
 			} else {
 				// Returns the alert message to be sent to the user.
 				self::set('message', 'You do not have sufficient privileges to view the content of this page.');
-				self::set('alert', '');
+				if ($admin == null) {
+					self::set('alert', '');
+				} else {
+					self::set('alert', 'nomargin');
+				}
 			}
 			// Show an alert.
 			$this->_action = 'alert';
@@ -158,12 +170,12 @@
 		 * @param  int    $basket_ID Basket item identifier.
 		 * @access public
 		 */
-		public function update($basket_ID = null)
+		public function update($basket_ID = null, $admin = null)
 		{
 			// Only loads the content for this method.
 			$this->ajax = true;
 			// Checks if the user has sufficient privileges.
-			if (self::isCustomer()) {
+			if (self::isCustomer() || $admin != null) {
 				// Checks if this was a POST request.
 				if (isset($_POST['operation'])) {
 					// Checks if the specified basket item exists.
@@ -178,10 +190,14 @@
 							self::delete($basket_ID);
 							return;
 						}
-						if ($_POST['basket_quantity'] == $basketItem['basket_quantity']) {
+						if ($_POST['basket_quantity'] == $basketItem['basket_quantity'] && $_POST['product_ID'] == $basketItem['product_ID'] && $_POST['customer_ID'] == $basketItem['customer_ID']) {
 							// Returns the alert message to be sent to the user.
 							self::set('message', 'No changes made.');
-							self::set('alert', 'alert-info');
+							if ($admin == null) {
+								self::set('alert', 'alert-info');
+							} else {
+								self::set('alert', 'alert-info nomargin');
+							}
 							$this->_action = 'alert';
 							return;
 						}
@@ -193,7 +209,11 @@
 							if ($productStock == 0 && ($_POST['basket_quantity'] > $basketItem['basket_quantity'])) {
 								// Returns the alert message to be sent to the user.
 								self::set('message', 'There is no more stock available.');
-								self::set('alert', '');
+								if ($admin == null) {
+									self::set('alert', '');
+								} else {
+									self::set('alert', 'nomargin');
+								}
 								$this->_action = 'alert';
 								return;
 							}
@@ -205,7 +225,9 @@
 									// Looks for the basket item with that identifier.
 									$this->Basket->where('basket_ID', $basket_ID, true);
 									$basket = array(
-										'basket_quantity' => $_POST['basket_quantity']
+										'basket_quantity' => $_POST['basket_quantity'],
+										'product_ID'      => $_POST['product_ID'],
+										'customer_ID'     => $_POST['customer_ID']
 									);
 									// Updates the basket item.
 									$this->Basket->update($basket);
@@ -217,26 +239,46 @@
 									}
 									// Returns the alert message to be sent to the user.
 									self::set('message', 'Basket item successfully updated.');
-									self::set('alert', 'alert-success');
+									if ($admin == null) {
+										self::set('alert', 'alert-success');
+									} else {
+										self::set('alert', 'alert-success nomargin');
+									}
 								} else {
 									// Returns the alert message to be sent to the user.
 									self::set('message', 'There is not enough stock available for this product.');
-									self::set('alert', '');
+									if ($admin == null) {
+										self::set('alert', '');
+									} else {
+										self::set('alert', 'nomargin');
+									}
 								}
 							} else {
 								// Returns the alert message to be sent to the user.
 								self::set('message', 'Customer does not exist.');
-								self::set('alert', '');
+								if ($admin == null) {
+									self::set('alert', '');
+								} else {
+									self::set('alert', 'nomargin');
+								}
 							}
 						} else {
 							// Returns the alert message to be sent to the user.
 							self::set('message', 'Product does not exist.');
-							self::set('alert', '');
+							if ($admin == null) {
+								self::set('alert', '');
+							} else {
+								self::set('alert', 'nomargin');
+							}
 						}
 					} else {
 						// Returns the alert message to be sent to the user.
 						self::set('message', 'Basket item does not exist.');
-						self::set('alert', '');
+						if ($admin == null) {
+							self::set('alert', '');
+						} else {
+							self::set('alert', 'nomargin');
+						}
 					}
 				// Default action for GET requests.
 				} else {
@@ -244,6 +286,10 @@
 					$basket = self::_getBasketItemById($basket_ID);
 					self::set('basket_ID', $basket_ID);
 					self::set('basket', $basket);
+					self::set('products', self::_getProducts());
+					self::set('customers', self::_getCustomers());
+					$this->_action = 'update';
+					return;
 				}
 			} else {
 				// Returns the alert message to be sent to the user.
@@ -467,6 +513,22 @@
 			$this->Basket->table('products');
 			$this->Basket->select();
 			// Returns the results of the products.
+			return $this->Basket->fetch(true);
+		}
+
+		/**
+		 * Returns customer values in a variable.
+		 * 
+		 * @return array     Returns the customer values.
+		 * @access protected
+		 */
+		protected function _getCustomers()
+		{
+			$this->Basket->clear();
+			// Uses the customers table.
+			$this->Basket->table('customers');
+			$this->Basket->select();
+			// Returns the results of the customers.
 			return $this->Basket->fetch(true);
 		}
 
