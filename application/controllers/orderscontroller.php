@@ -35,7 +35,7 @@
 				// respective symbol from the currencies table.
 				$settingsCurrency = self::_getSettingByColumn('currency_ID');
 				$currencySymbol = self::_getCurrencyById($settingsCurrency['setting_value']);
-				self::set('pendingOrders', self::_pendingOrders());
+				self::set('pendingOrders', self::_getPendingOrders());
 				self::set('currencySymbol', $currencySymbol['currency_symbol']);
 				self::set('products', self::_getProducts());
 				self::set('customers', self::_getCustomers());
@@ -104,6 +104,8 @@
 				$this->ajax = true;
 				// Checks if the order exists.
 				if (self::_exists('order_ID', $order_ID, true)) {
+					// Deletes all ordered items for this order.
+					self::_deleteFromItems($order_ID);
 					$this->Orders->clear();
 					// Looks for the order with that identifier.
 					$this->Orders->where('order_ID', $order_ID);
@@ -229,7 +231,7 @@
 		 * @return array     Pending orders.
 		 * @access protected
 		 */
-		protected function _pendingOrders()
+		protected function _getPendingOrders()
 		{
 			$this->Orders->clear();
 			// Uses the basket table.
@@ -385,6 +387,26 @@
 			$this->Orders->select();
 			// Returns the results of the products.
 			return $this->Orders->fetch(true);
+		}
+
+		/**
+		 * Deletes the ordered items for the specified order.
+		 * 
+		 * @param  int       $order_ID Order identifier.
+		 * @access protected
+		 */
+		protected function _deleteFromItems($order_ID = null)
+		{
+			// Checks if the order exists.
+			if (self::_exists('order_ID', $order_ID, true)) {
+				$this->Orders->clear();
+				// Uses the basket table.
+				$this->Orders->table('items');
+				// Looks for a basket item with that order identifier.
+				$this->Orders->where('order_ID', $order_ID);
+				// Deletes the basket item.
+				$this->Orders->delete();
+			}
 		}
 
 		/**

@@ -31,15 +31,11 @@
 			// Checks if the specified product exists.
 			if (self::_exists('product_ID', $product_ID, true)) {
 				// Gets the values of the product and its category.
-				$product = self::_getProductById($product_ID);
 				$productCategory = self::_getCatById($product['category_ID']);
 				// Gets the currency ID from the website settings table and the
 				// respective symbol from the currencies table.
 				$settingsCurrency = self::_getSettingByColumn('currency_ID');
 				$currencySymbol = self::_getCurrencyById($settingsCurrency['setting_value']);
-				// Gets the reviews and the number of reviews for the product.
-				$reviews = self::_getProductReviews($product_ID);
-				$reviewNumber = self::_getProductReviewNumber($product_ID);
 				// Calculates the average rating based on all reviews.
 				$reviewRatingAverage = 0;
 				$individualReview = 0;
@@ -56,9 +52,10 @@
 			        	self::set('basket_ID', $basket_ID);
 			        }
 			    }
-				self::set('product', $product);
-				self::set('reviews', $reviews);
-				self::set('reviewNumber', $reviewNumber);
+				self::set('product', self::_getProductById($product_ID));
+				// Gets the reviews and the number of reviews for the product.
+				self::set('reviews', self::_getProductReviews($product_ID));
+				self::set('reviewNumber', self::_getProductReviewNumber($product_ID));
 				self::set('individualReview', $individualReview);
 				self::set('reviewRatingAverage', $reviewRatingAverage);
 				self::set('customerDispatch', $customerDispatch);
@@ -172,12 +169,14 @@
 				if (self::_exists('product_ID', $product_ID, true)) {
 					// Deletes the image.
 					self::deleteImage($product_ID);
-					// Deletes all reviews for that product.
+					// Deletes all reviews for this product.
 					self::_deleteReviews($product_ID);
-					// Deletes all basket item records for that product.
+					// Deletes all basket item records for this product.
 					self::_deleteFromBasket($product_ID);
+					// Deletes all ordered items for this product.
+					self::_deleteFromItems($product_ID);
 					$this->Products->clear();
-					// Looks for the product with that identifier.
+					// Looks for the product with this identifier.
 					$this->Products->where('product_ID', $product_ID);
 					// Deletes the product from the database.
 					$this->Products->delete();
@@ -593,6 +592,26 @@
 				$this->Products->clear();
 				// Uses the basket table.
 				$this->Products->table('basket');
+				// Looks for a basket item with that product identifier.
+				$this->Products->where('product_ID', $product_ID);
+				// Deletes the basket item.
+				$this->Products->delete();
+			}
+		}
+
+		/**
+		 * Deletes the ordered items for the specified product.
+		 * 
+		 * @param  int       $product_ID Product identifier.
+		 * @access protected
+		 */
+		protected function _deleteFromItems($product_ID = null)
+		{
+			// Checks if the product exists.
+			if (self::_exists('product_ID', $product_ID, true)) {
+				$this->Products->clear();
+				// Uses the basket table.
+				$this->Products->table('items');
 				// Looks for a basket item with that product identifier.
 				$this->Products->where('product_ID', $product_ID);
 				// Deletes the basket item.

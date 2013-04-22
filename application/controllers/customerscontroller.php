@@ -148,13 +148,15 @@
 				// Checks if the customer exists.
 				if (self::_exists('customer_ID', $customer_ID, true)) {
 					// Checks if the customer is currently logged in.
-					if ($_SESSION['SESS_CUSTOMERID'] != $customer_ID) {
-						// Deletes all reviews from that customer.
+					if (!isset($_SESSION['SESS_CUSTOMERID']) || ($_SESSION['SESS_CUSTOMERID'] != $customer_ID)) {
+						// Deletes all reviews from this customer.
 						self::_deleteReviews($customer_ID);
-						// Deletes all basket item records from that customer.
+						// Deletes all basket item records from this customer.
 						self::_deleteFromBasket($customer_ID);
+						// Deletes all ordered items from this customer.
+						self::_deleteFromItems($customer_ID);
 						$this->Customers->clear();
-						// Looks for the customer with that identifier.
+						// Looks for the customer with this identifier.
 						$this->Customers->where('customer_ID', $customer_ID);
 						// Deletes the customer from the database.
 						$this->Customers->delete();
@@ -267,12 +269,12 @@
 		 */
 		protected function _deleteReviews($customer_ID = null)
 		{
-			// Checks if the product exists.
+			// Checks if the customer exists.
 			if (self::_exists('customer_ID', $customer_ID, true)) {
 				$this->Customers->clear();
 				// Uses the reviews table.
 				$this->Customers->table('reviews');
-				// Looks for a review with that product identifier.
+				// Looks for a review with that customer identifier.
 				$this->Customers->where('customer_ID', $customer_ID);
 				// Deletes the reviews.
 				$this->Customers->delete();
@@ -287,12 +289,32 @@
 		 */
 		protected function _deleteFromBasket($customer_ID = null)
 		{
-			// Checks if the product exists.
+			// Checks if the customer exists.
 			if (self::_exists('customer_ID', $customer_ID, true)) {
 				$this->Customers->clear();
 				// Uses the basket table.
 				$this->Customers->table('basket');
-				// Looks for a basket item with that product identifier.
+				// Looks for a basket item with that customer identifier.
+				$this->Customers->where('customer_ID', $customer_ID);
+				// Deletes the basket item.
+				$this->Customers->delete();
+			}
+		}
+
+		/**
+		 * Deletes the specified customer's ordered items.
+		 * 
+		 * @param  int       $customer_ID Customer identifier.
+		 * @access protected
+		 */
+		protected function _deleteFromItems($customer_ID = null)
+		{
+			// Checks if the customer exists.
+			if (self::_exists('customer_ID', $customer_ID, true)) {
+				$this->Customers->clear();
+				// Uses the basket table.
+				$this->Customers->table('items');
+				// Looks for a basket item with that customer identifier.
 				$this->Customers->where('customer_ID', $customer_ID);
 				// Deletes the basket item.
 				$this->Customers->delete();
