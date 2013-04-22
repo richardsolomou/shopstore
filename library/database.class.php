@@ -142,12 +142,12 @@
 		 * @param  boolean $override Don't push to parameters array.
 		 * @access public
 		 */
-		public function where($column, $value, $override = false)
+		public function where($column, $value, $override = false, $operator = '=')
 		{
 			if ($override == false) {
 				array_push($this->_params, array('column' => $column, 'value' => $value));
 			}
-			$this->_clause .= '`' . $column . '` = ' . $value . ' AND ';
+			$this->_clause .= '`' . $column . '` ' . $operator . ' ' . $value . ' AND ';
 		}
 
 		/**
