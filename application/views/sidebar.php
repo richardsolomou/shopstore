@@ -38,27 +38,56 @@
         <div id="sideBarAlert"></div>
 
         <h3>Shopping Basket</h3>
-        <table class="shoppingBasket">
-            <tr>
-                <td>Placeholder Item</td>
-                <td class="price">&pound;59.90</td>
-            </tr>
-            <tr>
-                <td class="righted">Sub-Total:</td>
-                <td class="price">&pound;0.00</td>
-            </tr>
-            <tr>
-                <td class="righted">Shipping:</td>
-                <td class="price">&pound;0.00</td>
-            </tr>
-            <tr>
-                <td class="righted">Total:</td>
-                <td class="price">&pound;0.00</td>
-            </tr>
-            <tr>
-                <td colspan="2" class="nopadding centered"><a href="<?php echo BASE_PATH . '/basket'; ?>">Go to your Shopping Basket</a></td>
-            </tr>
-        </table>
+        <div id="sideBarBasket">
+            <table class="shoppingBasket hoverRed bordered">
+                <thead>
+                    <th class="table2">Name</th>
+                    <th class="width25">Price</th>
+                </thead>
+                <tbody>
+                    <?php
+                        $totalPrice = 0;
+                        if ($basketItems != array()) {
+                            foreach ($basketItems as $item) {
+                                foreach ($products as $product) {
+                                    if ($item['product_ID'] == $product['product_ID']) {
+                                        $productName = $product['product_name'];
+                                        $productPrice = $product['product_price'];
+                                        $productImage = $product['product_image'];
+                                        $productStock = $product['product_stock'];
+                                    }
+                                }
+                                $totalPrice += $productPrice * $item['basket_quantity'];
+                    ?>
+                    <tr class="centered">
+                        <td><?php echo $productName; ?></td>
+                        <td><?php echo $currencySymbol . $productPrice; ?></td>
+                    </tr>
+                    <?php
+                            }
+                        }
+                    ?>
+                    <tr class="noHover"><td colspan="2"><hr class="nomargin"></td></tr>
+                    <tr class="noHover">
+                        <td class="righted">Sub-Total:</td>
+                        <td>&pound;0.00</td>
+                    </tr>
+                    <tr class="noHover">
+                        <td class="righted">Shipping:</td>
+                        <td>&pound;0.00</td>
+                    </tr>
+                    <tr class="noHover">
+                        <td class="righted">Total:</td>
+                        <td><?php echo $currencySymbol . $totalPrice; ?></td>
+                    </tr>
+                    <tr class="noHover">
+                        <td colspan="2" class="centered">
+                            <a href="<?php echo BASE_PATH . '/basket'; ?>" class="btn">Go to your Shopping Basket</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
     </div>
 
