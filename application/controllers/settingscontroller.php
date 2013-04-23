@@ -105,6 +105,7 @@
 				$products = self::_getProducts();
 	            foreach ($products as $product) {
 	            	$imageGlobal = glob(strtolower(SERVER_ROOT . '/templates/img/products/' . $product['product_ID'] . '.' . '*'));
+	            	$imageGlobal = $imageGlobal ? $imageGlobal : array();
 					foreach ($imageGlobal as $image) {
 						unlink($image);
 					}
