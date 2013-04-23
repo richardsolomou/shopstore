@@ -247,7 +247,7 @@
 			$this->$model->clear();
 			// Uses a different table for other controllers.
 			if ($customTable == null) {
-				$this->$model->table($model);
+				$this->$model->table(strtolower($model));
 			} else {
 				$this->$model->table($customTable);
 			}

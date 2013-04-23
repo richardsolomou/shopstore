@@ -24,7 +24,7 @@
 		{
 			$this->connect(DB_HOST, DB_NAME, DB_USER, DB_PASS);
 			$this->_model = get_class($this);
-			$this->table($this->_model);
+			$this->table(strtolower($this->_model));
 		}
 
 		/**

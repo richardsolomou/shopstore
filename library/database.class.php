@@ -108,7 +108,7 @@
 		public function clear()
 		{
 			$this->_query = null;
-			$this->_table = get_class($this);
+			$this->_table = strtolower(get_class($this));
 			$this->_statement = null;
 			$this->_clause = null;
 			$this->_orderBy = null;
