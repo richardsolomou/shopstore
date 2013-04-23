@@ -134,7 +134,7 @@
 		        		copy(SERVER_ROOT . '/templates/img/demo/installer/GoogleNexus4_2_resized.png', SERVER_ROOT . '/templates/img/products/3.png');
 		        		$db_conn->query('INSERT INTO products (product_ID, category_ID, product_name, product_description, product_condition, product_price, product_stock, product_image) VALUES (4, 3, "Google Nexus 7", "That\'s what she said.", "Used - Very Good", 159.00, 200, ".png");');
 		        		copy(SERVER_ROOT . '/templates/img/demo/installer/GoogleNexus7_resized.png', SERVER_ROOT . '/templates/img/products/4.png');
-		        		
+		        		$productsAdded = 1;
 		        	} catch (PDOException $e) {
 		        		// Pushes the error to an array.
 		        		array_push($error, 'Failed to fill in sample data for products.<br>' . $e->getMessage());
@@ -155,6 +155,7 @@
 		        // Checks if the sample data checkbox for reviews was ticked.
 		        if (isset($_POST['reviews'])) {
 		        	try {
+		        		if (!isset($productsAdded)) array_push($error, 'Can\'t add reviews without products.');
 		        		// Creates sample data for the currencies.
 		        		$db_conn->query('INSERT INTO customers (customer_ID, customer_username, customer_password, customer_firstname, customer_lastname, customer_address1, customer_address2, customer_postcode, customer_phone, customer_email) VALUES (1, "rich", "rich", "Rich", "Solomou", "Flat 9 Salisbury Apartments", "57-59 Festing Road, Southsea", "PO4 0NQ", 07426925773, "rsolomou@rsolomou.com");');
 		        		$db_conn->query('INSERT INTO reviews (review_ID, product_ID, review_subject, review_description, review_rating, customer_ID) VALUES (1, 3, "Amazing!", "This product is amazing, I can\'t stop using it! Thanks!", 4, 1);');
