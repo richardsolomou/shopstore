@@ -52,7 +52,7 @@
             <tr>
                 <td class="righted"><label for="admin_email">E-mail Address:</label></td>
                 <td>
-                    <input type="text" id="admin_email" name="admin_email" required value="rich@geekdiv.com" pattern="^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$">
+                    <input type="text" id="admin_email" name="admin_email" required value="rsolomou@rsolomou.com" pattern="^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$">
                 </td>
             </tr>
             <tr>
@@ -111,9 +111,11 @@
                 </td>
             </tr>
             <tr>
-                <td class="table2 righted"><label for="sampleData">Install Sample Data?</label></td>
+                <td class="righted table2">Install Sample Data</td>
                 <td>
-                    <input type="checkbox" id="sampleData" name="sampleData" checked value="Yes">
+                    <p><input type="checkbox" id="products" name="products" checked value="Products"><label for="products">Products</label></p>
+                    <p><input type="checkbox" id="currencies" name="currencies" checked value="Currencies"><label for="currencies">Currencies</label></p>
+                    <p><input type="checkbox" id="reviews" name="reviews" checked value="Reviews"><label for="reviews">Reviews</label></p>
                 </td>
             </tr>
             <tr>
