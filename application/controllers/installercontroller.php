@@ -55,10 +55,10 @@
 		        }
 		        // Checks if the checkbox for dropping the existing database was
 		        // ticked.
-		        if (isset($_POST['dropExisting']) && $_POST['dropExisting'] == 'Yes') {
+		        if (isset($_POST['dropExisting'])) {
 		            try {
 		            	// Drops the specified database.
-		                $db_conn->query('DROP DATABASE ' . $_POST['db_name']);
+		                $db_conn->query('DROP DATABASE IF EXISTS ' . $_POST['db_name']);
 		            } catch (PDOException $e) {
 		            	// Pushes the error to an array.
 		                array_push($error, 'Database could not be dropped.<br>' . $e->getMessage());

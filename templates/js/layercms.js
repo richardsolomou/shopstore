@@ -426,6 +426,20 @@ layercms.webscrp = (function() {
 
 	}
 
+	var sampleData = function () {
+
+		var products = document.getElementById('products');
+		var reviews = document.getElementById('reviews');
+
+		if (reviews.checked == true) {
+			products.disabled = true;
+			products.checked = true;
+		} else {
+			products.disabled = false;
+		}
+
+	}
+
 	// Function to be called when the document is loaded on every page.
 	var loaded = function () {
 		toggleSidebar();
@@ -451,6 +465,7 @@ layercms.webscrp = (function() {
 		'login': login,
 		'logout': logout,
 		'submitOrder': submitOrder,
+		'sampleData': sampleData,
 		'loaded': loaded
 	};
 

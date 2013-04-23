@@ -115,7 +115,7 @@
                 <td>
                     <p><input type="checkbox" id="products" name="products" checked value="Products"><label for="products">Products</label></p>
                     <p><input type="checkbox" id="currencies" name="currencies" checked value="Currencies"><label for="currencies">Currencies</label></p>
-                    <p><input type="checkbox" id="reviews" name="reviews" checked value="Reviews"><label for="reviews">Reviews</label></p>
+                    <p><input type="checkbox" id="reviews" name="reviews" value="Reviews" onchange="layercms.webscrp.sampleData()"><label for="reviews">Reviews</label></p>
                 </td>
             </tr>
             <tr>
