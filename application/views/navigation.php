@@ -22,11 +22,13 @@
         foreach ($categories as $navCats) {
             // Runs the method on every loop
             $productNumber = $navigationDispatch->_getProductCountByCat($navCats['category_ID']);
-            if (isset($category['category_ID'])) {
-                $active = $category['category_ID'] == $navCats['category_ID'] ? ' class="active"' : '';
-                    echo '<li' . $active . '><a href="' . BASE_PATH . '/categories/getById/' . $navCats['category_ID'] . '">' . $navCats['category_name'] . ' (' . $productNumber . ')</a></li>';
-            } else {
-                echo '<li><a href="' . BASE_PATH . '/categories/getById/' . $navCats['category_ID'] . '">' . $navCats['category_name'] . ' (' . $productNumber . ')</a></li>';
+            if ($productNumber > 0) {
+                if (isset($category['category_ID'])) {
+                    $active = $category['category_ID'] == $navCats['category_ID'] ? ' class="active"' : '';
+                        echo '<li' . $active . '><a href="' . BASE_PATH . '/categories/getById/' . $navCats['category_ID'] . '">' . $navCats['category_name'] . ' (' . $productNumber . ')</a></li>';
+                } else {
+                    echo '<li><a href="' . BASE_PATH . '/categories/getById/' . $navCats['category_ID'] . '">' . $navCats['category_name'] . ' (' . $productNumber . ')</a></li>';
+                }
             }
         }
 
