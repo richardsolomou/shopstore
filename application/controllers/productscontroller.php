@@ -292,21 +292,32 @@
 				// Checks what type of file it is.
 				switch ($imageType) {
 					case IMAGETYPE_GIF:
+						// Creates the image from the input.
 						$imageResource = imagecreatefromgif($tmpFilePath);
+						// Remakes the image with the dimensions given.
 						imagecopyresampled($thumbnailResource, $imageResource, 0, 0, 0, 0, 175, $thumbnailHeight, $imageWidth, $imageHeight);
+						// Saves the image.
 						imagegif($thumbnailResource, $tmpFilePath);
 						break;
 					case IMAGETYPE_JPEG:
+						// Creates the image from the input.
 						$imageResource = imagecreatefromjpeg($tmpFilePath);
+						// Remakes the image with the dimensions given.
 						imagecopyresampled($thumbnailResource, $imageResource, 0, 0, 0, 0, 175, $thumbnailHeight, $imageWidth, $imageHeight);
+						// Saves the image.
 						imagejpeg($thumbnailResource, $tmpFilePath, 85);
 						break;
 					case IMAGETYPE_PNG:
+						// Keeps transparency if exists.
 						imagealphablending($thumbnailResource, false);
 						imagesavealpha($thumbnailResource, true);
+						// Creates the image from the input.
 						$imageResource = imagecreatefrompng($tmpFilePath);
+						// Keeps transparency if exists.
 						imagealphablending($imageResource, true);
+						// Remakes the image with the dimensions given.
 						imagecopyresampled($thumbnailResource, $imageResource, 0, 0, 0, 0, 175, $thumbnailHeight, $imageWidth, $imageHeight);
+						// Saves the image.
 						imagepng($thumbnailResource, $tmpFilePath);
 						break;
 					default:
