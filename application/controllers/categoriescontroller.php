@@ -33,9 +33,9 @@
 				// Gets the values of the category.
 				$category = self::_getCatById($category_ID);
 				// Gets the products under the category.
-				$products = self::_getProductsByCat($category_ID);
+				$productsByCat = self::_getProductsByCat($category_ID);
 				self::set('category', $category);
-				self::set('products', $products);
+				self::set('productsByCat', $productsByCat);
 			} else {
 				// Returns a 404 error page.
 				notFound();

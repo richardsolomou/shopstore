@@ -32,7 +32,6 @@
 				// Fetches all the orders.
 				$orders = $this->Orders->fetch(true);
 				self::set('pendingOrders', self::_getPendingOrders());
-				self::set('products', self::_getProducts());
 				self::set('customers', self::_getCustomers());
 				self::set('orders', $orders);
 			} else {
@@ -169,7 +168,6 @@
 					// Returns the order's values from the database.
 					self::set('order_ID', $order_ID);
 					self::set('order', self::_getOrderById($order_ID));
-					self::set('products', self::_getProducts());
 					self::set('customers', self::_getCustomers());
 					self::set('orderedProducts', self::_getItemsByOrder($order_ID));
 				}
@@ -315,22 +313,6 @@
 			} else {
 				return false;
 			}
-		}
-
-		/**
-		 * Returns product values in a variable.
-		 * 
-		 * @return array     Returns the product values.
-		 * @access protected
-		 */
-		protected function _getProducts()
-		{
-			$this->Orders->clear();
-			// Uses the products table.
-			$this->Orders->table('products');
-			$this->Orders->select();
-			// Returns the results of the products.
-			return $this->Orders->fetch(true);
 		}
 
 		/**

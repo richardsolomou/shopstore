@@ -33,8 +33,6 @@
 				$this->Basket->select();
 				// Fetches all the basket items.
 				$basketItems = $this->Basket->fetch(true);
-				// Gets a list of all the products in the database.
-				self::set('products', self::_getProducts());
 				self::set('basketItems', $basketItems);
 			} else {
 				// Returns an unauthorized access page.
@@ -280,7 +278,6 @@
 					$basket = self::_getBasketItemById($basket_ID);
 					self::set('basket_ID', $basket_ID);
 					self::set('basket', $basket);
-					self::set('products', self::_getProducts());
 					self::set('customers', self::_getCustomers());
 					$this->_action = 'update';
 					return;
@@ -365,9 +362,6 @@
 				$this->Basket->select();
 				// Fetches all the basket items.
 				$basketItems = $this->Basket->fetch(true);
-				// Gets a list of all the products in the database.
-				$products = self::_getProducts();
-				self::set('products', $products);
 				self::set('basketItems', $basketItems);
 			} else {
 				// Returns an empty basket page.
@@ -487,22 +481,6 @@
 			);
 			// Updates the product with the new values.
 			$this->Basket->update($product);
-		}
-
-		/**
-		 * Returns product values in a variable.
-		 * 
-		 * @return array     Returns the product values.
-		 * @access protected
-		 */
-		protected function _getProducts()
-		{
-			$this->Basket->clear();
-			// Uses the products table.
-			$this->Basket->table('products');
-			$this->Basket->select();
-			// Returns the results of the products.
-			return $this->Basket->fetch(true);
 		}
 
 		/**
