@@ -53,8 +53,6 @@
                                     if ($item['product_ID'] == $product['product_ID']) {
                                         $productName = $product['product_name'];
                                         $productPrice = $product['product_price'];
-                                        $productImage = $product['product_image'];
-                                        $productStock = $product['product_stock'];
                                     }
                                 }
                                 $totalPrice += $productPrice * $item['basket_quantity'];
