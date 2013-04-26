@@ -1,4 +1,4 @@
-WEBSCRP
+ShopCMS
 =======
 
 This is my code for the Web-Script Programming unit coursework (year 2) that I was assessed in during my studies for a BSc (Hons) Computer Science degree at the University of Portsmouth.
@@ -20,3 +20,11 @@ My main aims and intentions related to the final product are listed below:
 * Error-free JavaScript
 * Aesthetically pleasing to use design
 * Room for improvement
+
+Restrictions
+------------
+There were a few things that we weren't allowed to use in this assignment:
+* JavaScript Libraries (jQuery, Backbone, etc.)
+* PHP Libraries (Smarty, Akismet, etc.)
+* Code from tutorials (without referencing at least)
+If any of the above were used on parts that were marked by the marking scheme, we would not receive any marks for those parts.
