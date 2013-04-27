@@ -17,7 +17,7 @@
         </thead>
         <tbody>
             <?php
-                foreach($orders as $order) {
+                foreach ($orders as $order) {
                     foreach ($customers as $customer) {
                         if ($customer['customer_ID'] == $order['customer_ID']) {
                             $customerName = $customer['customer_firstname'] . ' ' . $customer['customer_lastname'];
@@ -55,7 +55,7 @@
         </thead>
         <tbody>
             <?php
-                foreach($pendingOrders as $pendingOrder) {
+                foreach ($pendingOrders as $pendingOrder) {
                     foreach ($customers as $customer) {
                         if ($customer['customer_ID'] == $pendingOrder['customer_ID']) {
                             $customerName = $customer['customer_firstname'] . ' ' . $customer['customer_lastname'];

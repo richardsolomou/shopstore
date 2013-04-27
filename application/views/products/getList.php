@@ -18,7 +18,7 @@
         </thead>
         <tbody>
             <?php
-                foreach($products as $product) {
+                foreach ($products as $product) {
             ?>
                     <tr class="centered">
                         <td><?php echo $product['product_ID']; ?></td>

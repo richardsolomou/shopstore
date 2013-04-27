@@ -14,7 +14,7 @@
                             <select id="category_ID" name="category_ID" required>
                                 <option value="">-- None --</option>
                                 <?php
-                                    foreach($categories as $category) echo '<option value="' . $category['category_ID'] . '">' . $category['category_name'] . '</option>';
+                                    foreach ($categories as $category) echo '<option value="' . $category['category_ID'] . '">' . $category['category_name'] . '</option>';
                                 ?>
                             </select>
                         </td>

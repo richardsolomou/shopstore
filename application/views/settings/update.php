@@ -21,7 +21,7 @@
                             <?php if ($setting_ID == 2) { ?>
                                 <select id="setting_value" name="setting_value" required>
                                     <?php
-                                        foreach($currencies as $currency) {
+                                        foreach ($currencies as $currency) {
                                             if ($currency['currency_ID'] == $currency_ID) {
                                                 echo '<option value="' . $currency['currency_ID'] . '" selected>' . $currency['currency_code'] . ' - ' . $currency['currency_symbol'] . '</option>';
                                             } else {

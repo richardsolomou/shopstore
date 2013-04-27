@@ -18,7 +18,7 @@
                             <select id="category_parent_ID" name="category_parent_ID">
                                 <option value="0">-- None --</option>
                                 <?php
-                                    foreach($categories as $category) echo '<option value="' . $category['category_ID'] . '">' . $category['category_name'] . '</option>';
+                                    foreach ($categories as $category) echo '<option value="' . $category['category_ID'] . '">' . $category['category_name'] . '</option>';
                                 ?>
                             </select>
                         </td>

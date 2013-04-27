@@ -19,9 +19,9 @@
         </thead>
         <tbody>
             <?php
-                foreach($reviews as $review) {
-                    foreach($products as $product) if ($review['product_ID'] == $product['product_ID']) $productName = $product['product_name'];
-                    foreach($customers as $customer) if ($review['customer_ID'] == $customer['customer_ID']) $customerName = $customer['customer_firstname'] . ' ' . $customer['customer_lastname'];
+                foreach ($reviews as $review) {
+                    foreach ($products as $product) if ($review['product_ID'] == $product['product_ID']) $productName = $product['product_name'];
+                    foreach ($customers as $customer) if ($review['customer_ID'] == $customer['customer_ID']) $customerName = $customer['customer_firstname'] . ' ' . $customer['customer_lastname'];
             ?>
                     <tr class="centered">
                         <td><?php echo $review['review_ID']; ?></td>

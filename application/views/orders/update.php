@@ -21,7 +21,7 @@
                             <select id="customer_ID" name="customer_ID" required>
                                 <option value="">-- None --</option>
                                 <?php
-                                    foreach($customers as $customer) {
+                                    foreach ($customers as $customer) {
                                         if ($customer['customer_ID'] == $order['customer_ID']) {
                                             echo '<option value="' . $customer['customer_ID'] . '" selected>' . $customer['customer_firstname'] . ' ' . $customer['customer_lastname'] . '</option>';
                                         } else {

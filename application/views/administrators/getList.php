@@ -19,7 +19,7 @@
         </thead>
         <tbody>
             <?php
-                foreach($administrators as $administrator) {
+                foreach ($administrators as $administrator) {
             ?>
                     <tr class="centered">
                         <td><?php echo $administrator['admin_ID']; ?></td>

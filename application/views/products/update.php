@@ -18,7 +18,7 @@
                             <select id="category_ID" name="category_ID" required>
                                 <option value="">-- None --</option>
                                 <?php
-                                    foreach($categories as $category) {
+                                    foreach ($categories as $category) {
                                         if ($category['category_ID'] == $product['category_ID']) {
                                             echo '<option value="' . $category['category_ID'] . '" selected>' . $category['category_name'] . '</option>';
                                         } else {

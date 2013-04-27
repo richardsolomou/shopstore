@@ -19,7 +19,7 @@
         </thead>
         <tbody>
             <?php
-                foreach($currencies as $currency) {
+                foreach ($currencies as $currency) {
             ?>
                     <tr class="centered">
                         <td><?php echo $currency['currency_ID']; ?></td>

@@ -17,7 +17,7 @@
                             <select id="product_ID" name="product_ID" required>
                                 <option value="">-- None --</option>
                                 <?php
-                                    foreach($products as $product) echo '<option value="' . $product['product_ID'] . '">' . $product['product_name'] . '</option>';
+                                    foreach ($products as $product) echo '<option value="' . $product['product_ID'] . '">' . $product['product_name'] . '</option>';
                                 ?>
                             </select>
                         </td>
@@ -51,7 +51,7 @@
                             <select id="customer_ID" name="customer_ID" required>
                                 <option value="">-- None --</option>
                                 <?php
-                                    foreach($customers as $customer) echo '<option value="' . $customer['customer_ID'] . '">' . $customer['customer_firstname'] . ' ' . $customer['customer_lastname'] . '</option>';
+                                    foreach ($customers as $customer) echo '<option value="' . $customer['customer_ID'] . '">' . $customer['customer_firstname'] . ' ' . $customer['customer_lastname'] . '</option>';
                                 ?>
                             </select>
                         </td>

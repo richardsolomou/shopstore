@@ -19,7 +19,7 @@
         </thead>
         <tbody>
             <?php
-                foreach($settings as $setting) {
+                foreach ($settings as $setting) {
             ?>
                     <tr class="centered">
                         <td><?php echo $setting['setting_ID']; ?></td>

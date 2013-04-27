@@ -19,7 +19,7 @@
         </thead>
         <tbody>
             <?php
-                foreach($customers as $customer) {
+                foreach ($customers as $customer) {
             ?>
                     <tr class="centered">
                         <td><?php echo $customer['customer_ID']; ?></td>

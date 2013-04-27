@@ -21,7 +21,7 @@
                             <select name="category_parent_ID" id="category_parent_ID">
                                 <option value="0">-- None --</option>
                                 <?php
-                                    foreach($categories as $category1) {
+                                    foreach ($categories as $category1) {
                                         if ($category1['category_ID'] == $category['category_parent_ID']) {
                                             echo "<option value=\"" . $category1['category_ID'] . "\" selected=\"selected\">" . $category1['category_name'] . "</option>";
                                         } else {

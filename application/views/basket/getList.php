@@ -20,7 +20,7 @@
                 <?php
                     $totalPrice = 0;
                     $numberOfItems = 0;
-                    foreach($basketItems as $item) {
+                    foreach ($basketItems as $item) {
                         $numberOfItems += 1;
                         foreach ($products as $product) {
                             if ($item['product_ID'] == $product['product_ID']) {
