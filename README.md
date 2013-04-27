@@ -1,5 +1,5 @@
-ShopCMS
-=======
+ShopStore
+=========
 
 This is my code for the Web-Script Programming unit coursework (year 2) that I was assessed in during my studies for a BSc (Hons) Computer Science degree at the University of Portsmouth.
 
